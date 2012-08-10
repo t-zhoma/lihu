@@ -21,15 +21,15 @@ function shuffle() {
     var s;
     while (i > 0) {
         s = Math.floor(Math.random() * (i + 1));
-        swapindeck(s, i);
+        swapcard(deck, s, i);
         i--;
     }
 }
 
-function swapindeck(j, k) {
-    var temp = new card(deck[j].suit, deck[j].num, deck[j].picture.src);
-    deck[j] = deck[k];
-    deck[k] = temp;
+function swapcard(cards, j, k) {
+    var temp = new card(cards[j].suit, cards[j].num, cards[j].picture.src);
+    cards[j] = cards[k];
+    cards[k] = temp;
 }
 
 function fillbox() {
@@ -57,9 +57,62 @@ function buildImgSrcs() {
     imgSrcs.push("img\\back-blue-h-75-1.png");
 }
 
+// return true when card1 < card2, else return false
 function compare(card1, card2) {
+    return getOrder(card1) < getOrder(card2);
 }
 
+function getOrder(card) {
+    return cardOrder[cardFullName(card.suit, card.num)];
+}
+
+// Select sort(Desc)
 function sort(cards) {
-    
+    var max;
+    for (i = 0; i < cards.length - 1; i++) {
+        max = i;
+        for (j = i; j < cards.length; j++) {
+            if (getOrder(cards[j]) > getOrder(cards[max])) {
+                max = j;
+            }
+        }
+        swapcard(cards, i, max);
+    }
+}
+
+function getCurrentLevel() {
+    return ourRound ? ourLevel : theirLevel;
+}
+
+function cardFullName(suitname, num) {
+    return suitname + " " + num;
+}
+
+function buildCardOrder() {
+    var curLevel = getCurrentLevel();
+    var suitnames = ["diamonds", "clubs", "spades", "hearts"];
+    var i = 0;
+
+    for (j = 0; j < curLevel; j++) {
+        for (k = 0; k < suitnames.length; k++) {
+            cardOrder[cardFullName(suitnames[k], level[j])] = i++;
+        }
+    }
+
+    for (j = curLevel + 1; j < level.length; j++) {
+        for (k = 0; k < suitnames.length; k++) {
+            cardOrder[cardFullName(suitnames[k], level[j])] = i++;
+        }
+    }
+
+    for (k = 0; k < suitnames.length; k++) {
+        cardOrder[cardFullName(suitnames[k], "2")] = i++;
+    }
+
+    for (k = 0; k < suitnames.length; k++) {
+        cardOrder[cardFullName(suitnames[k], level[curLevel])] = i++;
+    }
+
+    cardOrder[cardFullName("", "joker-b")] = i++;
+    cardOrder[cardFullName("", "joker-r")] = i++;
 }
