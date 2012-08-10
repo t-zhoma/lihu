@@ -71,7 +71,7 @@ function mouseUp(x, y) {
 }
 
 function prompt() {
-    alert("prompt");
+    alert(getCardType(lastCard));
 }
 
 function hold() {

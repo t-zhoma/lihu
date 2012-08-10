@@ -1,4 +1,4 @@
-// Global variable
+﻿// Card
 var cardw = 75;
 var cardh = 107;
 var cardspace = 18;     // space btw cards
@@ -73,7 +73,18 @@ var lb = new box(14);
 var rb = new box(14);
 var bb = new bottombox();
 
+var cardNums = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a", "2", "joker-b", "joker-r"];
+var suitnames = ["clubs", "hearts", "spades", "diamonds"];
 var cardOrder = new Object(); // Card order related to current level
+
+var PutType = {
+    SINGLE: 0,      // 单牌
+    PAIR: 1,        // 对子
+    PAIRS: 2,       // 连对（滚子）
+    STRAIGHT: 3,    // 顺子
+    BOMB: 4,        // 炸弹
+    INVALID: 5      // 无效牌
+};
 
 // level
 var level = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"];
