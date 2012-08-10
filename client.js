@@ -1,25 +1,4 @@
-﻿var card = function (suit, num, picname) {
-    this.suit = suit;
-    this.num = num;
-    this.picture = new Image();
-    this.picture.src = picname;
-    this.selected = false;
-}
-
-var box = function (cardsNum) {
-    this.cardsNum = cardsNum;
-}
-
-var bottombox = function() {
-    this.cards = [];
-}
-
-var tb = new box(14);
-var lb = new box(14);
-var rb = new box(14);
-var bb = new bottombox();
-
-function preloadImg() {
+﻿function preloadImg() {
     buildImgSrcs();
     var imgPreloader = new ImagePreloader(imgSrcs, ImagePreloadCallback);
 }
@@ -36,6 +15,7 @@ function ImagePreloadCallback(images, nLoaded) {
 function init() {
     builddeck();
     shuffle();
+    buildCardOrder();
     fillbox();
     sort(bb.cards);
     drawBox();
@@ -64,11 +44,20 @@ function mouseDown(x, y) {
 }
 
 function mouseUp(x, y) {
+    if (bb.cards.length == 0) {
+        return;
+    }
+
     var x1 = Math.min(startX, x);
     var y1 = Math.min(startY, y);
     var w1 = Math.abs(startX - x);
     var h1 = Math.abs(startY - y);
 
+    var last = bb.cards.length - 1;
+    if (bb.cards[last].x < x1 && x1 < bb.cards[last].x + cardw) { // Prevent error choose on the rightest card
+        x1 = bb.cards[last].x + cardspace - 1;
+    }
+    
     for (i = bb.cards.length - 1; i >= 0; i--) {
         if (isRectCross(x1, y1, w1, h1, bb.cards[i].x, bb.cards[i].y, cardw, cardh)) {
             bb.cards[i].selected = !bb.cards[i].selected;
