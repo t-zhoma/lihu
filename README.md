@@ -1,9 +1,19 @@
-To run the game, run start_server which will start the server and open browser in localhost:8080, if another player wants 
+To run the game, you should start server first   
+Windows:   
+run start_server.bat    
+Mac/Linux:   
+1. Install nodejs on you pc first   
+2. cd to ~/funnypoke   
+3. run command "node server/app.js"   
+   
+
+after start the server, you can open browser in localhost:8080, if another player wants 
 to join in then go to the <server computer name or ip>:8080. If server functionality is not required (for development)
 then just start index.html in the browser.
 
 Here is a quick introduction to the simple framework I created to help you build multiplayer games more easily. Note tthat this is a very early demo and will change till the final tutorial. So here is a quick introduction on how to use it:
 The only file you have to edit to start writing games is teh client.js file in the root of the folder. Inside the client.js you have the following functions to help you into building a game:
+
 	-> canvas:
 		canvas is an object with overall information about the drawing area, you wont really need it though,
 	-> width:
