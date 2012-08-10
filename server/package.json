@@ -1,0 +1,9 @@
+{
+	"name": "MicGame",
+	"version": "0.0.1",
+	"author": "Hamza Zia",
+	"description": "Simple boiler plate for a simple game competition",
+	"dependencies": {
+		"socket.io": "*"
+	}
+}
