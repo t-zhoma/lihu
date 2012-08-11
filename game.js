@@ -66,6 +66,9 @@ Game.prototype.hold = function() {
 
 Game.prototype.prompt = function() {
     // TODO
+    var lastCard = [new Card(this.suitnames[0], 5, null)]; // "8"
+    this.choosePrompt(this.bb.cards, lastCard);
+    renderer.drawBottomBox();
     // alert( this.getCardType(lastCard));
 };
 
@@ -233,7 +236,7 @@ Game.prototype.buildCardOrder = function() {
 
 
 Game.prototype.getCardType = function (cards) {
-    sort(cards);
+    this.sort(cards);
     switch (cards.length) {
         case 1:
             return this.PutType.SINGLE;
@@ -313,10 +316,56 @@ Game.prototype.containSpecialCard = function(cards) {
     return false;
 }
 
+Game.prototype.getLastSelectedIndex = function(cards) {
+    for(i = cards.length-1; i >= 0; i--) {
+        if(cards[i].selected) {
+            return i;
+        }
+    }
+    
+    return -1;
+}
 
+Game.prototype.choosePrompt = function(cards, lastCards) {
+    var start = this.getLastSelectedIndex(cards) - 1;
+    if(start < 0){
+        start = cards.length - 1;
+    }
+    this.unchooseAll(cards);
+    switch(this.getCardType(lastCards)){
+    case this.PutType.SINGLE:
+        if(!this.chooseSingle(cards, lastCards, start) && start != cards.length-1){
+           this.chooseSingle(cards, lastCards, cards.length-1);
+        }
+        break;
+    case this.PutType.PAIR:
+        break;
+    case this.PutType.PAIRS:
+        break;
+    case this.PutType.STRAIGHT:
+        break;
+    case this.PutType.BOMB:
+        break;
+    }
+}
 
+Game.prototype.unchooseAll = function(cards){
+    for(i = 0; i < cards.length; i++){
+        cards[i].selected = false;
+    }
+}
 
-
+Game.prototype.chooseSingle = function(cards, lastCards, start) {
+    for(i = start; i >= 0; i--) {
+        if(this.getOrder(cards[i]) > this.getOrder(lastCards[0])){
+           
+           cards[i].selected = true;
+           return true;
+        }
+    }
+    
+    return false;
+}
 
 
 
