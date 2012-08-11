@@ -12,28 +12,26 @@ function preloadImg() {
     var imgPreloader = new ImagePreloader(game.imgSrcs, ImagePreloadCallback);
 }
 
-function ImagePreloadCallback(images, nLoaded) {
+function ImagePreloadCallback(imgMap, nLoaded) {
     if (nLoaded != game.imgSrcs.length) {
         alert("Only " + nLoaded + " of " + game.imgSrcs.length + " images load successful!");
         return;
     }
 
-    Source.images = images;
+    Source.imgMap = imgMap;
     init();
 }
 
 
 
-function init() {
-  //alert('init');
-    
+function init() {    
     game.builddeck();
     game.shuffle();
     game.buildCardOrder();
     game.fillbox();
     game.sort( game.bb.cards);
  
-  renderer.drawBox();
+    renderer.drawBox();
 }
 
 
