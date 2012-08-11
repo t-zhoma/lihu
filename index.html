@@ -1,8 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>Game is on!!!</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Lihu</title>
 		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
 		<style>
 			html, body{
 				padding: 0;
@@ -13,17 +15,33 @@
 			}
 		</style>
 	</head>
-	<body onload="preloadImg();">
-        <canvas width="1800" height="850">Your browser doesn't support the HTML5 element canvas.</canvas>
-        <br />
-        <div style="margin-left:520px">
-        <button id="btnHold" onclick="hold();">不出</button>
-        <button id="btnPrompt" onclick="prompt();">提示</button>
-        <button id="btnPut" onclick="put();">出牌</button>
-        </div>
+	<body>
+		<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+
+		<br />
+        		<div style="margin-left:520px">
+        		<button id="btnHold">不出</button>
+        		<button id="btnPrompt">提示</button>
+        		<button id="btnPut">出牌</button>
+        		</div>
+
+
 	</body>
-	<script type="text/javascript" src="jquery.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+	
+
+		<script type="text/javascript" src="lib\jquery.js"></script>
+		<script src="lib/socket.io.js"></script>
+		<script src="game.js"></script>
+		<script src="lib/imgpreloader.js"></script>
+		<script src="utility.js"></script>
+		<script src="render.js"></script>
+		<script src="controller.js"></script>
+		<!--
+		<script src="sound.js"></script>-->
+		<script src="client.js"></script>
+		<script src="lib/smoke.min.js"></script>
+
+	<!--
 	<script>
 	try {
 		  var socket = io.connect('http://localhost');
@@ -41,27 +59,12 @@
 		}
 	  }
 	</script>
-	<script>
-		function guidGenerator() {
-			var S4 = function() {
-				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-			};
-			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-		}
-		var clientID = guidGenerator(),
-			 canvas = document.getElementsByTagName('canvas')[0],
-			 width = canvas.width,
-			 height = canvas.height
-			 ctx = canvas.getContext('2d'),
-			 server = window.now || {};
-	</script>
+-->
+	
+	<!--
 	<script type="text/javascript" src="intersection.js"></script>
-    <script type="text/javascript" src="imgpreloader.js"></script>
-    <script type="text/javascript" src="variable.js"></script>
-    <script type="text/javascript" src="draw.js"></script>
-    <script type="text/javascript" src="utility.js"></script>
-    <script type="text/javascript" src="cardlogic.js"></script>
 	<script type="text/javascript" src="client.js"></script>
+
 	<script>
 		$(document.body).on('keydown', function(e) {
 			switch (e.which) {
@@ -83,14 +86,6 @@
 			}
 		});
 	</script>
-    <script>
-        $(document.body).mousedown(onMouseDown);
-        function onMouseDown(evt) {
-            window.mouseDown(evt.pageX, evt.pageY);
-        }
-        $(document.body).mouseup(onMouseUp);
-        function onMouseUp(evt) {
-            window.mouseUp(evt.pageX, evt.pageY);
-        }
-    </script>
+-->
+	
 </html>
