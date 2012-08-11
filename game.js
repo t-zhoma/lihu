@@ -15,7 +15,18 @@ this.lb = new Box(14);
 this.rb = new Box(14);
 this.bb = new BottomBox();
 
+this.cardNums = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a", "2", "joker-b", "joker-r"];
+this.suitnames = ["clubs", "hearts", "spades", "diamonds"];
 this.cardOrder = new Object(); // Card order related to current level
+
+this.PutType = {
+    SINGLE: 0,      // 单牌
+    PAIR: 1,        // 对子
+    PAIRS: 2,       // 连对（滚子）
+    STRAIGHT: 3,    // 顺子
+    BOMB: 4,        // 炸弹
+    INVALID: 5      // 无效牌
+};
 
 // level
 this.level = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"];
@@ -55,7 +66,7 @@ Game.prototype.hold = function() {
 
 Game.prototype.prompt = function() {
     // TODO
-    alert('promote');
+    // alert( this.getCardType(lastCard));
 };
 
 // Global variable
@@ -108,12 +119,10 @@ Game.rightOutboxh = Game.CARD_HEIGHT;
 Game.prototype.buildImgSrcs = function() {
     var n;
     var si;
-    var suitnames = ["clubs", "hearts", "spades", "diamonds"];
     var picname;
-    var nums = ["a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"];
     for (si = 0; si < 4; si++) {
         for (n = 0; n < 13; n++) {
-            picname = "img\\" + suitnames[si] + "-" + nums[n] + "-75.png";
+            picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
             this.imgSrcs.push(picname);
         }
     }
@@ -127,18 +136,16 @@ Game.prototype.buildImgSrcs = function() {
 Game.prototype.builddeck = function() {
     var n;
     var si;
-    var suitnames = ["clubs", "hearts", "spades", "diamonds"];
     var picname;
-    var nums = ["a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"];
     for (si = 0; si < 4; si++) {
         for (n = 0; n < 13; n++) {
-            picname = "img\\" + suitnames[si] + "-" + nums[n] + "-75.png";
-            this.deck.push(new Card(suitnames[si], nums[n], picname));
+            picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
+            this.deck.push(new Card( this.suitnames[si], n, picname));
         }
     }
 
-    this.deck.push(new Card("", "joker-b", "img\\joker-b-75.png"));
-    this.deck.push(new Card("", "joker-r", "img\\joker-r-75.png"));
+    this.deck.push(new Card("", 13, "img\\joker-b-75.png"));     // joker-b
+    this.deck.push(new Card("", 14, "img\\joker-r-75.png"));     // joker-r
 }
 
 Game.prototype.shuffle = function() {
@@ -202,27 +209,110 @@ Game.prototype.buildCardOrder = function() {
 
     for (j = 0; j < curLevel; j++) {
         for (k = 0; k < suitnames.length; k++) {
-            this.cardOrder[ this.cardFullName(suitnames[k], this.level[j])] = i++;
+            this.cardOrder[ this.cardFullName( suitnames[k], j)] = i++;
         }
     }
 
     for (j = curLevel + 1; j < this.level.length; j++) {
         for (k = 0; k < suitnames.length; k++) {
-            this.cardOrder[ this.cardFullName(suitnames[k], this.level[j])] = i++;
+            this.cardOrder[ this.cardFullName( suitnames[k], j)] = i++;
         }
     }
 
     for (k = 0; k < suitnames.length; k++) {
-        this.cardOrder[ this.cardFullName(suitnames[k], "2")] = i++;
+        this.cardOrder[ this.cardFullName( suitnames[k], 12)] = i++; // "2"
     }
 
     for (k = 0; k < suitnames.length; k++) {
-        this.cardOrder[ this.cardFullName(suitnames[k], this.level[curLevel])] = i++;
+        this.cardOrder[ this.cardFullName(suitnames[k], curLevel)] = i++;
     }
 
-    this.cardOrder[ this.cardFullName("", "joker-b")] = i++;
-    this.cardOrder[ this.cardFullName("", "joker-r")] = i++;
+    this.cardOrder[ this.cardFullName("", "13")] = i++; // joker-b
+    this.cardOrder[ this.cardFullName("", "14")] = i++; // joker-r
 }
+
+
+Game.prototype.getCardType = function (cards) {
+    sort(cards);
+    switch (cards.length) {
+        case 1:
+            return this.PutType.SINGLE;
+        case 2:
+            if ((cards[0].num == 14 && cards[1].num == 13)) { // "joker-r" and "joker-b"
+                return this.PutType.BOMB;
+            }
+            else if (cards[0].num == cards[1].num) {
+                return this.PutType.PAIR;
+            }
+            break;
+        case 3:
+            if (cards[0].num == cards[1].num && cards[1].num == cards[2].num) {
+                return this.PutType.BOMB;
+            }
+            else if ( this.isStraight(cards)) {
+                return this.PutType.STRAIGHT;
+            }
+            break;
+        case 4:
+            if (cards[0].num == cards[1].num && cards[1].num == cards[2].num && cards[2].num == cards[3].num) {
+                return this.PutType.BOMB;
+            }
+            else if ( this.isStraight(cards)) {
+                return this.PutType.STRAIGHT;
+            }
+            break;
+        default:
+            if ( this.isPairs(cards)) {
+                return this.PutType.PAIRS;
+            }
+            break;
+    }
+
+    return this.PutType.INVALID;
+}
+
+Game.prototype.isStraight = function(cards) {
+    if(cards.length < 3 || this.containSpecialCard(cards)){
+        return false;
+    }
+    
+    this.sort(cards);
+
+    for(i = 0; i < cards.length-1; i++) {
+        if(cards[i].num != cards[i+1].num+1){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+Game.prototype.isPairs = function(cards) {
+    if (cards.length < 6 || cards.length % 2 == 1 || this.containSpecialCard(cards))
+        return false;
+
+    this.sort(cards);
+    for (i = 0; i < cards.length - 3; i = i + 2) {
+        if (cards[i].num != cards[i + 1].num || cards[i].num != cards[i + 2].num + 1 ||
+           cards[i].num != cards[i + 3].num + 1) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+Game.prototype.containSpecialCard = function(cards) {
+    for(i = 0; i < cards.length; i++) {
+        if(cards[i].num == this.getCurrentLevel() || cards[i].num == 12 || 
+           cards[i].num == 13 || cards[i].num == 14) { // master, "2", "joker-b" or "joker-r"
+            return true;
+           }
+    }
+
+    return false;
+}
+
 
 
 
