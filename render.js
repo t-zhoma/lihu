@@ -18,14 +18,13 @@
             h += Game.CARD_SPACE;
         }
 
-        var x = Game.leftboxx;
-        var y = (Game.leftboxh - h) / 2 + Game.leftboxy;
+        var x = game.lb.rect.x;
+        var y = (game.lb.rect.h - h) / 2 + game.lb.rect.y;
 
-        this.ctx.clearRect(Game.leftboxx, Game.leftboxy, Game.leftboxw, Game.leftboxh);
+        this.ctx.clearRect(game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h);
 
         for (i = 0; i < game.lb.cardsNum; i++) {
             this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
-
             y += Game.CARD_SPACE;
         }
     }
@@ -36,10 +35,10 @@
             h += Game.CARD_SPACE;
         }
 
-        var x = Game.rightboxx;
-        var y = (Game.rightboxh - h) / 2 + Game.rightboxy;
+        var x = game.rb.rect.x;
+        var y = (game.rb.rect.h - h) / 2 + game.rb.rect.y;
 
-        this.ctx.clearRect(Game.rightboxx, Game.rightboxy, Game.rightboxw, Game.rightboxh);
+        this.ctx.clearRect(game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h);
         for (i = 0; i < game.rb.cardsNum; i++) {
             this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
             y += Game.CARD_SPACE;
@@ -51,10 +50,10 @@
         if (game.tb.cardsNum == 0) {
             w += Game.CARD_SPACE;
         }
-        var x = (Game.topboxw - w) / 2 + Game.topboxx;
-        var y = Game.topboxy;
+        var x = (game.tb.rect.w - w) / 2 + game.tb.rect.x;
+        var y = game.tb.rect.y;
 
-        this.ctx.clearRect(Game.topboxx, Game.topboxy, Game.topboxw, Game.topboxh);
+        this.ctx.clearRect(game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h);
         for (i = 0; i < game.tb.cardsNum; i++) {
             this.ctx.drawImage(Source.imgMap["img\\back-blue-75-1.png"], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -66,10 +65,10 @@
         if (game.bb.cards.length == 0) {
             w += Game.CARD_SPACE;
         }
-        var x = (Game.bottomboxw - w) / 2 + Game.bottomboxx;
-        var y = Game.bottomboxy;
+        var x = (game.bb.rect.w - w) / 2 + game.bb.rect.x;
+        var y = game.bb.rect.y;
 
-        this.ctx.clearRect(Game.bottomboxx, Game.bottomboxy, Game.bottomboxw, Game.bottomboxh);
+        this.ctx.clearRect(game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h);
         for (i = 0; i < game.bb.cards.length; i++) {
             var realY = game.bb.cards[i].selected ? y : (y + Game.CARD_EXTEND);
             this.ctx.drawImage(Source.imgMap[game.bb.cards[i].src], x, realY, Game.CARD_WIDTH, Game.CARD_HEIGHT);
@@ -85,10 +84,11 @@
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
         }
-        var x = (Game.bottomOutboxw - w) / 2 + Game.bottomOutboxx;
-        var y = Game.bottomOutboxy;
 
-        this.ctx.clearRect(Game.bottomOutboxx, Game.bottomOutboxy, Game.bottomOutboxw, Game.bottomOutboxh);
+        var x = (game.bob.rect.w - w) / 2 + game.bob.rect.x;
+        var y = game.bob.rect.y;
+
+        this.ctx.clearRect(game.bob.rect.x, game.bob.rect.y, game.bob.rect.w, game.bob.rect.h);
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -100,10 +100,10 @@
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
         }
-        var x = (Game.topOutboxw - w) / 2 + Game.topOutboxx;
-        var y = Game.topOutboxy;
+        var x = (game.tob.rect.w - w) / 2 + game.tob.rect.x;
+        var y = game.tob.rect.y;
 
-        this.ctx.clearRect(Game.topOutboxx, Game.topOutboxy, Game.topOutboxw, Game.topOutboxh);
+        this.ctx.clearRect(game.tob.rect.x, game.tob.rect.y, game.tob.rect.w, game.tob.rect.h);
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -111,10 +111,10 @@
     }
 
     CanvasRenderer.prototype.drawLeftOutbox = function (cards) {
-        var x = Game.leftOutboxx;
-        var y = Game.leftOutboxy;
+        var x = game.lob.rect.x;
+        var y = game.lob.rect.y;
 
-        this.ctx.clearRect(Game.leftOutboxx, Game.leftOutboxy, Game.leftOutboxw, Game.leftOutboxh);
+        this.ctx.clearRect(game.lob.rect.x, game.lob.rect.y, game.lob.rect.w, game.lob.rect.h);
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -126,10 +126,10 @@
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
         }
-        var x = Game.rightOutboxw - w + Game.rightOutboxx;
-        var y = Game.rightOutboxy;
+        var x = game.rob.rect.w - w + game.rob.rect.x;
+        var y = game.rob.rect.y;
 
-        this.ctx.clearRect(Game.rightOutboxx, Game.rightOutboxy, Game.rightOutboxw, Game.rightOutboxh);
+        this.ctx.clearRect(game.rob.rect.x, game.rob.rect.y, game.rob.rect.w, game.rob.rect.h);
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;

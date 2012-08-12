@@ -22,8 +22,6 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     init();
 }
 
-
-
 function init() {    
     game.builddeck();
     game.shuffle();

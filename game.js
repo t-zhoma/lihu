@@ -2,6 +2,11 @@
 (function (exports) {
 
     var Game = function () {
+        // Card parameter
+        Game.CARD_WIDTH = 75;
+        Game.CARD_HEIGHT = 107;
+        Game.CARD_SPACE = 18;     // space btw cards
+        Game.CARD_EXTEND = 25;    // extend space when card is selected
 
         // Cards
         this.deck = [];
@@ -10,10 +15,15 @@
         this.startX;
         this.startY;
 
-        this.tb = new Box(14);
-        this.lb = new Box(14);
-        this.rb = new Box(14);
-        this.bb = new BottomBox();
+        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
+        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
+        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
+        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
+
+        this.tob = new OutBox(new Rect(300, 167, 600, Game.CARD_HEIGHT));
+        this.lob = new OutBox(new Rect(267, 396, 326, Game.CARD_HEIGHT));
+        this.rob = new OutBox(new Rect(594, 396, 326, Game.CARD_HEIGHT));
+        this.bob = new OutBox(new Rect(300, 583, 600, Game.CARD_HEIGHT));
 
         this.cardNums = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a", "2", "joker-b", "joker-r"];
         this.suitnames = ["clubs", "hearts", "spades", "diamonds"];
@@ -73,53 +83,6 @@
         renderer.drawBottomBox();
         // alert( this.getCardType(lastCard));
     };
-
-    // Global variable
-    Game.CARD_WIDTH = 75;
-    Game.CARD_HEIGHT = 107;
-    Game.CARD_SPACE = 18;     // space btw cards
-    Game.CARD_EXTEND = 25;    // extend space when card is selected
-
-    // Box
-    Game.bottomboxx = 300;
-    Game.bottomboxy = 700;
-    Game.bottomboxw = 600;
-    Game.bottomboxh = Game.CARD_HEIGHT + Game.CARD_EXTEND;
-
-    Game.topboxx = 300;
-    Game.topboxy = 50;
-    Game.topboxw = 600;
-    Game.topboxh = Game.CARD_HEIGHT;
-
-    Game.leftboxx = 150;
-    Game.leftboxy = 125;
-    Game.leftboxw = Game.CARD_HEIGHT;
-    Game.leftboxh = 600;
-
-    Game.rightboxx = 930;
-    Game.rightboxy = 125;
-    Game.rightboxw = Game.CARD_HEIGHT;
-    Game.rightboxh = 600;
-
-    Game.bottomOutboxx = 300;
-    Game.bottomOutboxy = 583;
-    Game.bottomOutboxw = 600;
-    Game.bottomOutboxh = Game.CARD_HEIGHT;
-
-    Game.topOutboxx = 300;
-    Game.topOutboxy = 167;
-    Game.topOutboxw = 600;
-    Game.topOutboxh = Game.CARD_HEIGHT;
-
-    Game.leftOutboxx = 267;
-    Game.leftOutboxy = 396;
-    Game.leftOutboxw = 326;
-    Game.leftOutboxh = Game.CARD_HEIGHT;
-
-    Game.rightOutboxx = 594;
-    Game.rightOutboxy = 396;
-    Game.rightOutboxw = 326;
-    Game.rightOutboxh = Game.CARD_HEIGHT;
 
     Game.prototype.buildImgSrcs = function () {
         var n;
@@ -377,12 +340,25 @@
         this.selected = false;
     }
 
-    var Box = function (cardsNum) {
+    var Box = function (cardsNum, rect) {
         this.cardsNum = cardsNum;
+        this.rect = rect;
     }
 
-    var BottomBox = function () {
+    var BottomBox = function (rect) {
         this.cards = [];
+        this.rect = rect;
+    }
+
+    var OutBox = function (rect) {
+        this.rect = rect;
+    }
+
+    var Rect = function (x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 
     exports.Game = Game;
