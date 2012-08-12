@@ -11,7 +11,7 @@ var clientID = Util.guidGenerator();
 
 function preloadImg() { 
 
-    $('#loading').html('loading... please wait');
+    //$('#loading').html('loading... please wait');
     game.buildImgSrcs();
     var imgPreloader = new ImagePreloader(game.imgSrcs, ImagePreloadCallback);
 }
@@ -23,10 +23,12 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     }
 
     Source.imgMap = imgMap;
+
+    init();
     
-    $('#loading').hide();
-    $('#home').show();
-    $('#welcome_block').show();
+    //$('#loading').hide();
+    //$('#home').show();
+    //$('#welcome_block').show();
 }
 
 function init() {    
