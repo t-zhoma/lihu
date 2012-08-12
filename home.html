@@ -4,20 +4,37 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Lihu</title>
 		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-
-		<style>
-			html, body{
-				padding: 0;
-				margin: 0;
-				width: 100%;
-				height: 100%;
-				background-image: url(img/Floor.jpg);
-			}
-		</style>
-
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/app.css">
 		<link rel="stylesheet" type="text/css" href="lib/smoke.css">
 	</head>
 	<body>
+
+		<div class="container container-fluid well">
+			<div id = 'loading' class = 'span12' >
+				loading...
+			</div>
+			<div id='home' class='span12' style='display:none'>
+				<div id='welcome_block' class='join-game-block' style = 'display:none'>
+					<button id="join" class='join-game btn btn-large btn-info'>Join</button>
+				</div>
+				<div id = 'game_block' class="" style = 'display:none'>
+					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+
+					<br />
+			        		<div style="margin-left:520px">
+			        		<button id="btnHold">不出</button>
+			        		<button id="btnPrompt">提示</button>
+			        		<button id="btnPut">出牌</button>
+			        </div>
+
+
+			        <button id="test">game over</button>
+
+				</div>
+			</div>
+
+		</div>
 		
 
 
@@ -35,11 +52,6 @@
 		<!--
 		<script src="sound.js"></script>-->
 		<script src="client.js"></script>
-		<script type="text/javascript">
-			$("#test").click(function(){
-				smoke.alert('game over!');
-			});
-		</script>
 
 	<!--
 	<script>

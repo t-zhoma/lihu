@@ -21,4 +21,37 @@ var server = http.createServer(function(req, res) {
 		file.pipe(res);
 	});
 }).listen(8080);
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function(socket) {
+	socket.on('data', function(data) {
+		socket.emit('data', data);
+	});
+
+	// player join the game
+	socket.on('join', function(data) {
+		console.log('recv join request from ' + data.name);
+		// if enough player, start the game
+	});
+
+	// quit game
+	socket.on('quit', function(data) {	
+		console.log('quit game');
+	});
+
+	// user put cards
+	socket.on('put', function(data) {
+
+	});
+
+	socket.on('disconnect', function(data) {
+	    console.log('recv disconnect', data);
+	    //observerCount--;
+	    //game.leave(playerId);
+	    // If this was a player, it just left
+	    //if (playerId) {
+	    //  socket.broadcast.emit('leave', {name: playerId, timeStamp: new Date()});
+	    //}
+	});
+});
+
 console.log("You can start the game by going to 127.0.0.1:8080, if you want to join the game with another pc go to <pc name or ip of server pc>:8080");

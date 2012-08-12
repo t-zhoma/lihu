@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 To run the game, you should start server first   
 Windows:   
 run start_server.bat    
@@ -48,22 +49,37 @@ The only file you have to edit to start writing games is teh client.js file in t
 			And here is a cheat sheet:
 				-> http://simon.html5.org/dump/html5-canvas-cheat-sheet.html
 
+=======
+To run the game, you should start server first
+Windows:
+run start_server.bat  
+Mac/Linux:
+1. Install nodejs on you pc first
+2. cd to PATH/lihu
+3. run command "node server/app.js"
+
+Structure :
+	
+	-> client.js:
+
+	-> controller.js:
+		handle mouse, keyboard input event, bind event
+	-> game.js:
+		game logic and game data
+	-> index.html:
+		homepage
+	-> render.js:
+		canvas draw
+	-> sound.js:
+		TODO.  sound manager
+	-> utility.js:
+		common function
+	-> lib:
+		some 3rd js lib
+>>>>>>> 9733893f674e1c58948a03018fd5224fb42a607e
 	-> server:
-		this object has only one function, broadcast to send message to all the connected clients
-		broadcast: use this function to send message to all the clients e.g. server.broadcast("hello") or
-		server.broadcast({ name: "hamza" })
-	-> recieve:
-		you need to declare this function to recieve messages from any client, use it as follows:
-		function recieve(msg) {
-			// now use the msg to do interesting stuff
-		}
-	-> keyPress:
-		you also need to declare this function, this function will be called when ever a key is pressed, use it as
-		follows:
-		function keyPress(code) {
-			// the code can be "left", "right", "up", "down", "a", "b", ... ,"z" ,"1" , "2", ... ,"9", " "
-		}
-	-> intersection functions:
-		they are the functions contained in intersection.js, you wont need them until you are in the middle of developing
-		the game, check out that file for all the functions, more docs comming on the way in the tutorials
+		server side code
+	-> img:
+		image folder
+
 

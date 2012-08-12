@@ -1,0 +1,16 @@
+
+
+body.game {
+	background-image: url(/img/Floor.jpg);
+}
+
+.container {
+	width:1400px;
+	min-height: 500px;
+	margin-top: 50px;
+}
+
+.join-game-block {
+	text-align: center;
+	margin-top: 200px;
+}
