@@ -21,12 +21,17 @@
 			        		<button id="btnHold">不出</button>
 			        		<button id="btnPrompt">提示</button>
 			        		<button id="btnPut">出牌</button>
+			        			<div>
+			        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
+			        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
+			        			</div>
+
 			        		</div>
 				</div>
 			</div>
 			<div class='clr'></div>
 			<div class='status-block' >
-				<div class='fl'>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></div>
+				
 				<div id='status' class='fl' style='margin-left: 20px'></div>
 				<div class='clr'></div>
 				<button id="join" class='join-game btn btn-large btn-info'>Join</button>
@@ -55,51 +60,5 @@
 		<script src="sound.js"></script>-->
 		<script src="client.js"></script>
 
-	<!--
-	<script>
-	try {
-		  var socket = io.connect('http://localhost');
-		  socket.on('data', function (data) {
-			window.recieve(data);
-		  });
-		  
-	  }
-	  catch (ex) {
-		//server not running, ignore
-	  }
-	  window.broadcast = function(data) {
-		if (window.socket) {
-			socket.emit('data', data);
-		}
-	  }
-	</script>
--->
-	
-	<!--
-	<script type="text/javascript" src="intersection.js"></script>
-	<script type="text/javascript" src="client.js"></script>
-
-	<script>
-		$(document.body).on('keydown', function(e) {
-			switch (e.which) {
-				case 37:
-					window.keyPress('left');
-					break;
-				case 39:
-					window.keyPress('right');
-					break;
-				case 38:
-					window.keyPress('up');
-					break;
-				case 40:
-					window.keyPress('down');
-					break;
-				default:
-					window.keyPress(String.fromCharCode(e.which).toLowerCase());
-					break;
-			}
-		});
-	</script>
--->
 	
 </html>

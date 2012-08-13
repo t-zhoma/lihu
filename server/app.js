@@ -46,8 +46,6 @@ io.sockets.on('connection', function(socket) {
 	var curPlayer = false;
 	var curGame = false;
 
-	socket.emit('put', {'msg':0	});
-
 	socket.on('data', function(data) {
 		socket.emit('data', data);
 	});
@@ -73,6 +71,7 @@ io.sockets.on('connection', function(socket) {
 				return ;
 			}
 		}
+
 		if ( curGame.players.length == 4 ) {
 			socket.emit('join', {
 				code: 1,
@@ -109,7 +108,7 @@ io.sockets.on('connection', function(socket) {
 				io.sockets.socket( player.socketId ).emit('game start' ,{
 					players: players,
 					playerId: player.id,
-					curPutPlayerId: curGame.players[ curGame.currPlayerIdx ].id
+					nextPutPlayerId: curGame.players[ curGame.curPutPlayerIdx ].id
 
 				});
 			}
@@ -131,10 +130,10 @@ io.sockets.on('connection', function(socket) {
 			// socket.emit error
 			return false;
 		}
-		// caculate score
-		curGame.updateState(data.cards);
+		// update cards & scores
+		curGame.put(data.playerId, data.cards);
 
-		if ( curGame.isGameOver() ) {
+		if ( curGame.isGameOver() == true ) {
 			// game over , we have a winner
 			for( var idx in curGame.players ) {
 				var player = curGame.players[ idx ];
@@ -148,6 +147,7 @@ io.sockets.on('connection', function(socket) {
 
 		} else {
 			var nextPutPlayer = curGame.getNextPutPlayer();
+			console.log( curGame.curPutPlayerIdx );
 
 			
 			// send message to user
@@ -162,7 +162,8 @@ io.sockets.on('connection', function(socket) {
 				io.sockets.socket( player.socketId ).emit('put', {
 					players: players,
 					playerId: player.id,
-					nextPutPlayerId: nextPutPlayer.id
+					nextPutPlayerId: nextPutPlayer.id,
+					putCards: data.cards
 
 				});
 			}
@@ -172,6 +173,7 @@ io.sockets.on('connection', function(socket) {
 				// is robot. 
 				// current stratogy is just hold.
 
+				nextPutPlayer = curGame.getNextPutPlayer();
 				// send message to user
 				for( var idx in curGame.players ) {
 					var player = curGame.players[ idx ];
@@ -190,7 +192,7 @@ io.sockets.on('connection', function(socket) {
 					});
 				}
 
-				nextPutPlayer = curGame.getNextPutPlayer();
+				
 			}
 
 		}

@@ -37,7 +37,33 @@ function Controller() {
     }
 
     $('#btnPut').click(function(){
-        game.put();
+        // TODO
+        var selectedCards = new Array;
+        for (var i = game.bb.cards.length - 1; i >= 0; i--) {
+            if (game.bb.cards[i].selected) {
+                selectedCards.push(game.bb.cards[i]);
+                game.bb.cards.splice(i, 1);
+            }
+        }
+
+        game.sort(selectedCards);
+
+        if ( game.canPut(selectedCards) == false ) {
+            alert('can not put this cards!');
+            return false;
+        }
+
+        // TODO  verify whether can put
+
+        // TODO send to server
+        socket.emit('put', {
+            cards: selectedCards,
+            playerId: clientId
+        });
+
+        renderer.drawBottomBox();
+        renderer.drawBottomOutbox(selectedCards);
+
     });
     $('#btnHold').click(function(){
         game.hold();
