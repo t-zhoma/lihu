@@ -28,8 +28,8 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     
     
     $('#loading').hide();
-    $('#home').show();
-    $('#welcome_block').show();
+    $('#home').hide();
+    $('#room_block').show();
 
     $('#btnPut').attr('disabled', true);
     $('#butHold').attr('disabled', true);
@@ -55,6 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
     //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://localhost:8080');
 
+    socket.on('enter room', function(data) {
+        if ( data == undefined || data.players == false ) {
+            $('#select_robot').show();
+        } else {
+            $('#select_robot').hide();
+        }
+    });
     // start game, get cards from server
     socket.on('join', function(data) {
         console.log('resv server join' + data);
@@ -113,6 +120,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // start game, get cards from server
     socket.on('game over', function(data) {
         alert('game over! winner is ' + game.players[ game.getIdxByPlayerId( data.winnerId ) ].name );
+    });
+
+    socket.on('leave', function(data) {
+        //leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];
+        //console.log('user leave the game : ' + leavePlayer.name );
+        alert('somebody leaved the game ');
+        game.over();
+        $('#room_block').fadeIn('slow');
+        $('#home').fadeOut('slow');
     });
 
     $('#status').html('');

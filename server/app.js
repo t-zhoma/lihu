@@ -33,19 +33,16 @@ var observerCount = 0;
 
 // for test
 // set robot
-game.players.push(new Player('robot01', 'robot01'));
-game.players.push(new Player('robot02', 'robot02'));
-game.players.push(new Player('robot03', 'robot03'));
-game.players[0].isRobot = true;
-game.players[1].isRobot = true;
-game.players[2].isRobot = true;
+
+var curGame = false;
+var curPlayer = false;
 
 io.sockets.on('connection', function(socket) {
 	console.log(socket.id);
 	observerCount++;
-
-	var curPlayer = false;
-	var curGame = false;
+	//socket.emit('enter room', {
+	//	players: curGame.players
+	//});
 
 	socket.on('data', function(data) {
 		socket.emit('data', data);
@@ -59,8 +56,27 @@ io.sockets.on('connection', function(socket) {
 		//if ( games[roomId] == undefined ) {
 		//	games[roomId] = new Game();
 		//}
-		//curGame= games[roomId];
-		curGame = game;
+		//curGame= games[roomId];	
+
+		
+
+		if ( curGame == false ) {
+			console.log('new game');
+			curGame = new Game();
+			var robotCnt = 0;
+			// create robot
+			if ( !isNaN(data.robotCnt) ) {
+				robotCnt = parseInt( data.robotCnt );
+				if ( robotCnt > 3) robotCnt = 3;
+				for(var idx = 1; idx <= robotCnt ; idx++ ) {
+					robot = new Player('robot0' + idx , 'robot0' + idx);
+					robot.isRobot = true;
+					curGame.players.push( robot );
+				}
+			}
+		} else {
+			console.log('player num ' + curGame.players.length );
+		}
 
 		// already join the game
 		for( var i in curGame.players ) {
@@ -118,8 +134,9 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	// quit game
-	socket.on('quit', function(data) {	
+	socket.on('leave', function(data) {	
 		console.log('quit game');
+		gameOver(data);
 	});
 
 	// user put cards
@@ -202,6 +219,7 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('disconnect', function(data) {
 	    console.log('recv disconnect', data);
+	    gameOver(false);
 	    //observerCount--;
 	    //game.leave(playerId);
 	    // If this was a player, it just left
@@ -220,6 +238,19 @@ io.sockets.on('connection', function(socket) {
 		console.log('sync send');
 	}, 2000);
 */
+	function gameOver(data) {
+		if ( data != false ) {
+			leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];
+			console.log('user leave game : ' + leavePlayer.name );
+		}
+		// send message to user
+		for(var idx in curGame.players) {
+			var player = curGame.players[ idx ];
+			if ( player.isRobot == true ) continue ;
+			io.sockets.socket( player.socketId ).emit('leave', data);
+		} 
+		curGame.over();
+	}
 
 });
 

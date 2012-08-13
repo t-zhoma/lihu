@@ -17,24 +17,46 @@
 					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
 
 					<br />
-			        		<div style="margin-left:520px">
-			        		<button id="btnHold">不出</button>
-			        		<button id="btnPrompt">提示</button>
-			        		<button id="btnPut">出牌</button>
-			        			<div>
+			        		<div style='width:100%; margin:auto; padding:auto;'>
+			        			<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
+			        		<button id="btnHold" class='btn btn-primary'>不出</button>
+			        		<button id="btnPrompt" class='btn btn-primary'>提示</button>
+			        		<button id="btnPut" class='btn btn-primary'>出牌</button>
+			        			<div style='margin-top:10px;'>
 			        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
 			        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
 			        			</div>
+			        			<button id="quit_btn" class='btn btn-warning'>Quit</button>
+			        		</div>
 
 			        		</div>
 				</div>
-			</div>
-			<div class='clr'></div>
-			<div class='status-block' >
-				
-				<div id='status' class='fl' style='margin-left: 20px'></div>
+
 				<div class='clr'></div>
-				<button id="join" class='join-game btn btn-large btn-info'>Join</button>
+			</div>
+			<div id='room_block' class='room-block' >
+
+				<div class='room-list'>
+					<div class='room-item'>
+
+					</div>
+				</div>
+				<div>
+					<div style='margin-top:200px;'>
+						<div id='select_robot'>
+							Robot num:
+							<select id = 'robot_cnt' name='robot_cnt' class='span1'>
+								<option value='0'>0</option>
+								<option value='1'>1</option>
+								<option value='2'>2</option>
+								<option value='3'>3</option>
+							</select>
+						</div>
+						<div>
+							<button id="join_btn" class='join-game btn btn-large btn-success' >Join</button>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div id = 'loading' class = 'span12' >
 				loading...
@@ -47,7 +69,6 @@
 
 	</body>
 	
-
 		<script type="text/javascript" src="lib\jquery.js"></script>
 		<script src="lib/socket.io.js"></script>
 		<script src="lib/smoke.min.js"></script>

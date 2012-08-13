@@ -19,10 +19,29 @@ body.game {
     min-height: 500px;
 }
 
-.status-block {
-    margin:10px 0px;
+.room-block {
     padding:10px;
+    width: 900px;
+    min-height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
+
+.room-list {
+
+}
+.room-item {
+
+}
+.room-item .room-name {
+
+}
+
+.room-item .member-name {
+
+}
+
 #home {
     
 }

@@ -53,17 +53,37 @@
         game.prompt();
     });
 
-    $('#join').click(function(){
+    $('#quit_btn').click(function() {
+        smoke.confirm('are you sure to quit the game?', function(e){
+            if ( e ) {
+                // confirm
+                socket.emit('leave', {
+                    playerId: clientId
+                });
+            } else {
+                // cancel
+            }
+        });
+    });
+
+    $('#join_btn').click(function(){
+
+        
         smoke.prompt("what is your name", function(name) {
             if (name) {
                 //smoke.signal('name is: ' + name );
                 $('#player_name').html(name);
+                var robotCnt = $('#robot_cnt').val();
                 socket.emit('join', 
                     {
                         roomId: game.roomId,
                         playerId: clientId,
-                        playerName: name
+                        playerName: name,
+                        robotCnt: robotCnt
                     });
+                $('#room_block').fadeOut('slow');
+                $('#home').fadeIn('slow');
+
             } else {
                smoke.signal('sorry, name required');
             }

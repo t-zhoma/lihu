@@ -60,7 +60,7 @@
         this.ourRound = true;
 
         this.roomId;
-        this.players = []; // 4 player
+        this.players = new Array; // 4 player
         this.curPutPlayerIdx; // current put player
 
         this.lastCards; // last put cards
@@ -105,6 +105,17 @@
             }
         }
         return false;
+    }
+
+    Game.prototype.over = function() {
+        this.players = [];
+
+    } 
+    Game.prototype.resetBox = function() {
+        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
+        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
+        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
+        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
     }
 
     Game.prototype.getWinnerId = function() {
@@ -250,6 +261,7 @@
         //for (var i = 0; i < 14; i++) {
         //   this.bb.cards.push(new Card(this.deck[i].suit, this.deck[i].num, this.deck[i].src));
         //}
+
         this.players = players;
         var curIdx = this.getCurrentPlayerIdx();
         this.bb.cards = players[ curIdx ].cards;
