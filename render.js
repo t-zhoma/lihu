@@ -2,6 +2,7 @@
 
     var CanvasRenderer = function () {
         this.canvas = document.getElementById('canvas');
+        this.canvas.onselectstart = function () { return false; }
         this.ctx = this.canvas.getContext('2d');
     };
 

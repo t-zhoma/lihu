@@ -185,11 +185,7 @@
 
     Game.prototype.prompt = function () {
         // TODO
-        var lastCard = [new Card(this.suitnames[1], 1, null), new Card(this.suitnames[0], 1, null),
-                        new Card(this.suitnames[1], 2, null), new Card(this.suitnames[0], 2, null),
-                        new Card(this.suitnames[1], 3, null), new Card(this.suitnames[0], 3, null)];
-        //var lastCard = [new Card("", 13, null)]; // "joker-b"        
-        this.choosePrompt(this.bb.cards, lastCard);
+        this.choosePrompt(this.bb.cards, selectedCards);
         renderer.drawBottomBox();
     };
 
@@ -640,7 +636,7 @@
         this.h = h;
     }
 
-    var Player = function ( playerId, playerName) {
+    var Player = function (playerId, playerName) {
         this.id = playerId;
         this.name = playerName;
 
