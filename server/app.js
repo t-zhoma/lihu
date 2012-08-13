@@ -32,12 +32,13 @@ games = new Array;
 var observerCount = 0;
 
 // for test
+// set robot
 game.players.push(new Player('robot01', 'robot01'));
 game.players.push(new Player('robot02', 'robot02'));
-//game.players.push(new Player('robot03', 'robot03'));
+game.players.push(new Player('robot03', 'robot03'));
 game.players[0].isRobot = true;
 game.players[1].isRobot = true;
-//game.players[2].isRobot = true;
+game.players[2].isRobot = true;
 
 io.sockets.on('connection', function(socket) {
 	console.log(socket.id);
@@ -221,5 +222,6 @@ io.sockets.on('connection', function(socket) {
 */
 
 });
+
 
 console.log("You can start the game by going to 127.0.0.1:8080, if you want to join the game with another pc go to <pc name or ip of server pc>:8080");

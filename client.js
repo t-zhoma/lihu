@@ -30,6 +30,10 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     $('#loading').hide();
     $('#home').show();
     $('#welcome_block').show();
+
+    $('#btnPut').attr('disabled', true);
+    $('#butHold').attr('disabled', true);
+    $('#butPrompt').attr('disabled', true); 
 }
 
 function init() {    

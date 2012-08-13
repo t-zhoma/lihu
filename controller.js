@@ -66,7 +66,10 @@ function Controller() {
 
     });
     $('#btnHold').click(function(){
-        game.hold();
+        socket.emit('put', {
+            cards: [],
+            playerId: clientId
+        });
     });
     $('#btnPrompt').click(function(){
         alert('prompt');

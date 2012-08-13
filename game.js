@@ -170,7 +170,12 @@
         this.shuffle();
 
         // start user
-        this.curPutPlayerIdx = 3;
+        var startIdx = 3;
+        // get a none robot user to start
+        while( this.players[ startIdx ].isRobot == true ) {
+            startIdx = ( startIdx + 1 ) % 4;
+        }
+        this.curPutPlayerIdx = startIdx;
     };
 
     Game.prototype.hold = function () {
