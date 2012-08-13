@@ -43,14 +43,21 @@ function Controller() {
         game.hold();
     });
     $('#btnPrompt').click(function(){
+        alert('prompt');
         game.prompt();
     });
 
     $('#join').click(function(){
         smoke.prompt("what is your name", function(name) {
             if (name) {
-                smoke.signal('name is: ' + name );
-                socket.emit('join', {name: name});
+                //smoke.signal('name is: ' + name );
+                $('#player_name').html(name);
+                socket.emit('join', 
+                    {
+                        roomId: game.roomId,
+                        playerId: clientId,
+                        playerName: name
+                    });
             } else {
                smoke.signal('sorry, name required');
             }

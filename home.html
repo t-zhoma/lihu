@@ -10,15 +10,10 @@
 	</head>
 	<body>
 
-		<div class="container container-fluid well">
-			<div id = 'loading' class = 'span12' >
-				loading...
-			</div>
-			<div id='home' class='span12' style='display:none'>
-				<div id='welcome_block' class='join-game-block' style = 'display:none'>
-					<button id="join" class='join-game btn btn-large btn-info'>Join</button>
-				</div>
-				<div id = 'game_block' class="" style = 'display:none'>
+		<div class="well" style='padding:0px; margin:0px;'>
+			
+			<div id='home'  style='display:none'>
+				<div id = 'game_block' class="">
 					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
 
 					<br />
@@ -26,13 +21,20 @@
 			        		<button id="btnHold">不出</button>
 			        		<button id="btnPrompt">提示</button>
 			        		<button id="btnPut">出牌</button>
-			        </div>
-
-
-			        <button id="test">game over</button>
-
+			        		</div>
 				</div>
 			</div>
+			<div class='clr'></div>
+			<div class='status-block' >
+				<div class='fl'>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></div>
+				<div id='status' class='fl' style='margin-left: 20px'></div>
+				<div class='clr'></div>
+				<button id="join" class='join-game btn btn-large btn-info'>Join</button>
+			</div>
+			<div id = 'loading' class = 'span12' >
+				loading...
+			</div>
+
 
 		</div>
 		

@@ -1,16 +1,28 @@
 
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clr {
+    clear: both;
+}
 
 body.game {
 	background-image: url(/img/Floor.jpg);
 }
 
 .container {
-	width:1400px;
-	min-height: 500px;
-	margin-top: 50px;
+    width: 100%;
+    /*width:1400px;*/
+    min-height: 500px;
 }
 
-.join-game-block {
-	text-align: center;
-	margin-top: 200px;
+.status-block {
+    margin:10px 0px;
+    padding:10px;
+}
+#home {
+    
 }
