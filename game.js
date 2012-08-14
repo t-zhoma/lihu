@@ -70,6 +70,10 @@
         this.lastCards; // last put cards
 
         this.gameLevel = [0, 0];
+        this.curLevel = 0;
+        this.lastWinnerId = false;
+
+        this.lastPut = false;
 
     };
 
@@ -112,6 +116,7 @@
         // anticlockwise
         this.curPutPlayerIdx = parseInt(this.curPutPlayerIdx);
         this.curPutPlayerIdx = (this.curPutPlayerIdx - 1 + 4) % 4;
+
         return this.players[this.curPutPlayerIdx];
     }
 
@@ -124,13 +129,28 @@
     Game.prototype.isGameOver = function () {
         for (var i in this.players) {
             if (this.players[i].cardsNum <= 0) {
+
                 return true;
             }
         }
         return false;
     }
 
-    Game.prototype.over = function () {
+    Game.prototype.roundOver = function () {
+        for (var i in this.players) {
+            if (this.players[i].cardsNum <= 0) {
+
+                // caculate level
+                this.gameLevel[ i%2 ]++; // level up
+                this.curLevel = this.gameLevel[ i%2 ];
+                this.lastWinnerId = this.players[i].id;
+
+                return ;
+            }
+        }
+    }
+
+    Game.prototype.leaveRoom = function() {
         this.players = [];
     }
 
@@ -139,6 +159,16 @@
         for (var idx in this.players) {
             if (this.players[idx].cardsNum == 0) {
                 return this.players[idx].id;
+            }
+        }
+    }
+
+    Game.prototype.getLastWinnerId = function() {
+        if ( this.lastWinnerId !== false ) return this.lastWinnerId;
+        for( var i in this.players ) {
+            if ( this.players[i].isRobot == false ) { 
+                this.curPutPlayerIdx = i;
+                return this.players[i].id;
             }
         }
     }
@@ -179,6 +209,7 @@
                 }
             }
             this.lastCards = cards;
+            this.lastPut = new Put(putPlayerId, cards);
         }
     }
 
@@ -215,7 +246,14 @@
         while (this.players[startIdx].isRobot == true) {
             startIdx = (startIdx + 1) % 4;
         }
-        this.curPutPlayerIdx = startIdx;
+
+        if ( this.lastWinnerId !== false ) { 
+            this.curPutPlayerIdx = this.getIdxByPlayerId( this.lastWinnerId );
+        } else {
+            this.curPutPlayerIdx = startIdx;
+            this.lastWinnerId = this.players[this.curPutPlayerIdx].id;
+        }
+
     };
 
     // Function related to card logic
@@ -715,10 +753,17 @@
         this.socketId;
     };
 
+    var Put = function(playerId, cards) {
+        this.playerId = playerId;
+        this.cards = cards;
+    };
+
     exports.Game = Game;
     exports.Card = Card;
     exports.Box = Box;
     exports.BottomBox = BottomBox;
     exports.Player = Player;
+    exports.Put = Put;
 
 })(typeof global === "undefined" ? window : exports);
+    

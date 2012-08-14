@@ -26,6 +26,7 @@ var server = http.createServer(function(req, res) {
 
 var gamejs = new require('../game.js');
 var Game = gamejs.Game;
+var Put = gamejs.Put;
 var Player = gamejs.Player;
 var game = new Game();
 var rooms = [];
@@ -39,6 +40,7 @@ var curPlayer = false;
 var curRoomId = false;
 
 // init rooms , five rooms init
+rooms.push(new Game());
 rooms.push(new Game());
 rooms.push(new Game());
 rooms.push(new Game());
@@ -70,9 +72,11 @@ io.sockets.on('connection', function (socket) {
         console.log('recv join request from ' + data);
         // if enough player, start the game
 
+        // get room id
         if (isNaN(data.roomId)) curRoomId = 0;
         else curRoomId = parseInt(data.roomId);
 
+        // get seat id
         var seatId = data.seatId;
         if (isNaN(seatId)) seatId = 0;
         else seatId = parseInt(seatId);
@@ -92,7 +96,7 @@ io.sockets.on('connection', function (socket) {
             return;
         }
 
-        if (rooms[curRoomId] == false || rooms[curRoomId].players.length == 0) {
+        if (rooms[curRoomId] === false || rooms[curRoomId].players.length == 0) {
             console.log('new game');
             rooms[curRoomId] = new Game();
             var robotCnt = 0;
@@ -112,6 +116,7 @@ io.sockets.on('connection', function (socket) {
 
         // already join the game
         for (var i in rooms[curRoomId].players) {
+        	console.log('room user : ' + rooms[curRoomId].players[i].name + ' ' + rooms[curRoomId].players[i].id);
             if (data.playerId == rooms[curRoomId].players[i].id) {
                 socket.emit('EnterRoom', {
                     code: 0,
@@ -132,22 +137,27 @@ io.sockets.on('connection', function (socket) {
         curPlayer = new Player(data.playerId, data.playerName);
         curPlayer.socketId = socket.id;
         rooms[curRoomId].players.push(curPlayer);
+        curPlayer.seatId = rooms[curRoomId].players.length - 1;
+
         // Broadcast that client has joined
         var returnData = {
             code: 0,
-            players: rooms[curRoomId].players,
             roomId: curRoomId
         };
+
+       	roomBroadCast('EnterRoom', returnData);
+       	/*
         for (var idx in rooms[curRoomId].players) {
             var player = rooms[curRoomId].players[idx];
             if (player.isRobot == true) continue;
             io.sockets.socket(player.socketId).emit('EnterRoom', returnData);
         }
         // socket.emit('join', returnData);
+		*/
 
         // could start
         if (rooms[curRoomId].ready()) {
-            gameStart();
+            roundStart();
         }
     });
 
@@ -165,82 +175,68 @@ io.sockets.on('connection', function (socket) {
     });
 
     // user put cards
+    /*
+	data = {
+		put: curPut,
+	}
+    */
     socket.on('Put', function (data) {
         console.log('recv client put');
 
+        var curPut = data.put;
+
         // TODO verify put cards
-        if (rooms[curRoomId].canPut(data.cards) == false) {
+        if (rooms[curRoomId].canPut(curPut.cards) == false) {
             // socket.emit error
             return false;
         }
+
+
         // update cards & scores
-        rooms[curRoomId].put(data.playerId, data.cards);
+        rooms[curRoomId].put(curPut.playerId, curPut.cards);
 
         var nextPutPlayer = rooms[curRoomId].getNextPutPlayer();
         console.log(rooms[curRoomId].curPutPlayerIdx);
 
 
         // send message to user
-        for (var idx in rooms[curRoomId].players) {
-            var player = rooms[curRoomId].players[idx];
-            if (player.isRobot == true) continue;
-            var players = rooms[curRoomId].players;
-            for (var idx2 in players) {
-                // empty cards
-                if (idx2 != idx) players.cards = [];
-            }
-            io.sockets.socket(player.socketId).emit('Put', {
-                players: players,
-                playerId: player.id,
-                nextPutPlayerId: nextPutPlayer.id,
-                putCards: data.cards
+        var putData = {
+        	curPut: curPut,
+            nextPutPlayerId: nextPutPlayer.id,
 
-            });
         }
+        roomBroadCast('Put', putData);
+        
 
         // game over , we have a winner
         if (rooms[curRoomId].isGameOver() == true) {
             
-            for (var idx in rooms[curRoomId].players) {
-                var player = rooms[curRoomId].players[idx];
-                if (player.isRobot == true) continue;
-                io.sockets.socket(player.socketId).emit('RoundOver', {
-                    winnerId: rooms[curRoomId].getWinnerId(),
-                    players: rooms[curRoomId].players,
-                    putCards: data.cards
+            rooms[ curRoomId ].roundOver();
+            roomBroadCast('RoundOver', {
+                    winnerId: rooms[curRoomId].getWinnerId()
                 });
-            }
+
 
             if (rooms[curRoomId].ready()) {
-                gameStart();
+                roundStart();
             }
         } else {
-            while (nextPutPlayer.isRobot == true) {
+            while (nextPutPlayer.isRobot === true) {
                 // is robot. 
                 // current stratogy is just hold.
                 rooms[curRoomId].choosePrompt(nextPutPlayer.cards, rooms[curRoomId].lastCards);
                 var selectedCards = rooms[curRoomId].getSelectedCards(nextPutPlayer.cards);
                 rooms[curRoomId].put(nextPutPlayer.id, selectedCards);
 
+                var robotPut = new Put(nextPutPlayer.id, selectedCards);
+
                 nextPutPlayer = rooms[curRoomId].getNextPutPlayer();
                 // send message to user
-                for (var idx in rooms[curRoomId].players) {
-                    var player = rooms[curRoomId].players[idx];
-                    if (player.isRobot == true) continue;
-                    var players = rooms[curRoomId].players;
-                    for (var idx2 in players) {
-                        // empty cards
-                        if (idx2 != idx) players.cards = [];
-                    }
-                    io.sockets.socket(player.socketId).emit('Put', {
-                        players: players,
-                        playerId: player.id,
+                roomBroadCast('Put', {
                         nextPutPlayerId: nextPutPlayer.id,
-                        putCards: selectedCards
+                        curPut: robotPut
 
-                    });
-                }
-
+                });
 
             }
 
@@ -255,8 +251,20 @@ io.sockets.on('connection', function (socket) {
         leaveRoom(false);
     });
 
+    // select seat
+    // TODO
     /*
+    data = {
+        seatId : ,
+        roomId : ,
+        playerId : ,
+    }
+    */
+    socket.on('SelectSeat', function(data) {
+        
+    });
 
+    /*
     // Periodically emit time sync commands
     var timeSyncTimer = setInterval(function() {
     socket.emit('time', {
@@ -265,7 +273,7 @@ io.sockets.on('connection', function (socket) {
     console.log('sync send');
     }, 2000);
     */
-    function gameStart() {
+    function roundStart() {
         console.log('game start');
         // build deck and shuffe
         rooms[curRoomId].start();
@@ -280,8 +288,8 @@ io.sockets.on('connection', function (socket) {
             }
             io.sockets.socket(player.socketId).emit('RoundStart', {
                 players: players,
-                playerId: player.id,
-                nextPutPlayerId: rooms[curRoomId].players[rooms[curRoomId].curPutPlayerIdx].id
+                nextPutPlayerId: rooms[curRoomId].lastWinnerId,
+                curLevel: rooms[curRoomId].curLevel
             });
         }
     }
@@ -292,13 +300,42 @@ io.sockets.on('connection', function (socket) {
         //}
         // send message to user
 
-        if (curRoomId != false && rooms[curRoomId].players.length != 0) {
+        if (curRoomId !== false && rooms[curRoomId].players.length != 0 && data.playerId !== undefined ) {
+        	var inRoom = false;
             for (var idx in rooms[curRoomId].players) {
                 var player = rooms[curRoomId].players[idx];
-                if (player.isRobot == true) continue;
-                io.sockets.socket(player.socketId).emit('LeaveRoom', data);
+                if ( player.id == data.playerId ) {
+                	inRoom = true ;
+                	break;
+                }
             }
-            rooms[curRoomId].over();
+
+            // have not in this room, do nothing
+            if ( inRoom == false ) return ;
+            
+            roomBroadCast('LeaveRoom', data);
+            rooms[curRoomId].leaveRoom();
+            console.log('leave room num : ' + rooms[curRoomId].players.length);
+        }
+    }
+
+    function roomBroadCast(action, data) {
+    	console.log('broadcast in room  ' + curRoomId + ' ' + action + ' ' + rooms[curRoomId].players.length);
+
+    	if ( curRoomId === false || rooms[curRoomId].players.length == 0) return false;
+
+        for (var idx in rooms[curRoomId].players) {
+	        var player = rooms[curRoomId].players[idx];
+	        console.log(player.name + ' ');
+	        if (player.isRobot == true) continue;
+	        var players = rooms[curRoomId].players;
+	        for (var idx2 in players) {
+	            // empty cards
+	             if (idx2 != idx) players.cards = [];
+	        }
+	        var tmpData = data;
+	        tmpData.players = players;
+            io.sockets.socket(player.socketId).emit(action, tmpData);
         }
     }
 

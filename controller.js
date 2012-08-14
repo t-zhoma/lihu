@@ -30,12 +30,13 @@
                 return false;
             }
 
+            var curPut = new Put(clientId, selectedCards);
+
             // TODO  verify whether can put
 
             // TODO send to server
             socket.emit('Put', {
-                cards: selectedCards,
-                playerId: clientId
+                put: curPut
             });
 
             renderer.drawBottomBox();
@@ -43,9 +44,9 @@
 
         });
         $('#btnHold').click(function () {
+            curPut = new Put(clientId, false);
             socket.emit('Put', {
-                cards: [],
-                playerId: clientId
+                put: curPut
             });
         });
         $('#btnPrompt').click(function () {
@@ -57,7 +58,8 @@
                 if (e) {
                     // confirm
                     socket.emit('LeaveRoom', {
-                        playerId: clientId
+                        playerId: clientId,
+                        roomId: game.roomId
                     });
                     $('#room_block').fadeIn('slow');
                     $('#home').fadeOut('slow');
@@ -68,35 +70,38 @@
         });
 
         $('#join_btn').click(function () {
-            //        smoke.prompt("what is your name", function(name) {
-            //            if (name) {
-            //                //smoke.signal('name is: ' + name );
-            //                $('#player_name').html(name);
-            //                var robotCnt = $('#robot_cnt').val();
-            //                socket.emit('join', 
-            //                    {
-            //                        roomId: $('#select_room_id').val(),
-            //                        playerId: clientId,
-            //                        playerName: name,
-            //                        robotCnt: robotCnt
-            //                    });
-            //                
+            smoke.prompt("what is your name", function(name) {
+                if (name) {
+                    //smoke.signal('name is: ' + name );
+                    $('#player_name').html(name);
+                    var robotCnt = $('#robot_cnt').val();
+                    socket.emit('EnterRoom', 
+                    {
+                        roomId: $('#select_room_id').val(),
+                        seatId: 0,
+                        playerId: clientId,
+                        playerName: name,
+                        robotCnt: robotCnt
+                    });
+                } else {
+                    smoke.signal('sorry, name required');
+                }
+            });
 
-            //            } else {
-            //               smoke.signal('sorry, name required');
-            //            }
-            //        });
-
+            /*
             var name = "short";
             $('#player_name').html(name);
             var robotCnt = $('#robot_cnt').val();
+            game.roomId = parseInt( $('#select_room_id').val() );
             socket.emit('EnterRoom',
             {
                 roomId: $('#select_room_id').val(),
+                seatId: 0,
                 playerId: clientId,
                 playerName: name,
                 robotCnt: robotCnt
             });
+*/
         });
     }
 

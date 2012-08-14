@@ -46,9 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
     /*
     var returnData = {
             code: 0/1,
-            errorMsg: '', // if code = 1
-            players: rooms[curRoomId].players,
-            roomId: curRoomId
+            errorMsg: 'xxx', // if code = 1
+            players: ,
+            roomId: ,
+            seatId: 
         };
     */
     socket.on('EnterRoom', function (data) {
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //##console.log('resv server join' + data);
 
         if (data.code != 0) {
-            alert('fail to join the game' + data.errorMsg);
+            alert('fail to join the game' + data.errorMsg );
             return;
         }
 
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#home #waiting').show();
         var userHtml = '';
         for (var idx in data.players) {
-            userHtml += '<li>' + data.players[idx].name + '</li>';
+            userHtml += '<li> ' + data.players[idx].name + '</li>';
         }
         $('#home #waiting #player_list').html(userHtml);
         $('#home #waiting #room_id').html(data.roomId);
@@ -80,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // bradcast get user put cards and server result
     /*
     data = {
-        lastPut:
         curPut:
         players: players,
         nextPutPlayerId: ,
@@ -91,9 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // update player cards and score status
 
         game.fillbox(data.players);
-        if (data.putCards.length != 0) { game.lastCards = data.putCards; }
+        if (data.curPut.cards.length != 0) { 
+            game.lastPut = data.curPut; 
+            game.lastCards = data.curPut.cards; // wait to delete.
+        }
 
-        renderer.drawPutCards(data.putCards);
+        renderer.drawPutCards(data.curPut.cards);
         game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
@@ -109,7 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
     /*
     data = {
         players: players,
-        nextPutPlayerId: 
+        nextPutPlayerId: ,
+        curLevel: ,
     }
     */
     socket.on('RoundStart', function (data) {
@@ -121,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderer.drawBox();
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
+        $('#cur_level').html( data.curLevel);
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
@@ -134,11 +139,22 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#home #game').show();
     });
 
-    // game over
+    // round over
+    /*
+    data = {
+        winnerId: 
+    }
+    */
     socket.on('RoundOver', function (data) {
         alert('round over! winner is ' + game.players[game.getIdxByPlayerId(data.winnerId)].name);
     });
 
+    // leave room
+    /*
+    data = {
+    
+    }
+    */
     socket.on('LeaveRoom', function (data) {
         //leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];
         //console.log('user leave the game : ' + leavePlayer.name );
@@ -147,11 +163,18 @@ document.addEventListener('DOMContentLoaded', function () {
         
     });
 
-    $('#status').html('');
-    var syncTime = 0;
-    socket.on('time', function (data) {
-        syncTime++;
-        $('#status').html('sync times: ' + syncTime);
+
+    // select seat
+    // TODO
+    /*
+    data = {
+        seatId : ,
+        roomId : ,
+        playerId : ,
+    }
+    */
+    socket.on('SelectSeat', function(data) {
+
     });
 
 });
