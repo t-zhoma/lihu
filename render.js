@@ -14,6 +14,16 @@
         this.drawPlayersInfo();
     };
 
+    CanvasRenderer.prototype.emptyPutCards = function () {
+        renderer.drawTopOutbox([]);
+        renderer.drawRightOutbox([]);
+        renderer.drawLeftOutbox([]);
+        renderer.drawBottomOutbox([]);
+    };
+
+
+
+
     CanvasRenderer.prototype.drawLeftBox = function () {
         var h = Game.CARD_WIDTH + (game.lb.cardsNum - 1) * Game.CARD_SPACE;
         if (game.lb.cardsNum == 0) {

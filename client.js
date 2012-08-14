@@ -36,17 +36,6 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     $('#butPrompt').attr('disabled', true); 
 }
 
-function init() {    
-    // game.builddeck();
-    // game.shuffle();
-    game.buildCardOrder();
-    game.fillbox();
-    game.sort( game.bb.cards);
- 
-    renderer.drawBox();
-}
-
-
 window.onload = preloadImg;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -74,8 +63,21 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        $('#room_block').fadeOut('slow');
+        $('#home').fadeIn('slow');
+
         // save user
         game.players = data.players;
+
+        $('#home #game').hide();
+        $('#home #waiting').show();
+        var userHtml = '';
+        for( var idx in data.players ) {
+            userHtml += '<li>' + data.players[idx].name + '</li>';
+        }
+        $('#home #waiting #player_list').html(userHtml);
+        $('#home #waiting #room_id').html( data.roomId );
+        
     });
 
     // bradcast get user put cards and server result
@@ -100,9 +102,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // start game, get cards from server
     socket.on('game start', function (data) {
-        game.fillbox(data.players);
-        game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
-        game.sort(game.bb.cards);
+        alert('game start');
+        game.fillbox( data.players );
+        game.curPutPlayerIdx = game.getIdxByPlayerId( data.nextPutPlayerId );
+        game.sort( game.bb.cards);
+        renderer.emptyPutCards();
+
         renderer.drawBox();
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
@@ -112,6 +117,10 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#btnPut').attr('disabled', false);
             $('#btnHold').attr('disabled', false);
         }
+
+        // start game
+        $('#home #waiting').hide();
+        $('#home #game').show();
     });
 
     // game over

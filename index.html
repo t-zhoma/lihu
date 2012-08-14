@@ -14,9 +14,21 @@
 			
 			<div id='home'  style='display:none'>
 				<div id = 'game_block' class="">
-					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+					<div id = 'waiting' >
+						<p>
+							waiting people to join the room.
+						</p>
 
-					<br />
+						<p>
+							room id : <span id = 'room_id'></span>
+						</p>
+
+						current users :
+						<ul id = 'player_list' ></ul>
+					</div>
+
+					<div id = 'game'>
+					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
 			        		<div style='width:100%; margin:auto; padding:auto;'>
 			        			<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
 			        		<button id="btnHold" class='btn btn-primary'>不出</button>
@@ -26,10 +38,15 @@
 			        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
 			        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
 			        			</div>
-			        			<button id="quit_btn" class='btn btn-warning'>Quit</button>
+			        			
 			        		</div>
 
 			        		</div>
+			       	</div>
+			       	<div>
+			       		<button id="quit_btn" class='btn btn-warning'>Quit</button>
+			       	</div>
+
 				</div>
 
 				<div class='clr'></div>
@@ -52,6 +69,16 @@
 								<option value='3'>3</option>
 							</select>
 						</div>
+						<div id='select_room'>
+							room id:
+							<select id = 'select_room_id' name='select_room_id' class='span1'>
+								<option value=0>0</option>
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+								<option value=4>4</option>
+							</select>
+						</div>
 						<div>
 							<button id="join_btn" class='join-game btn btn-large btn-success' >Join</button>
 						</div>
@@ -69,7 +96,7 @@
 
 	</body>
 	
-		<script src="lib/jquery.js"></script>
+		<script type="text/javascript" src="lib\jquery.js"></script>
 		<script src="lib/socket.io.js"></script>
 		<script src="lib/smoke.min.js"></script>
 		<script src="game.js"></script>
