@@ -76,13 +76,12 @@
                 var robotCnt = $('#robot_cnt').val();
                 socket.emit('join', 
                     {
-                        roomId: game.roomId,
+                        roomId: $('#select_room_id').val(),
                         playerId: clientId,
                         playerName: name,
                         robotCnt: robotCnt
                     });
-                $('#room_block').fadeOut('slow');
-                $('#home').fadeIn('slow');
+                
 
             } else {
                smoke.signal('sorry, name required');

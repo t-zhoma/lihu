@@ -36,17 +36,6 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     $('#butPrompt').attr('disabled', true); 
 }
 
-function init() {    
-    // game.builddeck();
-    // game.shuffle();
-    game.buildCardOrder();
-    game.fillbox();
-    game.sort( game.bb.cards);
- 
-    renderer.drawBox();
-}
-
-
 window.onload = preloadImg;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -74,6 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        $('#room_block').fadeOut('slow');
+        $('#home').fadeIn('slow');
+
         // save user
         game.players = data.players;
 
@@ -84,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userHtml += '<li>' + data.players[idx].name + '</li>';
         }
         $('#home #waiting #player_list').html(userHtml);
+        $('#home #waiting #room_id').html( data.roomId );
         
     });
 
