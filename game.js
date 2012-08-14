@@ -479,7 +479,7 @@
                 return this.chooseFourBomb(cards, lastCards, start, bCompare);
                 break;
             case this.PutType.KING_BOMB:
-                return this.KingFourBomb(cards, lastCards, start, bCompare);
+                return this.chooseKingFourBomb(cards, lastCards, start, bCompare);
                 break;
         }
 
@@ -608,7 +608,7 @@
         return false;
     }
 
-    Game.prototype.KingFourBomb = function (cards, lastCards, start, bCompare) {
+    Game.prototype.chooseKingFourBomb = function (cards, lastCards, start, bCompare) {
         if (cards.length < 2 || cards[0].num != 14 || cards[1].num != 13) { return false; }
 
         cards[0].selected = true;
