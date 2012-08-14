@@ -11,7 +11,6 @@ var clientId = Util.guidGenerator();
 
 
 function preloadImg() { 
-
     $('#loading').html('loading... please wait');
     game.buildImgSrcs();
     var imgPreloader = new ImagePreloader(game.imgSrcs, ImagePreloadCallback);
@@ -24,8 +23,6 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     }
 
     Source.imgMap = imgMap;
-
-    
     
     $('#loading').hide();
     $('#home').hide();
@@ -72,12 +69,12 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#home #game').hide();
         $('#home #waiting').show();
         var userHtml = '';
-        for( var idx in data.players ) {
+        for (var idx in data.players) {
             userHtml += '<li>' + data.players[idx].name + '</li>';
         }
         $('#home #waiting #player_list').html(userHtml);
-        $('#home #waiting #room_id').html( data.roomId );
-        
+        $('#home #waiting #room_id').html(data.roomId);
+
     });
 
     // bradcast get user put cards and server result
@@ -87,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         game.fillbox(data.players);
         if (data.putCards.length != 0) { game.lastCards = data.putCards; }
-        
+
         renderer.drawPutCards(data.putCards);
         game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
@@ -102,10 +99,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // start game, get cards from server
     socket.on('game start', function (data) {
-        alert('game start');
-        game.fillbox( data.players );
-        game.curPutPlayerIdx = game.getIdxByPlayerId( data.nextPutPlayerId );
-        game.sort( game.bb.cards);
+        game.fillbox(data.players);
+        game.buildCardOrder();
+        game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
+        game.sort(game.bb.cards);
         renderer.emptyPutCards();
 
         renderer.drawBox();

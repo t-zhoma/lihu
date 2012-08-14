@@ -13,80 +13,89 @@
             controller.mouseUp(evt.pageX, evt.pageY);
         }
 
-    $('#btnPut').click(function(){
-        // TODO
-        var selectedCards = new Array;
-        for (var i = game.bb.cards.length - 1; i >= 0; i--) {
-            if (game.bb.cards[i].selected) {
-                selectedCards.push(game.bb.cards[i]);
-                game.bb.cards.splice(i, 1);
+        $('#btnPut').click(function () {
+            // TODO
+            var selectedCards = new Array;
+            for (var i = game.bb.cards.length - 1; i >= 0; i--) {
+                if (game.bb.cards[i].selected) {
+                    selectedCards.push(game.bb.cards[i]);
+                    game.bb.cards.splice(i, 1);
+                }
             }
-        }
 
-        game.sort(selectedCards);
+            game.sort(selectedCards);
 
-        if ( game.canPut(selectedCards) == false ) {
-            alert('can not put this cards!');
-            return false;
-        }
-
-        // TODO  verify whether can put
-
-        // TODO send to server
-        socket.emit('put', {
-            cards: selectedCards,
-            playerId: clientId
-        });
-
-        renderer.drawBottomBox();
-        renderer.drawBottomOutbox(selectedCards);
-
-    });
-    $('#btnHold').click(function(){
-        socket.emit('put', {
-            cards: [],
-            playerId: clientId
-        });
-    });
-    $('#btnPrompt').click(function(){
-        game.prompt();
-    });
-
-    $('#quit_btn').click(function() {
-        smoke.confirm('are you sure to quit the game?', function(e){
-            if ( e ) {
-                // confirm
-                socket.emit('leave', {
-                    playerId: clientId
-                });
-            } else {
-                // cancel
+            if (game.canPut(selectedCards) == false) {
+                alert('can not put this cards!');
+                return false;
             }
+
+            // TODO  verify whether can put
+
+            // TODO send to server
+            socket.emit('put', {
+                cards: selectedCards,
+                playerId: clientId
+            });
+
+            renderer.drawBottomBox();
+            renderer.drawBottomOutbox(selectedCards);
+
         });
-    });
+        $('#btnHold').click(function () {
+            socket.emit('put', {
+                cards: [],
+                playerId: clientId
+            });
+        });
+        $('#btnPrompt').click(function () {
+            game.prompt();
+        });
 
-    $('#join_btn').click(function(){
-
-        
-        smoke.prompt("what is your name", function(name) {
-            if (name) {
-                //smoke.signal('name is: ' + name );
-                $('#player_name').html(name);
-                var robotCnt = $('#robot_cnt').val();
-                socket.emit('join', 
-                    {
-                        roomId: $('#select_room_id').val(),
-                        playerId: clientId,
-                        playerName: name,
-                        robotCnt: robotCnt
+        $('#quit_btn').click(function () {
+            smoke.confirm('are you sure to quit the game?', function (e) {
+                if (e) {
+                    // confirm
+                    socket.emit('leave', {
+                        playerId: clientId
                     });
-                
-
-            } else {
-               smoke.signal('sorry, name required');
-            }
+                } else {
+                    // cancel
+                }
+            });
         });
-    });
+
+        $('#join_btn').click(function () {
+            //        smoke.prompt("what is your name", function(name) {
+            //            if (name) {
+            //                //smoke.signal('name is: ' + name );
+            //                $('#player_name').html(name);
+            //                var robotCnt = $('#robot_cnt').val();
+            //                socket.emit('join', 
+            //                    {
+            //                        roomId: $('#select_room_id').val(),
+            //                        playerId: clientId,
+            //                        playerName: name,
+            //                        robotCnt: robotCnt
+            //                    });
+            //                
+
+            //            } else {
+            //               smoke.signal('sorry, name required');
+            //            }
+            //        });
+
+            var name = "short";
+            $('#player_name').html(name);
+            var robotCnt = $('#robot_cnt').val();
+            socket.emit('join',
+            {
+                roomId: $('#select_room_id').val(),
+                playerId: clientId,
+                playerName: name,
+                robotCnt: robotCnt
+            });
+        });
     }
 
     Controller.prototype.mouseDown = function (x, y) {

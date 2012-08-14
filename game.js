@@ -173,14 +173,14 @@
     }
 
     Game.prototype.ready = function () {
-        return ( this.players.length == 4 );
+        return (this.players.length == 4);
     }
 
     Game.prototype.start = function () {
 
         // reset cards
         this.deck = [];
-        for(var i = 0; i<4; i++ ) {
+        for (var i = 0; i < 4; i++) {
             this.players[i].cards = [];
             this.players[i].cardsNum = 0;
         }
@@ -255,8 +255,8 @@
             i--;
         }
 
-        for( i = 0; i < 54 ; i++) {
-            this.players[ i%4 ].cards.push(this.deck[i]);
+        for (i = 0; i < 54; i++) {
+            this.players[i % 4].cards.push(this.deck[i]);
         }
         this.players[0].cardsNum = this.players[0].cards.length;
         this.players[1].cardsNum = this.players[1].cards.length;
@@ -452,7 +452,7 @@
         }
         this.unchooseAll(cards);
         var j = this.getCardType(lastCards);
-        alert(j);
+
         for (var i = this.PutType.SINGLE; i < this.PutType.INVALID; i++) {
             if (this.rule[i][j] != 0) {
                 if (this.chooseCard(cards, lastCards, start, i, this.rule[i][j] == 1 ? false : true)) {
