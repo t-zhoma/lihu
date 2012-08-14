@@ -100,7 +100,7 @@
         // check is game over
         // if over return winner idx
         for ( var i in this.players ) {
-            if ( this.players[i].cardsNum == 0 ) {
+            if ( this.players[i].cardsNum <= 0 ) {
                 return true;
             }
         }
@@ -241,7 +241,7 @@
             i--;
         }
 
-        for( i = 0; i < 54 ; i++) {
+        for( i = 0; i < 52 ; i++) {
             this.players[ i%4 ].cards.push(this.deck[i]);
         }
         this.players[0].cardsNum = 13;
