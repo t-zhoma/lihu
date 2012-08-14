@@ -280,7 +280,7 @@ io.sockets.on('connection', function(socket) {
 		//}
 		// send message to user
 
-		if ( curRoomId == false || rooms[ curRoomId].players.length != 0 ) {
+		if ( curRoomId != false && rooms[ curRoomId].players.length != 0 ) {
 			for(var idx in rooms[ curRoomId ].players) {
 				var player = rooms[ curRoomId ].players[ idx ];
 				if ( player.isRobot == true ) continue ;
