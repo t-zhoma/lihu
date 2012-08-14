@@ -40,7 +40,7 @@ var curGame = false;
 var curPlayer = false;
 
 io.sockets.on('connection', function (socket) {
-    console.log(socket.id);
+    //##console.log(socket.id);
     observerCount++;
     //socket.emit('enter room', {
     //	players: curGame.players
@@ -52,7 +52,7 @@ io.sockets.on('connection', function (socket) {
 
     // player join the game
     socket.on('join', function (data) {
-        console.log('recv join request from ' + data);
+        //##console.log('recv join request from ' + data);
         // if enough player, start the game
         roomId = data.roomId;
         //if ( games[roomId] == undefined ) {
@@ -191,9 +191,9 @@ io.sockets.on('connection', function (socket) {
             while (nextPutPlayer.isRobot == true) {
                 // is robot. 
                 // current stratogy is just hold.
-//                curGame.choosePrompt(nextPutPlayer.cards, curGame.lastCards);
-//                var promptCards = curGame.getSelectedCards(nextPutPlayer.cards);
-//                console.log(promptCards.length);
+                curGame.choosePrompt(nextPutPlayer.cards, curGame.lastCards);
+                var promptCards = curGame.getSelectedCards(nextPutPlayer.cards);
+                curGame.put(nextPutPlayer.id, promptCards);
 
                 nextPutPlayer = curGame.getNextPutPlayer();
                 // send message to user
@@ -209,8 +209,7 @@ io.sockets.on('connection', function (socket) {
                         players: players,
                         playerId: player.id,
                         nextPutPlayerId: nextPutPlayer.id,
-                        putCards: []
-
+                        putCards: promptCards
                     });
                 }
 
@@ -222,7 +221,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function (data) {
-        console.log('recv disconnect', data);
+        //##console.log('recv disconnect', data);
         gameOver(false);
         //observerCount--;
         //game.leave(playerId);

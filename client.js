@@ -81,11 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // bradcast get user put cards and server result
     socket.on('put', function (data) {
         //##console.log('resv put');
-
         // update player cards and score status
 
         game.fillbox(data.players);
-        game.lastCards = data.putCards; // put cards
+        if (data.putCards.length != 0) { game.lastCards = data.putCards; }
+        
         renderer.drawPutCards(data.putCards);
         game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
@@ -100,22 +100,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // start game, get cards from server
     socket.on('game start', function (data) {
-        alert('game start');
         game.fillbox(data.players);
         game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
         game.sort(game.bb.cards);
         renderer.drawBox();
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
-            alert("enable");
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
         } else {
-            alert("disable");
             $('#btnPut').attr('disabled', false);
             $('#btnHold').attr('disabled', false);
         }
-
     });
 
     // game over

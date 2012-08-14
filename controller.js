@@ -49,7 +49,6 @@
         });
     });
     $('#btnPrompt').click(function(){
-        alert('prompt');
         game.prompt();
     });
 

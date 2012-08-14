@@ -82,19 +82,15 @@
     }
 
     Game.prototype.getNextPutPlayer = function () {
-        // clockwise
+        // anticlockwise
         this.curPutPlayerIdx = parseInt(this.curPutPlayerIdx);
-        this.curPutPlayerIdx = (this.curPutPlayerIdx + 1) % 4;
+        this.curPutPlayerIdx = (this.curPutPlayerIdx - 1 + 4) % 4;
         return this.players[this.curPutPlayerIdx];
     }
 
     Game.prototype.getNextPlayerIdx = function (curIdx) {
-        return (curIdx + 1) % 4;
+        return (curIdx - 1 + 4) % 4;
     }
-    Game.prototype.getPairPlayerIdx = function (curIdx) {
-        return (curIdx + 2) % 4;
-    }
-
 
     Game.prototype.isGameOver = function () {
         // check is game over
@@ -201,8 +197,7 @@
     };
 
     Game.prototype.prompt = function () {
-        // TODO
-        this.choosePrompt(this.bb.cards, selectedCards);
+        this.choosePrompt(this.bb.cards, this.lastCards);
         renderer.drawBottomBox();
     };
 
@@ -444,13 +439,16 @@
         }
         this.unchooseAll(cards);
         var j = this.getCardType(lastCards);
+        alert(j);
         for (var i = this.PutType.SINGLE; i < this.PutType.INVALID; i++) {
             if (this.rule[i][j] != 0) {
                 if (this.chooseCard(cards, lastCards, start, i, this.rule[i][j] == 1 ? false : true)) {
-                    return;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     Game.prototype.removeSelectedCards = function (cards) {
