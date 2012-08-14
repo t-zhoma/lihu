@@ -47,7 +47,7 @@ rooms.push(new Game());
 
 
 var io = require('socket.io').listen(server);
-io.set('log level', 2);
+io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
     console.log(socket.id);
@@ -56,17 +56,27 @@ io.sockets.on('connection', function (socket) {
     //	players: curGame.players
     //});
 
-    socket.on('data', function (data) {
-        socket.emit('data', data);
-    });
-
-    // player join the game
-    socket.on('join', function (data) {
+    // player enter the room
+    /* recieve
+	data = {
+		roomId : ,
+		seatId : ,
+		playerId : ,
+		playerName : ,
+		robotCnt : , 
+	}
+    */
+    socket.on('EnterRoom', function (data) {
         console.log('recv join request from ' + data);
         // if enough player, start the game
 
         if (isNaN(data.roomId)) curRoomId = 0;
         else curRoomId = parseInt(data.roomId);
+
+        var seatId = data.seatId;
+        if (isNaN(seatId)) seatId = 0;
+        else seatId = parseInt(seatId);
+
 
         console.log('room id ' + curRoomId);
         //if ( games[roomId] == undefined ) {
@@ -75,7 +85,7 @@ io.sockets.on('connection', function (socket) {
         //curGame= games[roomId];	
         if (curRoomId >= rooms.length) {
             // invalid rooms
-            socket.emit('join', {
+            socket.emit('enter room', {
                 code: 1,
                 errorMsg: 'invalid room, please rejoin'
             });
@@ -103,7 +113,7 @@ io.sockets.on('connection', function (socket) {
         // already join the game
         for (var i in rooms[curRoomId].players) {
             if (data.playerId == rooms[curRoomId].players[i].id) {
-                socket.emit('join', {
+                socket.emit('EnterRoom', {
                     code: 0,
                     msg: ''
                 });
@@ -112,7 +122,7 @@ io.sockets.on('connection', function (socket) {
         }
 
         if (rooms[curRoomId].players.length == 4) {
-            socket.emit('join', {
+            socket.emit('EnterRoom', {
                 code: 1,
                 errorMsg: 'room is full'
             });
@@ -131,9 +141,9 @@ io.sockets.on('connection', function (socket) {
         for (var idx in rooms[curRoomId].players) {
             var player = rooms[curRoomId].players[idx];
             if (player.isRobot == true) continue;
-            io.sockets.socket(player.socketId).emit('join', returnData);
+            io.sockets.socket(player.socketId).emit('EnterRoom', returnData);
         }
-        socket.emit('join', returnData);
+        // socket.emit('join', returnData);
 
         // could start
         if (rooms[curRoomId].ready()) {
@@ -142,13 +152,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     // quit game
-    socket.on('leave', function (data) {
+    /*
+     player leave room
+	data = {
+		playerId : ,
+		roomId : ,
+	}
+    */
+    socket.on('LeaveRoom', function (data) {
         console.log('quit game');
-        gameOver(data);
+        leaveRoom(data);
     });
 
     // user put cards
-    socket.on('put', function (data) {
+    socket.on('Put', function (data) {
         console.log('recv client put');
 
         // TODO verify put cards
@@ -172,7 +189,7 @@ io.sockets.on('connection', function (socket) {
                 // empty cards
                 if (idx2 != idx) players.cards = [];
             }
-            io.sockets.socket(player.socketId).emit('put', {
+            io.sockets.socket(player.socketId).emit('Put', {
                 players: players,
                 playerId: player.id,
                 nextPutPlayerId: nextPutPlayer.id,
@@ -181,12 +198,13 @@ io.sockets.on('connection', function (socket) {
             });
         }
 
+        // game over , we have a winner
         if (rooms[curRoomId].isGameOver() == true) {
-            // game over , we have a winner
+            
             for (var idx in rooms[curRoomId].players) {
                 var player = rooms[curRoomId].players[idx];
                 if (player.isRobot == true) continue;
-                io.sockets.socket(player.socketId).emit('game over', {
+                io.sockets.socket(player.socketId).emit('RoundOver', {
                     winnerId: rooms[curRoomId].getWinnerId(),
                     players: rooms[curRoomId].players,
                     putCards: data.cards
@@ -196,9 +214,6 @@ io.sockets.on('connection', function (socket) {
             if (rooms[curRoomId].ready()) {
                 gameStart();
             }
-
-
-
         } else {
             while (nextPutPlayer.isRobot == true) {
                 // is robot. 
@@ -217,7 +232,7 @@ io.sockets.on('connection', function (socket) {
                         // empty cards
                         if (idx2 != idx) players.cards = [];
                     }
-                    io.sockets.socket(player.socketId).emit('put', {
+                    io.sockets.socket(player.socketId).emit('Put', {
                         players: players,
                         playerId: player.id,
                         nextPutPlayerId: nextPutPlayer.id,
@@ -237,13 +252,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function (data) {
         console.log('recv disconnect', data);
-        gameOver(false);
-        //observerCount--;
-        //game.leave(playerId);
-        // If this was a player, it just left
-        //if (playerId) {
-        //  socket.broadcast.emit('leave', {name: playerId, timeStamp: new Date()});
-        //}
+        leaveRoom(false);
     });
 
     /*
@@ -269,14 +278,14 @@ io.sockets.on('connection', function (socket) {
                 // empty cards
                 if (idx2 != idx) players.cards = [];
             }
-            io.sockets.socket(player.socketId).emit('game start', {
+            io.sockets.socket(player.socketId).emit('RoundStart', {
                 players: players,
                 playerId: player.id,
                 nextPutPlayerId: rooms[curRoomId].players[rooms[curRoomId].curPutPlayerIdx].id
             });
         }
     }
-    function gameOver(data) {
+    function leaveRoom(data) {
         //if ( data != false ) {
         //	leavePlayer = rooms[ curRoomId ].players[ rooms[ curRoomId ].getIdxByPlayerId( data.playerId) ];
         //	console.log('user leave game : ' + leavePlayer.name );
@@ -287,7 +296,7 @@ io.sockets.on('connection', function (socket) {
             for (var idx in rooms[curRoomId].players) {
                 var player = rooms[curRoomId].players[idx];
                 if (player.isRobot == true) continue;
-                io.sockets.socket(player.socketId).emit('leave', data);
+                io.sockets.socket(player.socketId).emit('LeaveRoom', data);
             }
             rooms[curRoomId].over();
         }

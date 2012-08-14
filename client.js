@@ -41,17 +41,17 @@ document.addEventListener('DOMContentLoaded', function () {
     //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://localhost:8080');
 
-    socket.on('enter room', function (data) {
-        alert(" ");
-        if (data == undefined || data.players == false) {
-            $('#select_robot').show();
-        } else {
-            $('#select_robot').hide();
-        }
-
-    });
+    
     // start game, get cards from server
-    socket.on('join', function (data) {
+    /*
+    var returnData = {
+            code: 0/1,
+            errorMsg: '', // if code = 1
+            players: rooms[curRoomId].players,
+            roomId: curRoomId
+        };
+    */
+    socket.on('EnterRoom', function (data) {
 
         //##console.log('resv server join' + data);
 
@@ -78,7 +78,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // bradcast get user put cards and server result
-    socket.on('put', function (data) {
+    /*
+    data = {
+        lastPut:
+        curPut:
+        players: players,
+        nextPutPlayerId: ,
+    }
+    */
+    socket.on('Put', function (data) {
         //##console.log('resv put');
         // update player cards and score status
 
@@ -98,7 +106,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // start game, get cards from server
-    socket.on('game start', function (data) {
+    /*
+    data = {
+        players: players,
+        nextPutPlayerId: 
+    }
+    */
+    socket.on('RoundStart', function (data) {
         game.fillbox(data.players);
         game.buildCardOrder();
         game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
@@ -121,17 +135,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // game over
-    socket.on('game over', function (data) {
-        alert('game over! winner is ' + game.players[game.getIdxByPlayerId(data.winnerId)].name);
+    socket.on('RoundOver', function (data) {
+        alert('round over! winner is ' + game.players[game.getIdxByPlayerId(data.winnerId)].name);
     });
 
-    socket.on('leave', function (data) {
+    socket.on('LeaveRoom', function (data) {
         //leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];
         //console.log('user leave the game : ' + leavePlayer.name );
         alert('somebody leaved the game ');
         game.over();
-        $('#room_block').fadeIn('slow');
-        $('#home').fadeOut('slow');
+        
     });
 
     $('#status').html('');

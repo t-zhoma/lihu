@@ -33,7 +33,7 @@
             // TODO  verify whether can put
 
             // TODO send to server
-            socket.emit('put', {
+            socket.emit('Put', {
                 cards: selectedCards,
                 playerId: clientId
             });
@@ -43,7 +43,7 @@
 
         });
         $('#btnHold').click(function () {
-            socket.emit('put', {
+            socket.emit('Put', {
                 cards: [],
                 playerId: clientId
             });
@@ -56,9 +56,11 @@
             smoke.confirm('are you sure to quit the game?', function (e) {
                 if (e) {
                     // confirm
-                    socket.emit('leave', {
+                    socket.emit('LeaveRoom', {
                         playerId: clientId
                     });
+                    $('#room_block').fadeIn('slow');
+                    $('#home').fadeOut('slow');
                 } else {
                     // cancel
                 }
@@ -88,7 +90,7 @@
             var name = "short";
             $('#player_name').html(name);
             var robotCnt = $('#robot_cnt').val();
-            socket.emit('join',
+            socket.emit('EnterRoom',
             {
                 roomId: $('#select_room_id').val(),
                 playerId: clientId,
