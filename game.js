@@ -176,7 +176,19 @@
         
     }
 
+    Game.prototype.ready = function () {
+        return ( this.players.length == 4 );
+    }
+
     Game.prototype.start = function () {
+
+        // reset cards
+        this.deck = [];
+        for(var i = 0; i<4; i++ ) {
+            this.players[i].cards = [];
+            this.players[i].cardsNum = 0;
+        }
+
         this.builddeck();
         this.shuffle();
 
@@ -221,6 +233,7 @@
         var n;
         var si;
         var src;
+
         for (var si = 0; si < 4; si++) {
             for (var n = 0; n < 13; n++) {
                 src = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
@@ -241,13 +254,13 @@
             i--;
         }
 
-        for( i = 0; i < 52 ; i++) {
+        for( i = 0; i < 54 ; i++) {
             this.players[ i%4 ].cards.push(this.deck[i]);
         }
-        this.players[0].cardsNum = 13;
-        this.players[1].cardsNum = 13;
-        this.players[2].cardsNum = 13;
-        this.players[3].cardsNum = 13;
+        this.players[0].cardsNum = this.players[0].cards.length;
+        this.players[1].cardsNum = this.players[1].cards.length;
+        this.players[2].cardsNum = this.players[2].cards.length;
+        this.players[3].cardsNum = this.players[3].cards.length;
 
     }
 

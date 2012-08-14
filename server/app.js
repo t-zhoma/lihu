@@ -60,7 +60,7 @@ io.sockets.on('connection', function(socket) {
 
 		
 
-		if ( curGame == false ) {
+		if ( curGame == false || curGame.players.length == 0 ) {
 			console.log('new game');
 			curGame = new Game();
 			var robotCnt = 0;
@@ -109,26 +109,8 @@ io.sockets.on('connection', function(socket) {
 		socket.emit('join', returnData);
 
 		// could start
-		if ( curGame.players.length == 4 ) {
-			console.log('game start');
-			// build deck and shuffe
-			curGame.start();
-			// send poke
-			for(var idx in curGame.players) {
-				var player = curGame.players[ idx ];
-				if ( player.isRobot == true ) continue ;
-				var players = curGame.players;
-				for( var idx2 in players ) {
-					// empty cards
-					if ( idx2 != idx ) players.cards = [];
-				}
-				io.sockets.socket( player.socketId ).emit('game start' ,{
-					players: players,
-					playerId: player.id,
-					nextPutPlayerId: curGame.players[ curGame.curPutPlayerIdx ].id
-
-				});
-			}
+		if ( curGame.ready() ) {
+			gameStart();
 			
 		}
 	});
@@ -151,19 +133,6 @@ io.sockets.on('connection', function(socket) {
 		// update cards & scores
 		curGame.put(data.playerId, data.cards);
 
-		if ( curGame.isGameOver() == true ) {
-			// game over , we have a winner
-			for( var idx in curGame.players ) {
-				var player = curGame.players[ idx ];
-				if ( player.isRobot == true ) continue;
-				io.sockets.socket( player.socketId ).emit('game over', {
-					winnerId: curGame.getWinnerId(),
-					players: curGame.players,
-					putCards: data.cards
-				});
-			}
-
-		} else {
 			var nextPutPlayer = curGame.getNextPutPlayer();
 			console.log( curGame.curPutPlayerIdx );
 
@@ -186,34 +155,54 @@ io.sockets.on('connection', function(socket) {
 				});
 			}
 
-
-			while ( nextPutPlayer.isRobot == true ) {
-				// is robot. 
-				// current stratogy is just hold.
-
-				nextPutPlayer = curGame.getNextPutPlayer();
-				// send message to user
+			if ( curGame.isGameOver() == true ) {
+				// game over , we have a winner
 				for( var idx in curGame.players ) {
 					var player = curGame.players[ idx ];
 					if ( player.isRobot == true ) continue;
-					var players = curGame.players;
-					for( var idx2 in players ) {
-						// empty cards
-						if ( idx2 != idx ) players.cards = [];
-					}
-					io.sockets.socket( player.socketId ).emit('put', {
-						players: players,
-						playerId: player.id,
-						nextPutPlayerId: nextPutPlayer.id,
-						putCards: []
-
+					io.sockets.socket( player.socketId ).emit('game over', {
+						winnerId: curGame.getWinnerId(),
+						players: curGame.players,
+						putCards: data.cards
 					});
 				}
 
-				
+				if ( curGame.ready() ) {
+					gameStart();
+				}
+
+
+
+			} else {
+				while ( nextPutPlayer.isRobot == true ) {
+					// is robot. 
+					// current stratogy is just hold.
+
+					nextPutPlayer = curGame.getNextPutPlayer();
+					// send message to user
+					for( var idx in curGame.players ) {
+						var player = curGame.players[ idx ];
+						if ( player.isRobot == true ) continue;
+						var players = curGame.players;
+						for( var idx2 in players ) {
+							// empty cards
+							if ( idx2 != idx ) players.cards = [];
+						}
+						io.sockets.socket( player.socketId ).emit('put', {
+							players: players,
+							playerId: player.id,
+							nextPutPlayerId: nextPutPlayer.id,
+							putCards: []
+
+						});
+					}
+
+					
+				}
+
 			}
 
-		}
+		
 
 	});
 
@@ -238,6 +227,27 @@ io.sockets.on('connection', function(socket) {
 		console.log('sync send');
 	}, 2000);
 */
+	function gameStart() {
+		console.log('game start');
+			// build deck and shuffe
+			curGame.start();
+			// send poke
+			for(var idx in curGame.players) {
+				var player = curGame.players[ idx ];
+				if ( player.isRobot == true ) continue ;
+				var players = curGame.players;
+				for( var idx2 in players ) {
+					// empty cards
+					if ( idx2 != idx ) players.cards = [];
+				}
+				io.sockets.socket( player.socketId ).emit('game start' ,{
+					players: players,
+					playerId: player.id,
+					nextPutPlayerId: curGame.players[ curGame.curPutPlayerIdx ].id
+
+				});
+			}
+	}
 	function gameOver(data) {
 		if ( data != false ) {
 			leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];

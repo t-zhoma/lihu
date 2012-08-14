@@ -73,6 +73,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // save user
         game.players = data.players;
+
+        $('#home #game').hide();
+        $('#home #waiting').show();
+        var userHtml = '';
+        for( var idx in data.players ) {
+            userHtml += '<li>' + data.players[idx].name + '</li>';
+        }
+        $('#home #waiting #player_list').html(userHtml);
         
 
 
@@ -104,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         game.fillbox( data.players );
         game.curPutPlayerIdx = game.getIdxByPlayerId( data.nextPutPlayerId );
         game.sort( game.bb.cards);
+        renderer.emptyPutCards();
         renderer.drawBox();
         $('#putter_name').html( game.players[ game.curPutPlayerIdx ].name );
 
@@ -114,6 +123,10 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#btnPut').attr('disabled', false);
             $('#btnHold').attr('disabled', false);
         }
+
+        // start game
+        $('#home #waiting').hide();
+        $('#home #game').show();
 
     });
 
