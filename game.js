@@ -82,19 +82,15 @@
     }
 
     Game.prototype.getNextPutPlayer = function () {
-        // clockwise
+        // anticlockwise
         this.curPutPlayerIdx = parseInt(this.curPutPlayerIdx);
-        this.curPutPlayerIdx = (this.curPutPlayerIdx + 1) % 4;
+        this.curPutPlayerIdx = (this.curPutPlayerIdx - 1 + 4) % 4;
         return this.players[this.curPutPlayerIdx];
     }
 
     Game.prototype.getNextPlayerIdx = function (curIdx) {
-        return (curIdx + 1) % 4;
+        return (curIdx - 1 + 4) % 4;
     }
-    Game.prototype.getPairPlayerIdx = function (curIdx) {
-        return (curIdx + 2) % 4;
-    }
-
 
     Game.prototype.isGameOver = function () {
         // check is game over
@@ -177,14 +173,14 @@
     }
 
     Game.prototype.ready = function () {
-        return ( this.players.length == 4 );
+        return (this.players.length == 4);
     }
 
     Game.prototype.start = function () {
 
         // reset cards
         this.deck = [];
-        for(var i = 0; i<4; i++ ) {
+        for (var i = 0; i < 4; i++) {
             this.players[i].cards = [];
             this.players[i].cardsNum = 0;
         }
@@ -195,7 +191,9 @@
 
         // sort cards
         for (var idx in this.players) {
-            this.sort(this.players[idx].cards);
+            var cards = this.players[idx].cards;
+            if ( cards == undefined ) continue;
+            this.sort( cards );
         }
 
         // start user
@@ -213,8 +211,7 @@
     };
 
     Game.prototype.prompt = function () {
-        // TODO
-        this.choosePrompt(this.bb.cards, selectedCards);
+        this.choosePrompt(this.bb.cards, this.lastCards);
         renderer.drawBottomBox();
     };
 
@@ -260,8 +257,8 @@
             i--;
         }
 
-        for( i = 0; i < 54 ; i++) {
-            this.players[ i%4 ].cards.push(this.deck[i]);
+        for (i = 0; i < 54; i++) {
+            this.players[i % 4].cards.push(this.deck[i]);
         }
         this.players[0].cardsNum = this.players[0].cards.length;
         this.players[1].cardsNum = this.players[1].cards.length;
@@ -457,13 +454,16 @@
         }
         this.unchooseAll(cards);
         var j = this.getCardType(lastCards);
+
         for (var i = this.PutType.SINGLE; i < this.PutType.INVALID; i++) {
             if (this.rule[i][j] != 0) {
                 if (this.chooseCard(cards, lastCards, start, i, this.rule[i][j] == 1 ? false : true)) {
-                    return;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     Game.prototype.removeSelectedCards = function (cards) {

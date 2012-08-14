@@ -7,17 +7,11 @@
     };
 
     CanvasRenderer.prototype.drawBox = function () {
-        //alert("0");
         this.drawBottomBox();
-        //alert("1");
         this.drawTopBox();
-        //alert("2");
         this.drawLeftBox();
-        //alert("3");
         this.drawRightBox();
-        //alert("4");
-        //this.drawPlayersInfo();
-        //alert("5");
+        this.drawPlayersInfo();
     };
 
     CanvasRenderer.prototype.emptyPutCards = function () {
@@ -155,32 +149,32 @@
     }
 
 
-    CanvasRenderer.prototype.drawPutCards = function(putCards) {
+    CanvasRenderer.prototype.drawPutCards = function (putCards) {
         // put player idx
         var putIdx = game.curPutPlayerIdx;
         // cur player idx
         var curIdx = game.getCurrentPlayerIdx();
 
         // bb
-        if ( curIdx == putIdx ) {
+        if (curIdx == putIdx) {
             renderer.drawBottomBox();
             renderer.drawBottomOutbox(putCards);
         }
 
         // lb
-        if ( (curIdx + 1 ) % 4 == putIdx ) {
+        if ((curIdx + 1) % 4 == putIdx) {
             renderer.drawLeftBox();
             renderer.drawLeftOutbox(putCards);
         }
 
         // tb
-        if ( (curIdx + 2 ) % 4 == putIdx ) {
+        if ((curIdx + 2) % 4 == putIdx) {
             renderer.drawTopBox();
             renderer.drawTopOutbox(putCards);
         }
 
         // rb
-        if ( (curIdx + 3 ) % 4 == putIdx ) {
+        if ((curIdx + 3) % 4 == putIdx) {
             renderer.drawRightBox();
             renderer.drawRightOutbox(putCards);
         }
@@ -189,37 +183,35 @@
 
     }
 
-    CanvasRenderer.prototype.drawPlayersInfo = function() {
+    CanvasRenderer.prototype.drawPlayersInfo = function () {
 
         var curPlayerIdx = game.getCurrentPlayerIdx();
         var player;
         var curBox;
         this.ctx.font = '20pt Calibri';
+
         // bottom box
-        player = game.players[ curPlayerIdx ];
+        player = game.players[curPlayerIdx];
         //this.ctx.fillText(player.name, );
-        console.log(curPlayerIdx);
-        curPlayerIdx = game.getNextPlayerIdx( curPlayerIdx );
+        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+
         // left box
-        console.log(curPlayerIdx);
-        player = game.players[ curPlayerIdx ];
-        curBox  = game.lob.rect;
-        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130 );
-        curPlayerIdx = game.getNextPlayerIdx( curPlayerIdx );
+        player = game.players[curPlayerIdx];
+        curBox = game.lob.rect;
+        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130);
+        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+
         // up box
+        player = game.players[curPlayerIdx];
+        curBox = game.tob.rect;
+        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50);
+        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-        console.log(curPlayerIdx);
-        player = game.players[ curPlayerIdx ];
-        curBox  = game.tob.rect;
-        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50 );
-        curPlayerIdx = game.getNextPlayerIdx( curPlayerIdx );
         // right box
-        console.log(curPlayerIdx);
-        player = game.players[ curPlayerIdx ];
-        curBox  = game.rob.rect;
-        this.ctx.fillText(player.name, curBox.x + 360, curBox.y  + curBox.h + 130 );
-        curPlayerIdx = game.getNextPlayerIdx( curPlayerIdx );
-
+        player = game.players[curPlayerIdx];
+        curBox = game.rob.rect;
+        this.ctx.fillText(player.name, curBox.x + 360, curBox.y + curBox.h + 130);
+        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
     }
 
     // TODO
