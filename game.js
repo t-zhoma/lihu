@@ -1,6 +1,9 @@
 
 (function (exports) {
 
+    ////////////////////////////
+    // Common
+    ////////////////////////////
     var Game = function () {
         // Card parameter
         Game.CARD_WIDTH = 75;
@@ -63,7 +66,10 @@
         this.players = new Array; // 4 player
         this.curPutPlayerIdx; // current put player
 
+        this.lastPos;
         this.lastCards; // last put cards
+
+        this.gameLevel = [0, 0];
 
     };
 
@@ -77,9 +83,30 @@
         return false;
     }
 
-    Game.prototype.getCurrentPlayerIdx = function () {
-        return this.getIdxByPlayerId(clientId);
+
+    Game.prototype.swapcard = function (cards, j, k) {
+        var temp = new Card(cards[j].suit, cards[j].num, cards[j].src);
+        cards[j] = cards[k];
+        cards[k] = temp;
     }
+
+    // Select sort(Desc), need buildCardOrder first
+    Game.prototype.sort = function (cards) {
+        var max;
+        for (var i = 0; i < cards.length - 1; i++) {
+            max = i;
+            for (var j = i; j < cards.length; j++) {
+                if (this.getOrder(cards[j]) > this.getOrder(cards[max])) {
+                    max = j;
+                }
+            }
+            this.swapcard(cards, i, max);
+        }
+    }
+
+    ////////////////////////////
+    // Server Code
+    ////////////////////////////
 
     Game.prototype.getNextPutPlayer = function () {
         // anticlockwise
@@ -92,9 +119,9 @@
         return (curIdx - 1 + 4) % 4;
     }
 
+
+    // check is game over
     Game.prototype.isGameOver = function () {
-        // check is game over
-        // if over return winner idx
         for (var i in this.players) {
             if (this.players[i].cardsNum <= 0) {
                 return true;
@@ -105,13 +132,6 @@
 
     Game.prototype.over = function () {
         this.players = [];
-
-    }
-    Game.prototype.resetBox = function () {
-        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
-        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
-        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
-        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
     }
 
     Game.prototype.getWinnerId = function () {
@@ -123,17 +143,9 @@
         }
     }
 
-    // verify put cards
-    Game.prototype.canPut = function (cards) {
-        // TODO
-        // 
-        return true;
-    }
-
+    // update user cards
+    // caculate user score
     Game.prototype.put = function (putPlayerId, cards) {
-        // update user cards
-        // caculate user score
-
         // update cards status
 
         if (cards.length == 0) {
@@ -168,14 +180,15 @@
             }
             this.lastCards = cards;
         }
-
-
     }
 
+
+    // game ready
     Game.prototype.ready = function () {
         return (this.players.length == 4);
     }
 
+    // game start
     Game.prototype.start = function () {
 
         // reset cards
@@ -204,32 +217,6 @@
         }
         this.curPutPlayerIdx = startIdx;
     };
-
-    Game.prototype.hold = function () {
-        // TODO
-        renderer.drawBottomOutbox(new Array);
-    };
-
-    Game.prototype.prompt = function () {
-        this.choosePrompt(this.bb.cards, this.lastCards);
-        renderer.drawBottomBox();
-    };
-
-    Game.prototype.buildImgSrcs = function () {
-        var n;
-        var si;
-        var picname;
-        for (var si = 0; si < 4; si++) {
-            for (var n = 0; n < 13; n++) {
-                picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
-                this.imgSrcs.push(picname);
-            }
-        }
-        this.imgSrcs.push("img\\joker-b-75.png");
-        this.imgSrcs.push("img\\joker-r-75.png");
-        this.imgSrcs.push("img\\back-blue-75-1.png");
-        this.imgSrcs.push("img\\back-blue-h-75-1.png");
-    }
 
     // Function related to card logic
     Game.prototype.builddeck = function () {
@@ -267,10 +254,57 @@
 
     }
 
-    Game.prototype.swapcard = function (cards, j, k) {
-        var temp = new Card(cards[j].suit, cards[j].num, cards[j].src);
-        cards[j] = cards[k];
-        cards[k] = temp;
+
+
+
+    ////////////////////////////
+    // Clent Code
+    ////////////////////////////
+
+    Game.prototype.getCurrentPlayerIdx = function () {
+        return this.getIdxByPlayerId(clientId);
+    }
+
+    Game.prototype.resetBox = function () {
+        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
+        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
+        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
+        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
+    }
+
+    // verify put cards
+    Game.prototype.canPut = function (cards) {
+        // TODO
+        // 
+        return true;
+    }
+
+
+
+    Game.prototype.hold = function () {
+        // TODO
+        renderer.drawBottomOutbox(new Array);
+    };
+
+    Game.prototype.prompt = function () {
+        this.choosePrompt(this.bb.cards, this.lastCards);
+        renderer.drawBottomBox();
+    };
+
+    Game.prototype.buildImgSrcs = function () {
+        var n;
+        var si;
+        var picname;
+        for (var si = 0; si < 4; si++) {
+            for (var n = 0; n < 13; n++) {
+                picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
+                this.imgSrcs.push(picname);
+            }
+        }
+        this.imgSrcs.push("img\\joker-b-75.png");
+        this.imgSrcs.push("img\\joker-r-75.png");
+        this.imgSrcs.push("img\\back-blue-75-1.png");
+        this.imgSrcs.push("img\\back-blue-h-75-1.png");
     }
 
     Game.prototype.fillbox = function (players) {
@@ -289,20 +323,6 @@
 
     Game.prototype.getOrder = function (card) {
         return this.cardOrder[this.cardFullName(card.suit, card.num)];
-    }
-
-    // Select sort(Desc), need buildCardOrder first
-    Game.prototype.sort = function (cards) {
-        var max;
-        for (var i = 0; i < cards.length - 1; i++) {
-            max = i;
-            for (var j = i; j < cards.length; j++) {
-                if (this.getOrder(cards[j]) > this.getOrder(cards[max])) {
-                    max = j;
-                }
-            }
-            this.swapcard(cards, i, max);
-        }
     }
 
     Game.prototype.getCurrentLevel = function () {
@@ -644,6 +664,11 @@
         return true;
     }
 
+
+    ////////////////////////////
+    // Data Type
+    ////////////////////////////
+
     var Card = function (suit, num, src) {
         this.suit = suit;
         this.num = num;
@@ -683,11 +708,11 @@
         this.cards = [];
         this.cardsNum;
         this.isRobot = false;
+        // ready to start game
+        this.isReady = false;
 
         this.score;
-
         this.socketId;
-
     };
 
     exports.Game = Game;
