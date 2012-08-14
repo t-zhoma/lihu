@@ -7,12 +7,17 @@
     };
 
     CanvasRenderer.prototype.drawBox = function () {
+        //alert("0");
         this.drawBottomBox();
+        //alert("1");
         this.drawTopBox();
+        //alert("2");
         this.drawLeftBox();
+        //alert("3");
         this.drawRightBox();
-
-        this.drawPlayersInfo();
+        //alert("4");
+        //this.drawPlayersInfo();
+        //alert("5");
     };
 
     CanvasRenderer.prototype.emptyPutCards = function () {

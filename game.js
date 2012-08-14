@@ -67,61 +67,61 @@
 
     };
 
-    Game.prototype.getIdxByPlayerId = function(playerId) {
-        for ( var idx in this.players ) {
-            var player = this.players[ idx ] ;
-            if ( player != false && player.id == playerId ) {
+    Game.prototype.getIdxByPlayerId = function (playerId) {
+        for (var idx in this.players) {
+            var player = this.players[idx];
+            if (player != false && player.id == playerId) {
                 return parseInt(idx);
             }
         }
         return false;
     }
 
-    Game.prototype.getCurrentPlayerIdx = function() {
-        return this.getIdxByPlayerId( clientId );
+    Game.prototype.getCurrentPlayerIdx = function () {
+        return this.getIdxByPlayerId(clientId);
     }
 
-    Game.prototype.getNextPutPlayer = function() {
+    Game.prototype.getNextPutPlayer = function () {
         // clockwise
         this.curPutPlayerIdx = parseInt(this.curPutPlayerIdx);
-        this.curPutPlayerIdx = ( this.curPutPlayerIdx + 1 ) % 4;
-        return this.players[ this.curPutPlayerIdx ];
+        this.curPutPlayerIdx = (this.curPutPlayerIdx + 1) % 4;
+        return this.players[this.curPutPlayerIdx];
     }
 
-    Game.prototype.getNextPlayerIdx = function( curIdx ) {
-        return ( curIdx + 1 ) % 4;
-    } 
-    Game.prototype.getPairPlayerIdx = function( curIdx ) {
-        return ( curIdx + 2 ) % 4;
-    } 
+    Game.prototype.getNextPlayerIdx = function (curIdx) {
+        return (curIdx + 1) % 4;
+    }
+    Game.prototype.getPairPlayerIdx = function (curIdx) {
+        return (curIdx + 2) % 4;
+    }
 
 
-    Game.prototype.isGameOver = function() {
+    Game.prototype.isGameOver = function () {
         // check is game over
         // if over return winner idx
-        for ( var i in this.players ) {
-            if ( this.players[i].cardsNum <= 0 ) {
+        for (var i in this.players) {
+            if (this.players[i].cardsNum <= 0) {
                 return true;
             }
         }
         return false;
     }
 
-    Game.prototype.over = function() {
+    Game.prototype.over = function () {
         this.players = [];
 
-    } 
-    Game.prototype.resetBox = function() {
+    }
+    Game.prototype.resetBox = function () {
         this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
         this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
         this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
         this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
     }
 
-    Game.prototype.getWinnerId = function() {
-        if ( this.isGameOver() == false ) return false;
-        for ( var idx in this.players ) {
-            if ( this.players[idx].cardsNum == 0 ) {
+    Game.prototype.getWinnerId = function () {
+        if (this.isGameOver() == false) return false;
+        for (var idx in this.players) {
+            if (this.players[idx].cardsNum == 0) {
                 return this.players[idx].id;
             }
         }
@@ -134,38 +134,38 @@
         return true;
     }
 
-    Game.prototype.put = function(putPlayerId, cards) {
+    Game.prototype.put = function (putPlayerId, cards) {
         // update user cards
         // caculate user score
 
         // update cards status
 
-        if ( cards.length == 0 ) {
+        if (cards.length == 0) {
             // hold
         } else {
             // put
-        
-            for( var idx in this.players ) {
-                var player = this.players[ idx ] ;
-                if ( putPlayerId == player.id ) {
-                    console.log(' cards num ' + cards.length );
-                    
+
+            for (var idx in this.players) {
+                var player = this.players[idx];
+                if (putPlayerId == player.id) {
+                    console.log(' cards num ' + cards.length);
+
                     var tmpCards = [];
-                    for( var idx01 in player.cards ) {
+                    for (var idx01 in player.cards) {
                         var found = false;
                         for (var idx02 in cards) {
-                            if ( player.cards[ idx01 ].isEqual( cards[ idx02 ] ) ) {
+                            if (player.cards[idx01].isEqual(cards[idx02])) {
                                 found = true; break;
                             }
                         }
-                        if ( found == false ) {
-                            tmpCards.push( player.cards[ idx01 ] );
+                        if (found == false) {
+                            tmpCards.push(player.cards[idx01]);
                         }
                     }
-                    
-                    this.players[ idx ].cards = tmpCards;
+
+                    this.players[idx].cards = tmpCards;
                     // simple
-                    this.players[ idx ].cardsNum -= cards.length;
+                    this.players[idx].cardsNum -= cards.length;
 
                     break;
                 }
@@ -173,7 +173,7 @@
             this.lastCards = cards;
         }
 
-        
+
     }
 
     Game.prototype.ready = function () {
@@ -191,12 +191,18 @@
 
         this.builddeck();
         this.shuffle();
+        this.buildCardOrder();
+
+        // sort cards
+        for (var idx in this.players) {
+            this.sort(this.players[idx].cards);
+        }
 
         // start user
         var startIdx = 3;
         // get a none robot user to start
-        while( this.players[ startIdx ].isRobot == true ) {
-            startIdx = ( startIdx + 1 ) % 4;
+        while (this.players[startIdx].isRobot == true) {
+            startIdx = (startIdx + 1) % 4;
         }
         this.curPutPlayerIdx = startIdx;
     };
@@ -271,20 +277,15 @@
     }
 
     Game.prototype.fillbox = function (players) {
-        //for (var i = 0; i < 14; i++) {
-        //   this.bb.cards.push(new Card(this.deck[i].suit, this.deck[i].num, this.deck[i].src));
-        //}
-
         this.players = players;
         var curIdx = this.getCurrentPlayerIdx();
-        this.bb.cards = players[ curIdx ].cards;
-        this.lb.cardsNum = players[ ( curIdx + 1 ) % 4 ].cardsNum;
-        this.tb.cardsNum = players[ ( curIdx + 2 ) % 4 ].cardsNum;
-        this.rb.cardsNum = players[ ( curIdx + 3 ) % 4 ].cardsNum;
+        this.bb.cards = players[curIdx].cards;
+        this.lb.cardsNum = players[(curIdx + 1) % 4].cardsNum;
+        this.tb.cardsNum = players[(curIdx + 2) % 4].cardsNum;
+        this.rb.cardsNum = players[(curIdx + 3) % 4].cardsNum;
     }
 
-
-    // return true when card1 < card2, else return false
+    // return true when card1 < card2, else return false, need buildCardOrder first
     Game.prototype.compare = function (card1, card2) {
         return this.getOrder(card1) < getOrder(card2);
     }
@@ -293,7 +294,7 @@
         return this.cardOrder[this.cardFullName(card.suit, card.num)];
     }
 
-    // Select sort(Desc)
+    // Select sort(Desc), need buildCardOrder first
     Game.prototype.sort = function (cards) {
         var max;
         for (var i = 0; i < cards.length - 1; i++) {
@@ -463,6 +464,20 @@
                 }
             }
         }
+    }
+
+    Game.prototype.removeSelectedCards = function (cards) {
+        for (var i = cards.length - 1; i >= 0; i++) {
+            if (cards[i].selected) { cards.splice(i, 1); }
+        }
+    }
+
+    Game.prototype.getSelectedCards = function (cards) {
+        var temp = new Array;
+        for (var i = 0; i < cards.length; i++) {
+            if (cards[i].selected) { temp.push(cards[i]); }
+        }
+        return temp;
     }
 
     Game.prototype.unchooseAll = function (cards) {
@@ -636,8 +651,8 @@
 
         this.selected = false;
     }
-    Card.prototype.isEqual = function(cardB) {
-        return ( this.suit == cardB.suit && this.num == cardB.num );
+    Card.prototype.isEqual = function (cardB) {
+        return (this.suit == cardB.suit && this.num == cardB.num);
     }
 
     var Box = function (cardsNum, rect) {

@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             $('#select_robot').hide();
         }
-        
+
     });
     // start game, get cards from server
     socket.on('join', function (data) {
@@ -109,11 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
         renderer.emptyPutCards();
         renderer.drawBox();
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
-
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
+            alert("enable");
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
         } else {
+            alert("disable");
             $('#btnPut').attr('disabled', false);
             $('#btnHold').attr('disabled', false);
         }
