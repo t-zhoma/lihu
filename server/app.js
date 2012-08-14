@@ -5,6 +5,7 @@ var pipeFile = function(path, res) {
 	res.writeHead('200');
 	fs.createReadStream(path).pipe(res);
 }
+
 var server = http.createServer(function(req, res) {
 	if (req.url.length == 1)
 		req.url = "/index.html";
@@ -21,6 +22,7 @@ var server = http.createServer(function(req, res) {
 		file.pipe(res);
 	});
 }).listen(8080);
+
 var io = require('socket.io').listen(server);
 
 var gamejs = new require('../game.js');

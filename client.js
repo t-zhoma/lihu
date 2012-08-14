@@ -49,26 +49,29 @@ function init() {
 
 window.onload = preloadImg;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // Globals
     //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://localhost:8080');
 
-    socket.on('enter room', function(data) {
-        if ( data == undefined || data.players == false ) {
+    socket.on('enter room', function (data) {
+        alert(" ");
+        if (data == undefined || data.players == false) {
             $('#select_robot').show();
         } else {
             $('#select_robot').hide();
         }
+        
     });
     // start game, get cards from server
-    socket.on('join', function(data) {
-        console.log('resv server join' + data);
-        
-        if ( data.code != 0 ) {
+    socket.on('join', function (data) {
+
+        //##console.log('resv server join' + data);
+
+        if (data.code != 0) {
             alert('fail to join the game' + data.errorMsg);
-            return ;
+            return;
         }
 
         // save user
@@ -82,22 +85,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         $('#home #waiting #player_list').html(userHtml);
         
-
-
     });
-    
+
     // bradcast get user put cards and server result
-    socket.on('put', function(data) {
-        console.log('resv put');
+    socket.on('put', function (data) {
+        //##console.log('resv put');
 
         // update player cards and score status
-        
-        game.fillbox( data.players );
+
+        game.fillbox(data.players);
         game.lastCards = data.putCards; // put cards
-        renderer.drawPutCards( data.putCards );
-        game.curPutPlayerIdx = game.getIdxByPlayerId( data.nextPutPlayerId );
-        $('#putter_name').html( game.players[ game.curPutPlayerIdx ].name );
-        if ( game.getCurrentPlayerIdx() != game.curPutPlayerIdx ) {
+        renderer.drawPutCards(data.putCards);
+        game.curPutPlayerIdx = game.getIdxByPlayerId(data.nextPutPlayerId);
+        $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
+        if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
         } else {
@@ -107,16 +108,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // start game, get cards from server
-    socket.on('game start', function(data) {
+    socket.on('game start', function (data) {
         alert('game start');
         game.fillbox( data.players );
         game.curPutPlayerIdx = game.getIdxByPlayerId( data.nextPutPlayerId );
         game.sort( game.bb.cards);
         renderer.emptyPutCards();
         renderer.drawBox();
-        $('#putter_name').html( game.players[ game.curPutPlayerIdx ].name );
+        $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
 
-        if ( game.getCurrentPlayerIdx() != game.curPutPlayerIdx ) {
+        if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
         } else {
@@ -130,12 +131,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
 
-    // start game, get cards from server
-    socket.on('game over', function(data) {
-        alert('game over! winner is ' + game.players[ game.getIdxByPlayerId( data.winnerId ) ].name );
+    // game over
+    socket.on('game over', function (data) {
+        alert('game over! winner is ' + game.players[game.getIdxByPlayerId(data.winnerId)].name);
     });
 
-    socket.on('leave', function(data) {
+    socket.on('leave', function (data) {
         //leavePlayer = curGame.players[ curGame.getIdxByPlayerId( data.playerId) ];
         //console.log('user leave the game : ' + leavePlayer.name );
         alert('somebody leaved the game ');
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#status').html('');
     var syncTime = 0;
-    socket.on('time', function(data) {
+    socket.on('time', function (data) {
         syncTime++;
         $('#status').html('sync times: ' + syncTime);
     });
