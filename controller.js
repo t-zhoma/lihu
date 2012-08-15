@@ -78,7 +78,7 @@
                     socket.emit('EnterRoom', 
                     {
                         roomId: $('#select_room_id').val(),
-                        seatId: 0,
+                        seatId: $('#select_seat').val(),
                         playerId: clientId,
                         playerName: name,
                         robotCnt: robotCnt
