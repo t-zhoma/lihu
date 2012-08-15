@@ -296,7 +296,7 @@
 
 
     ////////////////////////////
-    // Clent Code
+    // Client Code
     ////////////////////////////
 
     Game.prototype.getCurrentPlayerIdx = function () {

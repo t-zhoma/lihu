@@ -28,8 +28,7 @@ var gamejs = new require('../game.js');
 var Game = gamejs.Game;
 var Put = gamejs.Put;
 var Player = gamejs.Player;
-var game = new Game();
-var rooms = [];
+var games = [];
 
 var observerCount = 0;
 
@@ -39,13 +38,13 @@ var observerCount = 0;
 var curPlayer = false;
 var curRoomId = false;
 
-// init rooms , five rooms init
-rooms.push(new Game());
-rooms.push(new Game());
-rooms.push(new Game());
-rooms.push(new Game());
-rooms.push(new Game());
-rooms.push(new Game());
+// init games , five games init
+games.push(new Game());
+games.push(new Game());
+games.push(new Game());
+games.push(new Game());
+games.push(new Game());
+games.push(new Game());
 
 
 var io = require('socket.io').listen(server);
@@ -87,8 +86,8 @@ io.sockets.on('connection', function (socket) {
         //	games[roomId] = new Game();
         //}
         //curGame= games[roomId];	
-        if (curRoomId >= rooms.length) {
-            // invalid rooms
+        if (curRoomId >= games.length) {
+            // invalid games
             socket.emit('enter room', {
                 code: 1,
                 errorMsg: 'invalid room, please rejoin'
@@ -96,9 +95,9 @@ io.sockets.on('connection', function (socket) {
             return;
         }
 
-        if (rooms[curRoomId] === false || rooms[curRoomId].players.length == 0) {
+        if (games[curRoomId] === false || games[curRoomId].players.length == 0) {
             console.log('new game');
-            rooms[curRoomId] = new Game();
+            games[curRoomId] = new Game();
             var robotCnt = 0;
             // create robot
             if (!isNaN(data.robotCnt)) {
@@ -107,17 +106,17 @@ io.sockets.on('connection', function (socket) {
                 for (var idx = 1; idx <= robotCnt; idx++) {
                     robot = new Player('robot0' + idx, 'robot0' + idx);
                     robot.isRobot = true;
-                    rooms[curRoomId].players.push(robot);
+                    games[curRoomId].players.push(robot);
                 }
             }
         } else {
-            console.log('player num ' + rooms[curRoomId].players.length);
+            console.log('player num ' + games[curRoomId].players.length);
         }
 
         // already join the game
-        for (var i in rooms[curRoomId].players) {
-        	console.log('room user : ' + rooms[curRoomId].players[i].name + ' ' + rooms[curRoomId].players[i].id);
-            if (data.playerId == rooms[curRoomId].players[i].id) {
+        for (var i in games[curRoomId].players) {
+        	console.log('room user : ' + games[curRoomId].players[i].name + ' ' + games[curRoomId].players[i].id);
+            if (data.playerId == games[curRoomId].players[i].id) {
                 socket.emit('EnterRoom', {
                     code: 0,
                     msg: ''
@@ -126,7 +125,7 @@ io.sockets.on('connection', function (socket) {
             }
         }
 
-        if (rooms[curRoomId].players.length == 4) {
+        if (games[curRoomId].players.length == 4) {
             socket.emit('EnterRoom', {
                 code: 1,
                 errorMsg: 'room is full'
@@ -136,8 +135,8 @@ io.sockets.on('connection', function (socket) {
 
         curPlayer = new Player(data.playerId, data.playerName);
         curPlayer.socketId = socket.id;
-        rooms[curRoomId].players.push(curPlayer);
-        curPlayer.seatId = rooms[curRoomId].players.length - 1;
+        games[curRoomId].players.push(curPlayer);
+        curPlayer.seatId = games[curRoomId].players.length - 1;
 
         // Broadcast that client has joined
         var returnData = {
@@ -147,8 +146,8 @@ io.sockets.on('connection', function (socket) {
 
        	roomBroadCast('EnterRoom', returnData);
        	/*
-        for (var idx in rooms[curRoomId].players) {
-            var player = rooms[curRoomId].players[idx];
+        for (var idx in games[curRoomId].players) {
+            var player = games[curRoomId].players[idx];
             if (player.isRobot == true) continue;
             io.sockets.socket(player.socketId).emit('EnterRoom', returnData);
         }
@@ -156,7 +155,7 @@ io.sockets.on('connection', function (socket) {
 		*/
 
         // could start
-        if (rooms[curRoomId].ready()) {
+        if (games[curRoomId].ready()) {
             roundStart();
         }
     });
@@ -186,17 +185,17 @@ io.sockets.on('connection', function (socket) {
         var curPut = data.put;
 
         // TODO verify put cards
-        if (rooms[curRoomId].canPut(curPut.cards) == false) {
+        if (games[curRoomId].canPut(curPut.cards) == false) {
             // socket.emit error
             return false;
         }
 
 
         // update cards & scores
-        rooms[curRoomId].put(curPut.playerId, curPut.cards);
+        games[curRoomId].put(curPut.playerId, curPut.cards);
 
-        var nextPutPlayer = rooms[curRoomId].getNextPutPlayer();
-        console.log(rooms[curRoomId].curPutPlayerIdx);
+        var nextPutPlayer = games[curRoomId].getNextPutPlayer();
+        console.log(games[curRoomId].curPutPlayerIdx);
 
 
         // send message to user
@@ -209,28 +208,28 @@ io.sockets.on('connection', function (socket) {
         
 
         // game over , we have a winner
-        if (rooms[curRoomId].isGameOver() == true) {
+        if (games[curRoomId].isGameOver() == true) {
             
-            rooms[ curRoomId ].roundOver();
+            games[ curRoomId ].roundOver();
             roomBroadCast('RoundOver', {
-                    winnerId: rooms[curRoomId].getWinnerId()
+                    winnerId: games[curRoomId].getWinnerId()
                 });
 
 
-            if (rooms[curRoomId].ready()) {
+            if (games[curRoomId].ready()) {
                 roundStart();
             }
         } else {
             while (nextPutPlayer.isRobot === true) {
                 // is robot. 
                 // current stratogy is just hold.
-                rooms[curRoomId].choosePrompt(nextPutPlayer.cards, rooms[curRoomId].lastCards);
-                var selectedCards = rooms[curRoomId].getSelectedCards(nextPutPlayer.cards);
-                rooms[curRoomId].put(nextPutPlayer.id, selectedCards);
+                games[curRoomId].choosePrompt(nextPutPlayer.cards, games[curRoomId].lastCards);
+                var selectedCards = games[curRoomId].getSelectedCards(nextPutPlayer.cards);
+                games[curRoomId].put(nextPutPlayer.id, selectedCards);
 
                 var robotPut = new Put(nextPutPlayer.id, selectedCards);
 
-                nextPutPlayer = rooms[curRoomId].getNextPutPlayer();
+                nextPutPlayer = games[curRoomId].getNextPutPlayer();
                 // send message to user
                 roomBroadCast('Put', {
                         nextPutPlayerId: nextPutPlayer.id,
@@ -276,34 +275,34 @@ io.sockets.on('connection', function (socket) {
     function roundStart() {
         console.log('game start');
         // build deck and shuffe
-        rooms[curRoomId].start();
+        games[curRoomId].start();
         // send poke
-        for (var idx in rooms[curRoomId].players) {
-            var player = rooms[curRoomId].players[idx];
+        for (var idx in games[curRoomId].players) {
+            var player = games[curRoomId].players[idx];
             if (player.isRobot == true) continue;
-            var players = rooms[curRoomId].players;
+            var players = games[curRoomId].players;
             for (var idx2 in players) {
                 // empty cards
                 if (idx2 != idx) players.cards = [];
             }
             io.sockets.socket(player.socketId).emit('RoundStart', {
                 players: players,
-                nextPutPlayerId: rooms[curRoomId].lastWinnerId,
-                curLevel: rooms[curRoomId].curLevel
+                nextPutPlayerId: games[curRoomId].lastWinnerId,
+                curLevel: games[curRoomId].curLevel
             });
         }
     }
     function leaveRoom(data) {
         //if ( data != false ) {
-        //	leavePlayer = rooms[ curRoomId ].players[ rooms[ curRoomId ].getIdxByPlayerId( data.playerId) ];
+        //	leavePlayer = games[ curRoomId ].players[ games[ curRoomId ].getIdxByPlayerId( data.playerId) ];
         //	console.log('user leave game : ' + leavePlayer.name );
         //}
         // send message to user
 
-        if (curRoomId !== false && rooms[curRoomId].players.length != 0 && data.playerId !== undefined ) {
+        if (curRoomId !== false && games[curRoomId].players.length != 0 && data.playerId !== undefined ) {
         	var inRoom = false;
-            for (var idx in rooms[curRoomId].players) {
-                var player = rooms[curRoomId].players[idx];
+            for (var idx in games[curRoomId].players) {
+                var player = games[curRoomId].players[idx];
                 if ( player.id == data.playerId ) {
                 	inRoom = true ;
                 	break;
@@ -314,21 +313,21 @@ io.sockets.on('connection', function (socket) {
             if ( inRoom == false ) return ;
             
             roomBroadCast('LeaveRoom', data);
-            rooms[curRoomId].leaveRoom();
-            console.log('leave room num : ' + rooms[curRoomId].players.length);
+            games[curRoomId].leaveRoom();
+            console.log('leave room num : ' + games[curRoomId].players.length);
         }
     }
 
     function roomBroadCast(action, data) {
-    	console.log('broadcast in room  ' + curRoomId + ' ' + action + ' ' + rooms[curRoomId].players.length);
+    	console.log('broadcast in room  ' + curRoomId + ' ' + action + ' ' + games[curRoomId].players.length);
 
-    	if ( curRoomId === false || rooms[curRoomId].players.length == 0) return false;
+    	if ( curRoomId === false || games[curRoomId].players.length == 0) return false;
 
-        for (var idx in rooms[curRoomId].players) {
-	        var player = rooms[curRoomId].players[idx];
+        for (var idx in games[curRoomId].players) {
+	        var player = games[curRoomId].players[idx];
 	        console.log(player.name + ' ');
 	        if (player.isRobot == true) continue;
-	        var players = rooms[curRoomId].players;
+	        var players = games[curRoomId].players;
 	        for (var idx2 in players) {
 	            // empty cards
 	             if (idx2 != idx) players.cards = [];
