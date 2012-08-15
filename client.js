@@ -1,4 +1,19 @@
-game = new Game();
+var ClientGame = function() { }
+
+ClientGame.prototype = new Game();
+//ClientGame.prototype.gameList = [];
+
+//##game = new Game();
+game = new ClientGame();
+game.gameList = [];
+game.seatPos = [new Rect(30, 90, 60, 30), new Rect(90, 30, 30, 60),
+                new Rect(30, 0, 60, 30), new Rect(0, 30, 30, 60)];
+game.isChooseGame = false;
+game.myName = '';
+game.myRoom = -1;
+game.mySeat = -1;
+
+
 game.roomId = 1;
 
 renderer = new Renderer();
@@ -10,7 +25,7 @@ controller = new Controller();
 var clientId = Util.guidGenerator();
 
 
-function preloadImg() { 
+function preloadImg() {
     $('#loading').html('loading... please wait');
     game.buildImgSrcs();
     var imgPreloader = new ImagePreloader(game.imgSrcs, ImagePreloadCallback);
@@ -23,14 +38,13 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     }
 
     Source.imgMap = imgMap;
-    
     $('#loading').hide();
-    $('#home').hide();
-    $('#room_block').show();
+//    $('#home').hide();
+//    $('#room_block').show();
 
-    $('#btnPut').attr('disabled', true);
-    $('#butHold').attr('disabled', true);
-    $('#butPrompt').attr('disabled', true); 
+//    $('#btnPut').attr('disabled', true);
+//    $('#butHold').attr('disabled', true);
+    //    $('#butPrompt').attr('disabled', true);
 }
 
 window.onload = preloadImg;
@@ -41,23 +55,29 @@ document.addEventListener('DOMContentLoaded', function () {
     //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://localhost:8080');
 
-    
+
     // start game, get cards from server
     /*
     var returnData = {
-            code: 0/1,
-            errorMsg: 'xxx', // if code = 1
-            players: ,
-            roomId: ,
-            seatId: 
-        };
+    code: 0/1,
+    errorMsg: 'xxx', // if code = 1
+    players: ,
+    roomId: ,
+    seatId: 
+    };
     */
+    socket.on('GameList', function (data) {
+        game.gameList = data;
+        renderer.drawGameList();
+        game.isChooseGame = true;
+    });
+
     socket.on('EnterRoom', function (data) {
 
         //##console.log('resv server join' + data);
 
         if (data.code != 0) {
-            alert('fail to join the game' + data.errorMsg );
+            alert('fail to join the game' + data.errorMsg);
             return;
         }
 
@@ -81,9 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // bradcast get user put cards and server result
     /*
     data = {
-        curPut:
-        players: players,
-        nextPutPlayerId: ,
+    curPut:
+    players: players,
+    nextPutPlayerId: ,
     }
     */
     socket.on('Put', function (data) {
@@ -91,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // update player cards and score status
 
         game.fillbox(data.players);
-        if (data.curPut.cards.length != 0) { 
-            game.lastPut = data.curPut; 
+        if (data.curPut.cards.length != 0) {
+            game.lastPut = data.curPut;
             game.lastCards = data.curPut.cards; // wait to delete.
         }
 
@@ -111,9 +131,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // start game, get cards from server
     /*
     data = {
-        players: players,
-        nextPutPlayerId: ,
-        curLevel: ,
+    players: players,
+    nextPutPlayerId: ,
+    curLevel: ,
     }
     */
     socket.on('RoundStart', function (data) {
@@ -125,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderer.drawBox();
         $('#putter_name').html(game.players[game.curPutPlayerIdx].name);
-        $('#cur_level').html( data.curLevel);
+        $('#cur_level').html(data.curLevel);
         if (game.getCurrentPlayerIdx() != game.curPutPlayerIdx) {
             $('#btnPut').attr('disabled', true);
             $('#btnHold').attr('disabled', true);
@@ -142,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // round over
     /*
     data = {
-        winnerId: 
+    winnerId: 
     }
     */
     socket.on('RoundOver', function (data) {
@@ -160,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //console.log('user leave the game : ' + leavePlayer.name );
         alert('somebody leaved the game ');
         game.over();
-        
+
     });
 
 
@@ -168,12 +188,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // TODO
     /*
     data = {
-        seatId : ,
-        roomId : ,
-        playerId : ,
+    seatId : ,
+    roomId : ,
+    playerId : ,
     }
     */
-    socket.on('SelectSeat', function(data) {
+    socket.on('SelectSeat', function (data) {
 
     });
 

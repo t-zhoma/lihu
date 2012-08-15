@@ -70,29 +70,29 @@
         });
 
         $('#join_btn').click(function () {
-            smoke.prompt("what is your name", function(name) {
-                if (name) {
-                    //smoke.signal('name is: ' + name );
-                    $('#player_name').html(name);
-                    var robotCnt = $('#robot_cnt').val();
-                    socket.emit('EnterRoom', 
-                    {
-                        roomId: $('#select_room_id').val(),
-                        seatId: 0,
-                        playerId: clientId,
-                        playerName: name,
-                        robotCnt: robotCnt
-                    });
-                } else {
-                    smoke.signal('sorry, name required');
-                }
-            });
+            //##
+            //smoke.prompt("what is your name", function(name) {
+            //if (name) {
+            //                    $('#player_name').html(name);
+            //                    var robotCnt = $('#robot_cnt').val();
+            //                    socket.emit('EnterRoom', 
+            //                    {
+            //                        roomId: $('#select_room_id').val(),
+            //                        seatId: 0,
+            //                        playerId: clientId,
+            //                        playerName: name,
+            //                        robotCnt: robotCnt
+            //                    });
+            //                } else {
+            //                    smoke.signal('sorry, name required');
+            //                }
+            //});
 
-            /*
+
             var name = "short";
             $('#player_name').html(name);
             var robotCnt = $('#robot_cnt').val();
-            game.roomId = parseInt( $('#select_room_id').val() );
+            game.roomId = parseInt($('#select_room_id').val());
             socket.emit('EnterRoom',
             {
                 roomId: $('#select_room_id').val(),
@@ -101,13 +101,52 @@
                 playerName: name,
                 robotCnt: robotCnt
             });
-*/
+
         });
     }
 
     Controller.prototype.mouseDown = function (x, y) {
-        game.startX = x;
-        game.startY = y;
+        if (game.isChooseGame) {
+            for (var i = 0; i < game.gameList.length; i++) {
+                var gameRect = game.gameList[i].rect;
+                if (game.gameList[i].rect.contain(x, y)) { // Room
+                    for (var j = 0; j < game.seatPos.length; j++) { // Seat
+                        if (game.seatPos[j].contain(x - gameRect.x, y - gameRect.y)) {
+                            var havePlayer = false;
+                            for (var k = 0; k < game.gameList[i].length; k++) {
+                                if (game.gameList[i][k].pos == j) { havePlayer = true; break; }
+                            }
+
+
+                            if (havePlayer) {
+                                smoke.alert('This seat already have player!');
+                            }
+                            else {
+                                smoke.prompt("what is your name", function (name) {
+                                    if (name && name != "") {
+                                        game.myRoom = i;
+                                        game.mySeat = j;
+                                        game.myName = name;
+                                        socket.emit('EnterRoom',
+                                        {
+                                            room: i,
+                                            seat: j,
+                                            playerName: name
+                                        });
+                                    } else {
+                                        smoke.signal('sorry, name required');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        } // end of if(isChooseGame)
+        else {
+            game.startX = x;
+            game.startY = y;
+        }
     }
 
     Controller.prototype.mouseUp = function (x, y) {

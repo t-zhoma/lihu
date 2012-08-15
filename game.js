@@ -141,16 +141,16 @@
             if (this.players[i].cardsNum <= 0) {
 
                 // caculate level
-                this.gameLevel[ i%2 ]++; // level up
-                this.curLevel = this.gameLevel[ i%2 ];
+                this.gameLevel[i % 2]++; // level up
+                this.curLevel = this.gameLevel[i % 2];
                 this.lastWinnerId = this.players[i].id;
 
-                return ;
+                return;
             }
         }
     }
 
-    Game.prototype.leaveRoom = function() {
+    Game.prototype.leaveRoom = function () {
         this.players = [];
     }
 
@@ -163,10 +163,10 @@
         }
     }
 
-    Game.prototype.getLastWinnerId = function() {
-        if ( this.lastWinnerId !== false ) return this.lastWinnerId;
-        for( var i in this.players ) {
-            if ( this.players[i].isRobot == false ) { 
+    Game.prototype.getLastWinnerId = function () {
+        if (this.lastWinnerId !== false) return this.lastWinnerId;
+        for (var i in this.players) {
+            if (this.players[i].isRobot == false) {
                 this.curPutPlayerIdx = i;
                 return this.players[i].id;
             }
@@ -236,8 +236,8 @@
         // sort cards
         for (var idx in this.players) {
             var cards = this.players[idx].cards;
-            if ( cards == undefined ) continue;
-            this.sort( cards );
+            if (cards == undefined) continue;
+            this.sort(cards);
         }
 
         // start user
@@ -247,8 +247,8 @@
             startIdx = (startIdx + 1) % 4;
         }
 
-        if ( this.lastWinnerId !== false ) { 
-            this.curPutPlayerIdx = this.getIdxByPlayerId( this.lastWinnerId );
+        if (this.lastWinnerId !== false) {
+            this.curPutPlayerIdx = this.getIdxByPlayerId(this.lastWinnerId);
         } else {
             this.curPutPlayerIdx = startIdx;
             this.lastWinnerId = this.players[this.curPutPlayerIdx].id;
@@ -737,6 +737,11 @@
         this.y = y;
         this.w = w;
         this.h = h;
+
+        this.contain = function (x, y) {
+            return this.x < x && x < this.x + this.w &&
+                                                this.y < y && y < this.y + this.h;
+        }
     }
 
     var Player = function (playerId, playerName) {
@@ -753,7 +758,7 @@
         this.socketId;
     };
 
-    var Put = function(playerId, cards) {
+    var Put = function (playerId, cards) {
         this.playerId = playerId;
         this.cards = cards;
     };
@@ -764,6 +769,7 @@
     exports.BottomBox = BottomBox;
     exports.Player = Player;
     exports.Put = Put;
+    exports.Rect = Rect;
 
 })(typeof global === "undefined" ? window : exports);
     

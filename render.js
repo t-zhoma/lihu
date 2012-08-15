@@ -214,6 +214,34 @@
         curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
     }
 
+    CanvasRenderer.prototype.drawGameList = function () {
+        var x = 50, y = 50, cx = 120, cy = 120, gamesPerLine = 5;
+
+        for (var i = 0; i < game.gameList.length; i++) {
+            // Room
+            this.ctx.fillStyle = 'gray';
+            this.ctx.fillRect(x, y, cx, cy);
+            game.gameList[i].rect = new Rect(x, y, cx, cy);
+
+            // Seat, now just draw name
+            for (var j = 0; j < game.gameList[i].length; j++) {
+                var player = game.gameList[i][j];
+                player.rect = new Rect(game.seatPos[player.pos].x, game.seatPos[player.pos].y,
+                                       game.seatPos[player.pos].w, game.seatPos[player.pos].h);
+                player.rect.x += x;
+                player.rect.y += y;
+
+                this.ctx.fillStyle = 'blue';
+                this.ctx.fillRect(player.rect.x, player.rect.y, player.rect.w, player.rect.h);
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillText(player.name, player.rect.x, player.rect.y, player.rect.w, player.rect.h);
+            }
+
+            if (i % gamesPerLine == (gamesPerLine - 1)) { x = 50; y += 150; }
+            else { x += 150; }
+        }
+    }
+
     // TODO
     // for cache & preload 
     var Source = {

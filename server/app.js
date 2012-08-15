@@ -67,6 +67,23 @@ io.sockets.on('connection', function (socket) {
 		robotCnt : , 
 	}
     */
+
+    //##
+    var gameList = [[{pos:0, name:'short0'}, {pos:1, name:'short1'}, {pos:2, name:'short2'}, {pos:3, name:'short3'}], 
+                    [{pos:0, name:'bwq0'}, {pos:3, name:'bwq3'}], 
+                    [{pos:0, name:'mzq0'}, {pos:1, name:'mzq1'}, {pos:2, name:'mzq2'}, {pos:3, name:'mzq3'}],
+                    [{pos:0, name:'m0'}, {pos:1, name:'m1'}, {pos:3, name:'m3'}],
+                    [{pos:0, name:'z0'}, {pos:1, name:'z1'}, {pos:2, name:'z2'}, {pos:3, name:'z3'}],
+                    [{pos:0, name:'q0'}, {pos:1, name:'q1'}, {pos:2, name:'q2'}, {pos:3, name:'q3'}],
+                    [{pos:0, name:'amz0'}, {pos:1, name:'amz1'}, {pos:2, name:'amz2'}, {pos:3, name:'amz3'}],
+                    [{pos:0, name:'bmz0'}, {pos:1, name:'bmz1'}, {pos:2, name:'bmz2'}],
+                    [{pos:0, name:'cmz0'}, {pos:1, name:'cmz1'}, {pos:2, name:'cmz2'}, {pos:3, name:'bmz3'}],
+                    [{pos:0, name:'dmz0'}, {pos:2, name:'dmz2'}, {pos:3, name:'dmz3'}]];
+
+    socket.emit('GameList', gameList);         
+    return;           
+    //----------------------------
+
     socket.on('EnterRoom', function (data) {
         console.log('recv join request from ' + data);
         // if enough player, start the game
