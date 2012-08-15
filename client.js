@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#home #waiting').show();
         var userHtml = '';
         for (var idx in data.players) {
-            userHtml += '<li> ' + data.players[idx].name + '</li>';
+            userHtml += '<li> seat: ' + data.players[idx].seatId + '  name: ' + ( data.players[idx].name == false ? 'Empty' : data.players[idx].name )+ '</li>';
         }
         $('#home #waiting #player_list').html(userHtml);
         $('#home #waiting #room_id').html(data.roomId);

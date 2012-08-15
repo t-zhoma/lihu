@@ -63,7 +63,12 @@
         this.ourRound = true;
 
         this.roomId;
-        this.players = new Array; // 4 player
+        this.players = []; // 4 player, init empty seat
+        this.players.push(new Player(false, false) );
+        this.players.push(new Player(false, false) );
+        this.players.push(new Player(false, false) );
+        this.players.push(new Player(false, false) );
+
         this.curPutPlayerIdx; // current put player
 
         this.lastPos;
@@ -150,8 +155,13 @@
         }
     }
 
-    Game.prototype.leaveRoom = function () {
+    // user leave room,
+    Game.prototype.leaveRoom = function() {
         this.players = [];
+        this.players.push(new Player(false, false));
+        this.players.push(new Player(false, false));
+        this.players.push(new Player(false, false));
+        this.players.push(new Player(false, false));
     }
 
     Game.prototype.getWinnerId = function () {
@@ -215,8 +225,23 @@
 
 
     // game ready
+    // now just check players num, later will add to check player's status
     Game.prototype.ready = function () {
-        return (this.players.length == 4);
+        return (this.isRoomFull());
+    }
+
+    // 
+    Game.prototype.isRoomFull = function() {
+        for ( var idx in this.players ) {
+            if ( this.players[idx].id === false ) return false;
+        }
+        return true;
+    }
+    Game.prototype.isRoomEmpty = function() {
+        for ( var idx in this.players ) {
+            if ( this.players[idx].id !== false ) return false;
+        }
+        return true;
     }
 
     // game start
@@ -289,6 +314,43 @@
         this.players[1].cardsNum = this.players[1].cards.length;
         this.players[2].cardsNum = this.players[2].cards.length;
         this.players[3].cardsNum = this.players[3].cards.length;
+
+    }
+
+    Game.prototype.inRoom = function(playerId) {
+        for ( var idx in this.palyers ) {
+            var player  = this.players[ idx ];
+            if ( player.id == playerId ) return true;
+        } 
+        return false;
+    }
+    Game.prototype.isSeatOccupy = function(seatId) {
+        return ( this.players[ seatId ].id !== false );
+    }
+
+    Game.prototype.addPlayer = function(player) {
+        // check user in the room
+        console.log('add player ' + player.id + ' ' + player.name + ' ' +  player.seatId);
+        console.log(this.inRoom( player.id ) + ' ' + this.isSeatOccupy(player.seatId)  );
+        if ( this.inRoom( player.id ) == true  ) {
+            console.log('add player fail: in room ');
+            return false;
+        }
+
+        if ( this.isSeatOccupy(player.seatId) ) {
+            // arrange a seat
+            for ( var idx in this.players ) {
+                if ( this.players[idx].id == false ) {
+                    player.seatId = idx;
+                }
+            } 
+        }
+
+        // have seat
+        this.players[ player.seatId ] = player;
+        console.log('add player success ' + player.name + ' ' + player.seatId);
+
+        return player;
 
     }
 
@@ -749,13 +811,15 @@
         this.name = playerName;
 
         this.cards = [];
-        this.cardsNum;
+        this.cardsNum = 0;
         this.isRobot = false;
         // ready to start game
         this.isReady = false;
 
-        this.score;
-        this.socketId;
+        this.seatId = 0;
+
+        this.score = 0;
+        this.socketId = false;
     };
 
     var Put = function (playerId, cards) {
