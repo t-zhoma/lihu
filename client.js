@@ -1,10 +1,4 @@
-var ClientGame = function() { }
-
-ClientGame.prototype = new Game();
-//ClientGame.prototype.gameList = [];
-
-//##game = new Game();
-game = new ClientGame();
+game = new Game();
 game.gameList = [];
 game.seatPos = [new Rect(30, 90, 60, 30), new Rect(90, 30, 30, 60),
                 new Rect(30, 0, 60, 30), new Rect(0, 30, 30, 60)];
@@ -73,14 +67,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.on('EnterRoom', function (data) {
-
-        //##console.log('resv server join' + data);
+        alert(data.code);
 
         if (data.code != 0) {
             alert('fail to join the game' + data.errorMsg);
             return;
         }
 
+        if (game.isChooseGame) {
+            renderer.drawPlayerInfo(game.myName, game.mySeat);
+            game.isChooseGame = false;
+        }
+        else {
+            renderer.drawPlayerInfo(game.myName, game.mySeat);
+        }
+
+        
+        
         $('#room_block').fadeOut('slow');
         $('#home').fadeIn('slow');
 
@@ -91,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#home #waiting').show();
         var userHtml = '';
         for (var idx in data.players) {
-            userHtml += '<li> seat: ' + data.players[idx].seatId + '  name: ' + ( data.players[idx].name == false ? 'Empty' : data.players[idx].name )+ '</li>';
+            userHtml += '<li> seat: ' + data.players[idx].seatId + '  name: ' + (data.players[idx].name == false ? 'Empty' : data.players[idx].name) + '</li>';
         }
         $('#home #waiting #player_list').html(userHtml);
         $('#home #waiting #room_id').html(data.roomId);

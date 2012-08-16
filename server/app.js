@@ -28,6 +28,7 @@ var gamejs = new require('../game.js');
 var Game = gamejs.Game;
 var Put = gamejs.Put;
 var Player = gamejs.Player;
+var GAME_COUNT = 10;
 var games = [];
 
 var observerCount = 0;
@@ -39,13 +40,12 @@ var curPlayer = false;
 var curRoomId = false;
 
 // init games , five games init
-games.push(new Game());
-games.push(new Game());
-games.push(new Game());
-games.push(new Game());
-games.push(new Game());
-games.push(new Game());
-
+for(var i = 0; i < GAME_COUNT; i++){ 
+    var temp = new Game();
+    temp.players = []; // 4 player, init empty seat
+    for(var j = 0; j < 4; j++){ temp.players.push(null); }
+    games.push(temp); 
+}
 
 var io = require('socket.io').listen(server);
 //io.set('log level', 1);
@@ -68,48 +68,58 @@ io.sockets.on('connection', function (socket) {
 	}
     */
 
-    //##
-    var gameList = [[{pos:0, name:'short0'}, {pos:1, name:'short1'}, {pos:2, name:'short2'}, {pos:3, name:'short3'}], 
-                    [{pos:0, name:'bwq0'}, {pos:3, name:'bwq3'}], 
-                    [{pos:0, name:'mzq0'}, {pos:1, name:'mzq1'}, {pos:2, name:'mzq2'}, {pos:3, name:'mzq3'}],
-                    [{pos:0, name:'m0'}, {pos:1, name:'m1'}, {pos:3, name:'m3'}],
-                    [{pos:0, name:'z0'}, {pos:1, name:'z1'}, {pos:2, name:'z2'}, {pos:3, name:'z3'}],
-                    [{pos:0, name:'q0'}, {pos:1, name:'q1'}, {pos:2, name:'q2'}, {pos:3, name:'q3'}],
-                    [{pos:0, name:'amz0'}, {pos:1, name:'amz1'}, {pos:2, name:'amz2'}, {pos:3, name:'amz3'}],
-                    [{pos:0, name:'bmz0'}, {pos:1, name:'bmz1'}, {pos:2, name:'bmz2'}],
-                    [{pos:0, name:'cmz0'}, {pos:1, name:'cmz1'}, {pos:2, name:'cmz2'}, {pos:3, name:'bmz3'}],
-                    [{pos:0, name:'dmz0'}, {pos:2, name:'dmz2'}, {pos:3, name:'dmz3'}]];
+    var gameList = [];
+    
+    for(var i = 0; i < GAME_COUNT; i++){
+        gameList[i] = new Array;
+        for(var j = 0; j < 4; j++) {
+            if(games[i].players[j] == null){
+                gameList[i][j] = null;
+                continue;
+            }
 
-    socket.emit('GameList', gameList);         
-    return;           
-    //----------------------------
+            gameList[i][j] = {name: games[i].players[j].name};
+        }    
+    }
+
+    socket.emit('GameList', gameList);
 
     socket.on('EnterRoom', function (data) {
-        console.log('recv join request from ' + data.playerId + ' ' + data.playerName + ' ' + data.seatId);
-        // if enough player, start the game
-
-        // get room id
-        if (isNaN(data.roomId)) curRoomId = 0;
-        else curRoomId = parseInt(data.roomId);
-
-        // get seat id
-        var seatId = data.seatId;
-        if (isNaN(seatId)) seatId = 0;
-        else seatId = parseInt(seatId);
-
-        console.log('room id ' + curRoomId);
-        //if ( games[roomId] == undefined ) {
-        //	games[roomId] = new Game();
-        //}
-        //curGame= games[roomId];	
-        if (curRoomId >= games.length) {
-            // invalid games
-            socket.emit('enter room', {
+        if(isNaN(data.room) || isNaN(data.seat) || data.playerName == '' ||
+           data.room >= GAME_COUNT || data.seat >= 4 || 
+           games[data.room].players[data.seat] != null){
+            console.log('invalid parameter in join request.');
+            socket.emit('EnterRoom', {
                 code: 1,
-                errorMsg: 'invalid room, please rejoin'
+                errorMsg: 'Join room fail, please rejoin!'
             });
             return;
         }
+
+        console.log('join request from ' + data.playerName + ', room: ' + data.room + ',seat: ' + data.seat);
+
+        var player = new Player(data.playerName);
+        player.socketId = socket.id;
+        games[data.room].players[data.seat] = player;
+
+        // Notify other player in the room
+        for(var i = 0; i < 4; i++){
+            var tempPlayer = games[data.room].players[i];
+            if(tempPlayer != null){
+                io.sockets.socket(tempPlayer.socketId).emit('EnterRoom', {
+                    code: 0,
+                    name: data.playerName,
+                    seat: data.seat
+                });
+            }
+        }
+
+        // Notify the requester
+        socket.emit('EnterRoom', {
+                    code: 0,
+                });
+
+        return;
 
         if (games[curRoomId] === false || games[curRoomId].isRoomEmpty() == true ) {
             console.log('new game');

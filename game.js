@@ -63,11 +63,11 @@
         this.ourRound = true;
 
         this.roomId;
-        this.players = []; // 4 player, init empty seat
-        this.players.push(new Player(false, false) );
-        this.players.push(new Player(false, false) );
-        this.players.push(new Player(false, false) );
-        this.players.push(new Player(false, false) );
+        //##this.players = []; // 4 player, init empty seat
+//        this.players.push(new Player(false, false) );
+//        this.players.push(new Player(false, false) );
+//        this.players.push(new Player(false, false) );
+//        this.players.push(new Player(false, false) );
 
         this.curPutPlayerIdx; // current put player
 
@@ -806,8 +806,7 @@
         }
     }
 
-    var Player = function (playerId, playerName) {
-        this.id = playerId;
+    var Player = function (playerName) {
         this.name = playerName;
 
         this.cards = [];

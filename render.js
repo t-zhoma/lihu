@@ -183,35 +183,35 @@
 
     }
 
-    CanvasRenderer.prototype.drawPlayersInfo = function () {
+    CanvasRenderer.prototype.drawPlayerInfo = function (name, seat) {
 
-        var curPlayerIdx = game.getCurrentPlayerIdx();
-        var player;
-        var curBox;
-        this.ctx.font = '20pt Calibri';
+//        var curPlayerIdx = game.getCurrentPlayerIdx();
+//        var player;
+//        var curBox;
+//        this.ctx.font = '20pt Calibri';
 
-        // bottom box
-        player = game.players[curPlayerIdx];
-        //this.ctx.fillText(player.name, );
-        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+//        // bottom box
+//        player = game.players[curPlayerIdx];
+//        //this.ctx.fillText(player.name, );
+//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-        // left box
-        player = game.players[curPlayerIdx];
-        curBox = game.lob.rect;
-        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130);
-        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+//        // left box
+//        player = game.players[curPlayerIdx];
+//        curBox = game.lob.rect;
+//        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130);
+//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-        // up box
-        player = game.players[curPlayerIdx];
-        curBox = game.tob.rect;
-        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50);
-        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+//        // up box
+//        player = game.players[curPlayerIdx];
+//        curBox = game.tob.rect;
+//        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50);
+//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-        // right box
-        player = game.players[curPlayerIdx];
-        curBox = game.rob.rect;
-        this.ctx.fillText(player.name, curBox.x + 360, curBox.y + curBox.h + 130);
-        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+//        // right box
+//        player = game.players[curPlayerIdx];
+//        curBox = game.rob.rect;
+//        this.ctx.fillText(player.name, curBox.x + 360, curBox.y + curBox.h + 130);
+//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
     }
 
     CanvasRenderer.prototype.drawGameList = function () {
@@ -224,10 +224,11 @@
             game.gameList[i].rect = new Rect(x, y, cx, cy);
 
             // Seat, now just draw name
-            for (var j = 0; j < game.gameList[i].length; j++) {
+            for (var j = 0; j < 4; j++) {
                 var player = game.gameList[i][j];
-                player.rect = new Rect(game.seatPos[player.pos].x, game.seatPos[player.pos].y,
-                                       game.seatPos[player.pos].w, game.seatPos[player.pos].h);
+                if (player == null) { continue; }
+                player.rect = new Rect(game.seatPos[j].x, game.seatPos[j].y,
+                                       game.seatPos[j].w, game.seatPos[j].h);
                 player.rect.x += x;
                 player.rect.y += y;
 

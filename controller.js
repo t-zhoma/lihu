@@ -70,12 +70,12 @@
         });
 
         $('#join_btn').click(function () {
-            smoke.prompt("what is your name", function(name) {
+            smoke.prompt("what is your name", function (name) {
                 if (name) {
                     //smoke.signal('name is: ' + name );
                     $('#player_name').html(name);
                     var robotCnt = $('#robot_cnt').val();
-                    socket.emit('EnterRoom', 
+                    socket.emit('EnterRoom',
                     {
                         roomId: $('#select_room_id').val(),
                         seatId: $('#select_seat').val(),
@@ -111,13 +111,7 @@
                 if (game.gameList[i].rect.contain(x, y)) { // Room
                     for (var j = 0; j < game.seatPos.length; j++) { // Seat
                         if (game.seatPos[j].contain(x - gameRect.x, y - gameRect.y)) {
-                            var havePlayer = false;
-                            for (var k = 0; k < game.gameList[i].length; k++) {
-                                if (game.gameList[i][k].pos == j) { havePlayer = true; break; }
-                            }
-
-
-                            if (havePlayer) {
+                            if (game.gameList[i][j] != null) {
                                 smoke.alert('This seat already have player!');
                             }
                             else {
@@ -137,8 +131,10 @@
                                     }
                                 });
                             }
+                            break;
                         }
                     }
+                    break;
                 }
             }
         } // end of if(isChooseGame)
