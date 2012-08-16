@@ -1,3 +1,4 @@
+// Variables
 game = new Game();
 game.gameList = [];
 game.seatPos = [new Rect(30, 90, 60, 30), new Rect(90, 30, 30, 60),
@@ -6,7 +7,75 @@ game.isChooseGame = false;
 game.myName = '';
 game.myRoom = -1;
 game.mySeat = -1;
+game.playersInRoom = 0;
 
+game.tn = new Rect(550, 20, 100, 20);
+game.ln = new Rect(40, 415, 100, 20);
+game.rn = new Rect(940, 415, 100, 20);
+game.bn = new Rect(550, 842, 100, 20);
+
+game.hold = function () {
+    // TODO
+    renderer.drawBottomOutbox(new Array);
+};
+
+game.prompt = function () {
+    this.choosePrompt(this.bb.cards, this.lastCards);
+    renderer.drawBottomBox();
+};
+
+game.start = function () {
+    if (game.playersInRoom < 4) {
+        smoke.confirm('Not enough players, are you want to add robots and to start game?', function (e) {
+            if (e) {
+                socket.emit('StartGame', { room: game.myRoom, seat: game.mySeat });
+            }
+        });
+    }
+    else {
+        socket.emit('StartGame', { room: game.myRoom, seat: game.mySeat });
+    }
+}
+
+// update user cards
+// caculate user score
+game.put = function (putPlayerId, cards) {
+    // update cards status
+
+    if (cards.length == 0) {
+        // hold
+    } else {
+        // put
+
+        for (var idx in this.players) {
+            var player = this.players[idx];
+            if (putPlayerId == player.id) {
+                console.log(' cards num ' + cards.length);
+
+                var tmpCards = [];
+                for (var idx01 in player.cards) {
+                    var found = false;
+                    for (var idx02 in cards) {
+                        if (player.cards[idx01].isEqual(cards[idx02])) {
+                            found = true; break;
+                        }
+                    }
+                    if (found == false) {
+                        tmpCards.push(player.cards[idx01]);
+                    }
+                }
+
+                this.players[idx].cards = tmpCards;
+                // simple
+                this.players[idx].cardsNum -= cards.length;
+
+                break;
+            }
+        }
+        this.lastCards = cards;
+        this.lastPut = new Put(putPlayerId, cards);
+    }
+}
 
 game.roomId = 1;
 
@@ -33,12 +102,10 @@ function ImagePreloadCallback(imgMap, nLoaded) {
 
     Source.imgMap = imgMap;
     $('#loading').hide();
-//    $('#home').hide();
-//    $('#room_block').show();
-
-//    $('#btnPut').attr('disabled', true);
-//    $('#butHold').attr('disabled', true);
-    //    $('#butPrompt').attr('disabled', true);
+    $('#btnStart').attr('disabled', true);
+    $('#btnPut').attr('disabled', true);
+    $('#btnHold').attr('disabled', true);
+    $('#btnPrompt').attr('disabled', true);
 }
 
 window.onload = preloadImg;
@@ -67,38 +134,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     socket.on('EnterRoom', function (data) {
-        alert(data.code);
-
         if (data.code != 0) {
             alert('fail to join the game' + data.errorMsg);
             return;
         }
 
         if (game.isChooseGame) {
+            renderer.clear();
             renderer.drawPlayerInfo(game.myName, game.mySeat);
+            game.playersInRoom++;
+            for (var i = 0; i < data.players.length; i++) {
+                renderer.drawPlayerInfo(data.players[i].name, data.players[i].seat);
+                game.playersInRoom++;
+            }
+
             game.isChooseGame = false;
+            if (game.mySeat == 0) { $('#btnStart').attr('disabled', false); };
         }
         else {
-            renderer.drawPlayerInfo(game.myName, game.mySeat);
+            renderer.drawPlayerInfo(data.name, data.seat);
         }
-
-        
-        
-        $('#room_block').fadeOut('slow');
-        $('#home').fadeIn('slow');
-
-        // save user
-        game.players = data.players;
-
-        $('#home #game').hide();
-        $('#home #waiting').show();
-        var userHtml = '';
-        for (var idx in data.players) {
-            userHtml += '<li> seat: ' + data.players[idx].seatId + '  name: ' + (data.players[idx].name == false ? 'Empty' : data.players[idx].name) + '</li>';
-        }
-        $('#home #waiting #player_list').html(userHtml);
-        $('#home #waiting #room_id').html(data.roomId);
-
     });
 
     // bradcast get user put cards and server result

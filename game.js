@@ -183,47 +183,6 @@
         }
     }
 
-    // update user cards
-    // caculate user score
-    Game.prototype.put = function (putPlayerId, cards) {
-        // update cards status
-
-        if (cards.length == 0) {
-            // hold
-        } else {
-            // put
-
-            for (var idx in this.players) {
-                var player = this.players[idx];
-                if (putPlayerId == player.id) {
-                    console.log(' cards num ' + cards.length);
-
-                    var tmpCards = [];
-                    for (var idx01 in player.cards) {
-                        var found = false;
-                        for (var idx02 in cards) {
-                            if (player.cards[idx01].isEqual(cards[idx02])) {
-                                found = true; break;
-                            }
-                        }
-                        if (found == false) {
-                            tmpCards.push(player.cards[idx01]);
-                        }
-                    }
-
-                    this.players[idx].cards = tmpCards;
-                    // simple
-                    this.players[idx].cardsNum -= cards.length;
-
-                    break;
-                }
-            }
-            this.lastCards = cards;
-            this.lastPut = new Put(putPlayerId, cards);
-        }
-    }
-
-
     // game ready
     // now just check players num, later will add to check player's status
     Game.prototype.ready = function () {
@@ -378,18 +337,6 @@
         // 
         return true;
     }
-
-
-
-    Game.prototype.hold = function () {
-        // TODO
-        renderer.drawBottomOutbox(new Array);
-    };
-
-    Game.prototype.prompt = function () {
-        this.choosePrompt(this.bb.cards, this.lastCards);
-        renderer.drawBottomBox();
-    };
 
     Game.prototype.buildImgSrcs = function () {
         var n;

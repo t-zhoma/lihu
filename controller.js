@@ -43,12 +43,16 @@
             renderer.drawBottomOutbox(selectedCards);
 
         });
+
+        $('#btnStart').click(function () { game.start(); });
+
         $('#btnHold').click(function () {
             curPut = new Put(clientId, false);
             socket.emit('Put', {
                 put: curPut
             });
         });
+
         $('#btnPrompt').click(function () {
             game.prompt();
         });

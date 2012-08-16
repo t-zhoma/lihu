@@ -121,9 +121,7 @@ io.sockets.on('connection', function (socket) {
 
         console.log('join request from ' + data.playerName + ', room: ' + data.room + ',seat: ' + data.seat);
 
-        var player = new Player(data.playerName);
-        player.socketId = socket.id;
-        games[data.room].players[data.seat] = player;
+        var playerList = new Array;
 
         // Notify other player in the room
         for(var i = 0; i < 4; i++){
@@ -134,12 +132,18 @@ io.sockets.on('connection', function (socket) {
                     name: data.playerName,
                     seat: data.seat
                 });
+                playerList.push({name:tempPlayer.name, seat:i});
             }
         }
 
         // Notify the requester
+        var player = new Player(data.playerName);
+        player.socketId = socket.id;
+        games[data.room].players[data.seat] = player;
+
         socket.emit('EnterRoom', {
                     code: 0,
+                    players: playerList
                 });
 
         return;
@@ -211,6 +215,10 @@ io.sockets.on('connection', function (socket) {
         if (games[curRoomId].ready()) {
             roundStart();
         }
+    });
+
+    socket.on('StartGame', function(data){
+        console.log('************StartGame');
     });
 
     // quit game

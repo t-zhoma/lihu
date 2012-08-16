@@ -184,34 +184,49 @@
     }
 
     CanvasRenderer.prototype.drawPlayerInfo = function (name, seat) {
+        this.ctx.font = '20pt Calibri';
 
-//        var curPlayerIdx = game.getCurrentPlayerIdx();
-//        var player;
-//        var curBox;
-//        this.ctx.font = '20pt Calibri';
+        switch ((seat - game.mySeat + 4) % 4) {
+            case 0: // bottom
+                this.ctx.fillText(name, game.bn.x, game.bn.y, game.bn.w);
+                break;
+            case 1: // right
+                this.ctx.fillText(name, game.rn.x, game.rn.y, game.rn.w);
+                break;
+            case 2: // top
+                this.ctx.fillText(name, game.tn.x, game.tn.y, game.tn.w);
+                break;
+            case 3: // left
+                this.ctx.fillText(name, game.ln.x, game.ln.y, game.ln.w);
+                break;
+        }
+        //        var curPlayerIdx = game.getCurrentPlayerIdx();
+        //        var player;
+        //        var curBox;
+        //        this.ctx.font = '20pt Calibri';
 
-//        // bottom box
-//        player = game.players[curPlayerIdx];
-//        //this.ctx.fillText(player.name, );
-//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+        //        // bottom box
+        //        player = game.players[curPlayerIdx];
+        //        //this.ctx.fillText(player.name, );
+        //        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-//        // left box
-//        player = game.players[curPlayerIdx];
-//        curBox = game.lob.rect;
-//        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130);
-//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+        //        // left box
+        //        player = game.players[curPlayerIdx];
+        //        curBox = game.lob.rect;
+        //        this.ctx.fillText(player.name, curBox.x - 110, curBox.y + curBox.h + 130);
+        //        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-//        // up box
-//        player = game.players[curPlayerIdx];
-//        curBox = game.tob.rect;
-//        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50);
-//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+        //        // up box
+        //        player = game.players[curPlayerIdx];
+        //        curBox = game.tob.rect;
+        //        this.ctx.fillText(player.name, curBox.x - 50, curBox.y - 50);
+        //        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
 
-//        // right box
-//        player = game.players[curPlayerIdx];
-//        curBox = game.rob.rect;
-//        this.ctx.fillText(player.name, curBox.x + 360, curBox.y + curBox.h + 130);
-//        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
+        //        // right box
+        //        player = game.players[curPlayerIdx];
+        //        curBox = game.rob.rect;
+        //        this.ctx.fillText(player.name, curBox.x + 360, curBox.y + curBox.h + 130);
+        //        curPlayerIdx = game.getNextPlayerIdx(curPlayerIdx);
     }
 
     CanvasRenderer.prototype.drawGameList = function () {
@@ -241,6 +256,10 @@
             if (i % gamesPerLine == (gamesPerLine - 1)) { x = 50; y += 150; }
             else { x += 150; }
         }
+    }
+
+    CanvasRenderer.prototype.clear = function () {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     // TODO
