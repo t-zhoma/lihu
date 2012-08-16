@@ -44,7 +44,18 @@
 
         });
 
-        $('#btnStart').click(function () { game.start(); });
+        $('#btnStart').click(function () {
+            if (game.playersInRoom < 4) {
+                smoke.confirm('Not enough players, are you want to add robots and to start game?', function (e) {
+                    if (e) {
+                        socket.emit('StartGame', { room: game.myRoom, seat: game.mySeat });
+                    }
+                });
+            }
+            else {
+                socket.emit('StartGame', { room: game.myRoom, seat: game.mySeat });
+            }
+        });
 
         $('#btnHold').click(function () {
             curPut = new Put(clientId, false);
@@ -62,11 +73,10 @@
                 if (e) {
                     // confirm
                     socket.emit('LeaveRoom', {
-                        playerId: clientId,
-                        roomId: game.roomId
+                        room: game.myRoom,
+                        seat: game.mySeat,
+                        name: game.myName
                     });
-                    $('#room_block').fadeIn('slow');
-                    $('#home').fadeOut('slow');
                 } else {
                     // cancel
                 }
@@ -109,7 +119,7 @@
     }
 
     Controller.prototype.mouseDown = function (x, y) {
-        if (game.isChooseGame) {
+        if (game.stage == game.StageType.CHOOSE_GAME) {
             for (var i = 0; i < game.gameList.length; i++) {
                 var gameRect = game.gameList[i].rect;
                 if (game.gameList[i].rect.contain(x, y)) { // Room

@@ -12,7 +12,6 @@
         Game.CARD_EXTEND = 25;    // extend space when card is selected
 
         // Cards
-        this.deck = [];
         this.imgSrcs = new Array;
 
         this.startX;
@@ -58,18 +57,11 @@
 
         // level
         this.level = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"];
-        this.ourLevel = 0;
-        this.theirLevel = 0;
-        this.ourRound = true;
+        this.level_0_2 = 0;
+        this.level_1_3 = 0;
+        this.isLevel_0_2 = true; 
 
-        this.roomId;
-        //##this.players = []; // 4 player, init empty seat
-//        this.players.push(new Player(false, false) );
-//        this.players.push(new Player(false, false) );
-//        this.players.push(new Player(false, false) );
-//        this.players.push(new Player(false, false) );
-
-        this.curPutPlayerIdx; // current put player
+        this.curPutterSeat = 0; // seat of the current put player
 
         this.lastPos;
         this.lastCards; // last put cards
@@ -203,79 +195,6 @@
         return true;
     }
 
-    // game start
-    Game.prototype.start = function () {
-
-        // reset cards
-        this.deck = [];
-        for (var i = 0; i < 4; i++) {
-            this.players[i].cards = [];
-            this.players[i].cardsNum = 0;
-        }
-
-        this.builddeck();
-        this.shuffle();
-        this.buildCardOrder();
-
-        // sort cards
-        for (var idx in this.players) {
-            var cards = this.players[idx].cards;
-            if (cards == undefined) continue;
-            this.sort(cards);
-        }
-
-        // start user
-        var startIdx = 3;
-        // get a none robot user to start
-        while (this.players[startIdx].isRobot == true) {
-            startIdx = (startIdx + 1) % 4;
-        }
-
-        if (this.lastWinnerId !== false) {
-            this.curPutPlayerIdx = this.getIdxByPlayerId(this.lastWinnerId);
-        } else {
-            this.curPutPlayerIdx = startIdx;
-            this.lastWinnerId = this.players[this.curPutPlayerIdx].id;
-        }
-
-    };
-
-    // Function related to card logic
-    Game.prototype.builddeck = function () {
-        var n;
-        var si;
-        var src;
-
-        for (var si = 0; si < 4; si++) {
-            for (var n = 0; n < 13; n++) {
-                src = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
-                this.deck.push(new Card(this.suitnames[si], n, src));
-            }
-        }
-
-        this.deck.push(new Card("", 13, "img\\joker-b-75.png"));     // joker-b
-        this.deck.push(new Card("", 14, "img\\joker-r-75.png"));     // joker-r
-    }
-
-    Game.prototype.shuffle = function () {
-        var i = this.deck.length - 1;
-        var s;
-        while (i > 0) {
-            s = Math.floor(Math.random() * (i + 1));
-            this.swapcard(this.deck, s, i);
-            i--;
-        }
-
-        for (i = 0; i < 54; i++) {
-            this.players[i % 4].cards.push(this.deck[i]);
-        }
-        this.players[0].cardsNum = this.players[0].cards.length;
-        this.players[1].cardsNum = this.players[1].cards.length;
-        this.players[2].cardsNum = this.players[2].cards.length;
-        this.players[3].cardsNum = this.players[3].cards.length;
-
-    }
-
     Game.prototype.inRoom = function(playerId) {
         for ( var idx in this.palyers ) {
             var player  = this.players[ idx ];
@@ -354,15 +273,6 @@
         this.imgSrcs.push("img\\back-blue-h-75-1.png");
     }
 
-    Game.prototype.fillbox = function (players) {
-        this.players = players;
-        var curIdx = this.getCurrentPlayerIdx();
-        this.bb.cards = players[curIdx].cards;
-        this.lb.cardsNum = players[(curIdx + 1) % 4].cardsNum;
-        this.tb.cardsNum = players[(curIdx + 2) % 4].cardsNum;
-        this.rb.cardsNum = players[(curIdx + 3) % 4].cardsNum;
-    }
-
     // return true when card1 < card2, else return false, need buildCardOrder first
     Game.prototype.compare = function (card1, card2) {
         return this.getOrder(card1) < getOrder(card2);
@@ -373,7 +283,7 @@
     }
 
     Game.prototype.getCurrentLevel = function () {
-        return this.ourRound ? this.ourLevel : this.theirLevel;
+        return this.isLevel_0_2 ? this.level_0_2 : this.level_1_3;
     }
 
     Game.prototype.cardFullName = function (suitname, num) {
