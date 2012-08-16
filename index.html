@@ -4,17 +4,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Lihu</title>
 		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
-		<link rel="stylesheet" type="text/css" href="css/app.css">
-		<link rel="stylesheet" type="text/css" href="lib/smoke.css">
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/css/app.css">
+		<link rel="stylesheet" type="text/css" href="/lib/smoke.css">
 	</head>
 	<body>
 
 		<div class="well" style='padding:0px; margin:0px;'>
 			
-			<div id='home'  style='display:none'>
+			<div id='home'>
 				<div id = 'game_block' class="">
-					<div id = 'waiting' >
+					<div id = 'waiting' style='display:none'>
 						<p>
 							waiting people to join the room.
 						</p>
@@ -28,7 +28,7 @@
 					</div>
 
 					<div id = 'game'>
-					<canvas width="1200" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+					<canvas width="1800" height="850" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
 			        		<div style='width:100%; margin:auto; padding:auto;'>
 			        			<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
 			        		<button id="btnHold" class='btn btn-primary'>不出</button>
@@ -37,6 +37,7 @@
 			        			<div style='margin-top:10px;'>
 			        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
 			        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
+			        				<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
 			        			</div>
 			        			
 			        		</div>
@@ -51,8 +52,7 @@
 
 				<div class='clr'></div>
 			</div>
-			<div id='room_block' class='room-block' >
-
+			<div id='room_block' class='room-block' style='display:none'>
 				<div class='room-list'>
 					<div class='room-item'>
 
@@ -79,6 +79,18 @@
 								<option value=4>4</option>
 							</select>
 						</div>
+						<div >
+							seat:
+							<select id = 'select_seat' name='select_seat' class='span1'>
+								<option value=0>0</option>
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+							</select>
+							<br/>
+							<i>if not select , or the seat have been occupy, just random set a seat</i>
+						</div>
+
 						<div>
 							<button id="join_btn" class='join-game btn btn-large btn-success' >Join</button>
 						</div>
@@ -107,6 +119,8 @@
 		<!--
 		<script src="sound.js"></script>-->
 		<script src="client.js"></script>
+
+
 
 	
 </html>

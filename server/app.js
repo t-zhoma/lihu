@@ -1,12 +1,14 @@
 var http = require('http')
 	, fs = require('fs');
+var path = require('path');
 
 var pipeFile = function(path, res) {
 	res.writeHead('200');
 	fs.createReadStream(path).pipe(res);
 }
 
-var server = http.createServer(function(req, res) {
+var server = http.createServer(function(request, response) {
+    /*
 	if (req.url.length == 1)
 		req.url = "/index.html";
 	req.url = "." + req.url;
@@ -21,6 +23,49 @@ var server = http.createServer(function(req, res) {
 		var file = fs.createReadStream(req.url);
 		file.pipe(res);
 	});
+
+*/
+
+
+    console.log('request starting...');
+     
+    var filePath = '.' + request.url;
+    console.log(request.url);
+    if (request.url.length == 1)
+        filePath = './index.html';
+         
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+    }
+
+    path.exists(filePath, function(exists) {
+        console.log('path ' + filePath + ' exists ' + exists);
+     
+        if (exists) {
+            fs.readFile(filePath, function(error, content) {
+                if (error) {
+                    response.writeHead(500);
+                    response.end();
+                }
+                else {
+                    response.writeHead(200, { 'Content-Type': contentType });
+                    response.end(content, 'utf-8');
+                }
+            });
+        }
+        else {
+            response.writeHead(404);
+            response.end();
+        }
+    });
+
 }).listen(8080);
 
 
