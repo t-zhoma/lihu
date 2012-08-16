@@ -8,29 +8,8 @@ var pipeFile = function(path, res) {
 }
 
 var server = http.createServer(function(request, response) {
-    /*
-	if (req.url.length == 1)
-		req.url = "/index.html";
-	req.url = "." + req.url;
-	fs.exists(req.url, function(exists) {
-		if (!exists) {
-			console.log("cant find the following url", req.url);
-			res.writeHead(404);
-			res.end();
-			return;
-		}
-		res.writeHead(200);
-		var file = fs.createReadStream(req.url);
-		file.pipe(res);
-	});
 
-*/
-
-
-    console.log('request starting...');
-     
     var filePath = '.' + request.url;
-    console.log(request.url);
     if (request.url.length == 1)
         filePath = './index.html';
          
@@ -46,8 +25,7 @@ var server = http.createServer(function(request, response) {
     }
 
     path.exists(filePath, function(exists) {
-        console.log('path ' + filePath + ' exists ' + exists);
-     
+        
         if (exists) {
             fs.readFile(filePath, function(error, content) {
                 if (error) {
@@ -93,7 +71,7 @@ games.push(new Game());
 
 
 var io = require('socket.io').listen(server);
-//io.set('log level', 1);
+io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
     console.log(socket.id);
