@@ -32,46 +32,46 @@
         this.cardOrder = new Object(); // Card order related to current level
 
         this.PutType = {
-            SINGLE: 0,      // 单牌
-            PAIR: 1,        // 对子
-            PAIRS: 2,       // 连对（滚子）
-            STRAIGHT: 3,    // 顺子
-            THREE_BOMB: 4,  // 小炸弹（三张牌）
-            FOUR_BOMB: 5,   // 大炸弹（四张牌）
-            KING_BOMB: 6,   // 王炸（大小王）
-            INVALID: 7      // 无效牌
+            NONE: 0,        // 无
+            SINGLE: 1,      // 单牌
+            PAIR: 2,        // 对子
+            PAIRS: 3,       // 连对（滚子）
+            STRAIGHT: 4,    // 顺子
+            THREE_BOMB: 5,  // 小炸弹（三张牌）
+            FOUR_BOMB: 6,   // 大炸弹（四张牌）
+            KING_BOMB: 7,   // 王炸（大小王）
+            INVALID: 8      // 无效牌
         };
 
         // rule[i][j] means whether PutType i > j
         // 0: No, i.e. rule[PutType.SINGLE][PutType.KING_BOMB]
         // 1: Yes, i.e. rule[PutType.KING_BOMB][PutType.SINGLE]
         // 2: Maybe, i.e. rule[PutType.SINGLE][[PutType.SINGLE]]
-        this.rule = [[2, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 2, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 2, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 2, 0, 0, 0, 0],
-                     [1, 1, 0, 1, 2, 0, 0, 0],
-                     [1, 1, 1, 1, 1, 2, 0, 0],
-                     [1, 1, 1, 1, 1, 1, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0]];
+        this.rule = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [1, 2, 0, 0, 0, 0, 0, 0, 0],
+                     [1, 0, 2, 0, 0, 0, 0, 0, 0],
+                     [1, 0, 0, 2, 0, 0, 0, 0, 0],
+                     [1, 0, 0, 0, 2, 0, 0, 0, 0],
+                     [1, 1, 1, 0, 1, 2, 0, 0, 0],
+                     [1, 1, 1, 1, 1, 1, 2, 0, 0],
+                     [1, 1, 1, 1, 1, 1, 1, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
         // level
         this.level = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"];
         this.level_0_2 = 0;
         this.level_1_3 = 0;
-        this.isLevel_0_2 = true; 
+        this.isLevel_0_2 = true;
 
-        this.curPutterSeat = 0; // seat of the current put player
-
-        this.lastPos;
-        this.lastCards; // last put cards
+        // last put info
+        this.lastPutterSeat = 0;
+        this.lastPutCards = [];
 
         this.gameLevel = [0, 0];
         this.curLevel = 0;
         this.lastWinnerId = false;
 
         this.lastPut = false;
-
     };
 
     Game.prototype.getIdxByPlayerId = function (playerId) {
@@ -108,19 +108,9 @@
     ////////////////////////////
     // Server Code
     ////////////////////////////
-
-    Game.prototype.getNextPutPlayer = function () {
-        // anticlockwise
-        this.curPutPlayerIdx = parseInt(this.curPutPlayerIdx);
-        this.curPutPlayerIdx = (this.curPutPlayerIdx - 1 + 4) % 4;
-
-        return this.players[this.curPutPlayerIdx];
+    Game.prototype.nextSeat = function (seat) {
+        return (seat + 1) % 4;
     }
-
-    Game.prototype.getNextPlayerIdx = function (curIdx) {
-        return (curIdx - 1 + 4) % 4;
-    }
-
 
     // check is game over
     Game.prototype.isGameOver = function () {
@@ -148,7 +138,7 @@
     }
 
     // user leave room,
-    Game.prototype.leaveRoom = function() {
+    Game.prototype.leaveRoom = function () {
         this.players = [];
         this.players.push(new Player(false, false));
         this.players.push(new Player(false, false));
@@ -182,58 +172,55 @@
     }
 
     // 
-    Game.prototype.isRoomFull = function() {
-        for ( var idx in this.players ) {
-            if ( this.players[idx].id === false ) return false;
+    Game.prototype.isRoomFull = function () {
+        for (var idx in this.players) {
+            if (this.players[idx].id === false) return false;
         }
         return true;
     }
-    Game.prototype.isRoomEmpty = function() {
-        for ( var idx in this.players ) {
-            if ( this.players[idx].id !== false ) return false;
+    Game.prototype.isRoomEmpty = function () {
+        for (var idx in this.players) {
+            if (this.players[idx].id !== false) return false;
         }
         return true;
     }
 
-    Game.prototype.inRoom = function(playerId) {
-        for ( var idx in this.palyers ) {
-            var player  = this.players[ idx ];
-            if ( player.id == playerId ) return true;
-        } 
+    Game.prototype.inRoom = function (playerId) {
+        for (var idx in this.palyers) {
+            var player = this.players[idx];
+            if (player.id == playerId) return true;
+        }
         return false;
     }
-    Game.prototype.isSeatOccupy = function(seatId) {
-        return ( this.players[ seatId ].id !== false );
+    Game.prototype.isSeatOccupy = function (seatId) {
+        return (this.players[seatId].id !== false);
     }
 
-    Game.prototype.addPlayer = function(player) {
+    Game.prototype.addPlayer = function (player) {
         // check user in the room
-        console.log('add player ' + player.id + ' ' + player.name + ' ' +  player.seatId);
-        console.log(this.inRoom( player.id ) + ' ' + this.isSeatOccupy(player.seatId)  );
-        if ( this.inRoom( player.id ) == true  ) {
+        console.log('add player ' + player.id + ' ' + player.name + ' ' + player.seatId);
+        console.log(this.inRoom(player.id) + ' ' + this.isSeatOccupy(player.seatId));
+        if (this.inRoom(player.id) == true) {
             console.log('add player fail: in room ');
             return false;
         }
 
-        if ( this.isSeatOccupy(player.seatId) ) {
+        if (this.isSeatOccupy(player.seatId)) {
             // arrange a seat
-            for ( var idx in this.players ) {
-                if ( this.players[idx].id == false ) {
+            for (var idx in this.players) {
+                if (this.players[idx].id == false) {
                     player.seatId = idx;
                 }
-            } 
+            }
         }
 
         // have seat
-        this.players[ player.seatId ] = player;
+        this.players[player.seatId] = player;
         console.log('add player success ' + player.name + ' ' + player.seatId);
 
         return player;
 
     }
-
-
-
 
     ////////////////////////////
     // Client Code
@@ -331,8 +318,13 @@
 
 
     Game.prototype.getCardType = function (cards) {
+        if (cards == null || cards == undefined)
+            return this.PutType.NONE;
+
         this.sort(cards);
         switch (cards.length) {
+            case 0:
+                return this.PutType.NONE;
             case 1:
                 return this.PutType.SINGLE;
             case 2:
@@ -432,7 +424,7 @@
         this.unchooseAll(cards);
         var j = this.getCardType(lastCards);
 
-        for (var i = this.PutType.SINGLE; i < this.PutType.INVALID; i++) {
+        for (var i = this.PutType.NONE; i < this.PutType.INVALID; i++) {
             if (this.rule[i][j] != 0) {
                 if (this.chooseCard(cards, lastCards, start, i, this.rule[i][j] == 1 ? false : true)) {
                     return true;
@@ -621,6 +613,38 @@
         return true;
     }
 
+    // whether cards1 > cards2
+    Game.prototype.compareCards = function (cards1, cards2) {
+        var type1 = this.getCardType(cards1);
+        var type2 = this.getCardType(cards2);
+
+        switch (this.rule[type1][type2]) {
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                {
+                    switch (type1) {
+                        case SINGLE:
+                        case PAIR:
+                        case THREE_BOMB:
+                        case FOUR_BOMB:
+                            return this.getOrder(cards1[0]) > this.getOrder(cards2[0]);
+                        case PAIRS:
+                        case STRAIGHT:
+                            {
+                                if (cards1.length != cards2.length) { return false; }
+                                return this.getOrder(cards1[0]) > this.getOrder(cards2[0]);
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+
+        return false;
+    }
 
     ////////////////////////////
     // Data Type
@@ -665,18 +689,25 @@
 
     var Player = function (playerName) {
         this.name = playerName;
-
         this.cards = [];
         this.cardsNum = 0;
         this.isRobot = false;
-        // ready to start game
-        this.isReady = false;
-
-        this.seatId = 0;
-
-        this.score = 0;
         this.socketId = false;
+        this.isLihu = false;
     };
+
+    Player.prototype.clone = function () {
+        var temp = new Player(this.name);
+        temp.cardsNum = this.cardsNum;
+        temp.isRobot = this.isRobot;
+        temp.socketId = this.socketId;
+        temp.isLihu = this.isLihu;
+        temp.cards = [];
+        for (var i = 0; i < this.cards.length; i++) {
+            temp.cards[i] = new Card(this.cards[i].suit, this.cards[i].num, this.cards[i].src);
+        }
+        return temp;
+    }
 
     var Put = function (playerId, cards) {
         this.playerId = playerId;

@@ -14,34 +14,7 @@
         }
 
         $('#btnPut').click(function () {
-            // TODO
-            var selectedCards = new Array;
-            for (var i = game.bb.cards.length - 1; i >= 0; i--) {
-                if (game.bb.cards[i].selected) {
-                    selectedCards.push(game.bb.cards[i]);
-                    game.bb.cards.splice(i, 1);
-                }
-            }
-
-            game.sort(selectedCards);
-
-            if (game.canPut(selectedCards) == false) {
-                alert('can not put this cards!');
-                return false;
-            }
-
-            var curPut = new Put(clientId, selectedCards);
-
-            // TODO  verify whether can put
-
-            // TODO send to server
-            socket.emit('Put', {
-                put: curPut
-            });
-
-            renderer.drawBottomBox();
-            renderer.drawBottomOutbox(selectedCards);
-
+            game.put();
         });
 
         $('#btnStart').click(function () {

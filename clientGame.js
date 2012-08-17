@@ -32,10 +32,33 @@
         renderer.drawBottomBox();
     };
 
-    // update user cards
-    // caculate user score
-    game.put = function (putPlayerId, cards) {
-        // update cards status
+    game.put = function () {
+        var selectedCards = this.getSelectedCards(this.bb.cards);
+
+        //## 验证是否合法
+        if (!game.compareCards(selectedCards, this.lastPutCards)) {
+            smoke.signal('Invalid cards!');
+            return;
+        }
+
+        game.sort(selectedCards);
+
+        if (game.canPut(selectedCards) == false) {
+            alert('can not put this cards!');
+            return false;
+        }
+
+        var curPut = new Put(clientId, selectedCards);
+
+        // TODO  verify whether can put
+
+        // TODO send to server
+        socket.emit('Put', {
+            put: curPut
+        });
+
+        renderer.drawBottomBox();
+        renderer.drawBottomOutbox(selectedCards);
 
         if (cards.length == 0) {
             // hold
