@@ -146,38 +146,27 @@
     }
 
 
-    CanvasRenderer.prototype.drawPutCards = function (putCards) {
-        // put player idx
-        var putIdx = game.curPutPlayerIdx;
-        // cur player idx
-        var curIdx = game.getCurrentPlayerIdx();
-
+    CanvasRenderer.prototype.drawPutCards = function (putterSeat, putCards) {
         // bb
-        if (curIdx == putIdx) {
-            renderer.drawBottomBox();
-            renderer.drawBottomOutbox(putCards);
-        }
-
-        // lb
-        if ((curIdx + 1) % 4 == putIdx) {
-            renderer.drawLeftBox();
-            renderer.drawLeftOutbox(putCards);
-        }
-
-        // tb
-        if ((curIdx + 2) % 4 == putIdx) {
-            renderer.drawTopBox();
-            renderer.drawTopOutbox(putCards);
-        }
+        if (putterSeat == game.mySeat) { return; } // Already draw when put
 
         // rb
-        if ((curIdx + 3) % 4 == putIdx) {
+        if ((game.mySeat + 1) % 4 == putterSeat) {
             renderer.drawRightBox();
             renderer.drawRightOutbox(putCards);
         }
 
-        this.drawPlayersInfo();
+        // tb
+        if ((game.mySeat + 2) % 4 == putterSeat) {
+            renderer.drawTopBox();
+            renderer.drawTopOutbox(putCards);
+        }
 
+        // lb
+        if ((game.mySeat + 3) % 4 == putterSeat) {
+            renderer.drawLeftBox();
+            renderer.drawLeftOutbox(putCards);
+        }
     }
 
     CanvasRenderer.prototype.drawPlayersInfo = function () {
@@ -197,7 +186,7 @@
                 case 3: // left
                     this.ctx.fillText(game.players[i].name, game.ln.x, game.ln.y, game.ln.w);
                     break;
-            }   
+            }
         }
     }
 

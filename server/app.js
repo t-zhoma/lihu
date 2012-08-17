@@ -49,7 +49,6 @@ var server = http.createServer(function(request, response) {
 
 var servergamejs = new require('./serverGame.js');
 var Game = servergamejs.Game;
-var Put = servergamejs.Put;
 var Player = servergamejs.Player;
 var GAME_COUNT = 10;
 var games = [];
@@ -220,71 +219,31 @@ io.sockets.on('connection', function (socket) {
         //## send roomlist
     });
 
-    // user put cards
-    /*
-    data = {
-    put: curPut,
+    //user put cards
+    /*data = {
+    room : ,
+    seat : ,
+    putCards : ,
+    remainCards :
     }
     */
-    //    socket.on('Put', function (data) {
-    //        console.log('recv client put');
+    socket.on('Put', function (data) {
+        console.log('recv client put');
 
-    //        var curPut = data.put;
+        var game = games[data.room];
+        var putter = game.players[data.seat];
 
-    //        // TODO verify put cards
-    //        if (games[curRoomId].canPut(curPut.cards) == false) {
-    //            // socket.emit error
-    //            return false;
-    //        }
+        if (data.putCards.length != 0) {
+            game.lastPutterSeat = data.seat;
+            game.lastPutCards = data.putCards;
+            putter.cards = data.remainCards;
+            putter.cardsNum = data.remainCards.length;
+        }
 
-
-    //        // update cards & scores
-    //        games[curRoomId].put(curPut.playerId, curPut.cards);
-
-    //        var nextPutPlayer = games[curRoomId].getNextPutPlayer();
-    //        console.log(games[curRoomId].curPutPlayerIdx);
-
-
-    //        // send message to user
-    //        var putData = {
-    //        	curPut: curPut,
-    //            nextPutPlayerId: nextPutPlayer.id,
-
-    //        }
-    //        roomBroadCast('Put', putData);
-    //        
-
-    //        // game over , we have a winner
-    //        if (games[curRoomId].isGameOver() == true) {
-    //            
-    //            games[ curRoomId ].roundOver();
-    //            roomBroadCast('RoundOver', {
-    //                    winnerId: games[curRoomId].getWinnerId()
-    //                });
-
-
-    //            if (games[curRoomId].ready()) {
-    //                roundStart();
-    //            }
-    //        } else {
-    //            while (nextPutPlayer.isRobot === true) {
-    //                // is robot. 
-    //                // current stratogy is just hold.
-    //                games[curRoomId].choosePrompt(nextPutPlayer.cards, games[curRoomId].lastCards);
-    //                var selectedCards = games[curRoomId].getSelectedCards(nextPutPlayer.cards);
-    //                games[curRoomId].put(nextPutPlayer.id, selectedCards);
-
-    //                var robotPut = new Put(nextPutPlayer.id, selectedCards);
-
-    //                nextPutPlayer = games[curRoomId].getNextPutPlayer();
-    //                // send message to user
-    //                roomBroadCast('Put', {
-    //                        nextPutPlayerId: nextPutPlayer.id,
-    //                        curPut: robotPut
-    //                });
-    //            }
-    //        }
-    //    });
+        roomBroadCast(data.room, 'Put', { putterSeat: data.seat, putCards: data.putCards }, true);
+        game.curPutterSeat = game.nextSeat(game.curPutterSeat);
+        putCards(data.room);
+    });
 
     socket.on('disconnect', function (data) {
         console.log('recv disconnect', data);
@@ -337,26 +296,42 @@ io.sockets.on('connection', function (socket) {
     function putCards(room) {
         var game = games[room];
         robotPut(room);
-        while (game.players[game.curPutterSeat].isRobot || !game.needPut[game.curPutterSeat]) {
+        while (!game.needPut[game.curPutterSeat]) {
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);
         }
         roomBroadCast(room, 'NewPut', { curPutterSeat: game.curPutterSeat,
-                                        lastPutterSeat: game.lastPutterSeat,
-                                        lastPutCards: game.lastPutCards}, false);
+            lastPutterSeat: game.lastPutterSeat,
+            lastPutCards: game.lastPutCards
+        }, false);
     }
 
     function robotPut(room) {
         var game = games[room];
 
-        while (game.players[game.curPutterSeat].isRobot && game.needPut[game.curPutterSeat]) {
+        while (game.players[game.curPutterSeat].isRobot) {
+            if (!game.needPut[game.curPutterSeat]) {
+                game.curPutterSeat = game.nextSeat(game.curPutterSeat);
+                continue;
+            }
+
             if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
 
             var cards = game.players[game.curPutterSeat].cards;
             game.choosePrompt(cards, game.lastPutCards);
             var putCards = game.getSelectedCards(cards);
-            game.players[game.curPutterSeat].cardsNum = cards.length;
-            game.removeSelectedCards(cards);
+
+            if (putCards.length != 0) {
+                game.removeSelectedCards(cards);
+                game.players[game.curPutterSeat].cardsNum = cards.length;
+                game.lastPutterSeat = game.curPutterSeat;
+                game.lastPutCards = putCards;
+            }
+
             roomBroadCast(room, 'Put', { putterSeat: game.curPutterSeat, putCards: putCards }, true);
+
+            if (cards.length == 0) {
+                game.needPut[game.curPutterSeat] = false;
+            }
 
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);
         }

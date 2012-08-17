@@ -23,83 +23,49 @@
     game.bn = new Rect(550, 860, 100, 20);
 
     game.hold = function () {
-        // TODO
+        if (game.lastPutterSeat == game.mySeat) {
+            smoke.signal('Can not hold, please choose cards to put!');
+            return;
+        }
+
+        socket.emit('Put', { room: this.myRoom, seat: this.mySeat,
+            putCards: new Array,
+            remainCards: this.bb.cards
+        });
         renderer.drawBottomOutbox(new Array);
     };
 
     game.prompt = function () {
-        this.choosePrompt(this.bb.cards, this.lastCards);
+        this.choosePrompt(this.bb.cards, this.lastPutCards);
         renderer.drawBottomBox();
     };
 
     game.put = function () {
         var selectedCards = this.getSelectedCards(this.bb.cards);
 
-        //## 验证是否合法
+        // verify whether can put
         if (!game.compareCards(selectedCards, this.lastPutCards)) {
             smoke.signal('Invalid cards!');
             return;
         }
 
-        game.sort(selectedCards);
+        this.removeSelectedCards(this.bb.cards);
 
-        if (game.canPut(selectedCards) == false) {
-            alert('can not put this cards!');
-            return false;
-        }
-
-        var curPut = new Put(clientId, selectedCards);
-
-        // TODO  verify whether can put
-
-        // TODO send to server
-        socket.emit('Put', {
-            put: curPut
+        // send to server
+        socket.emit('Put', { room: this.myRoom, seat: this.mySeat,
+            putCards: selectedCards,
+            remainCards: this.bb.cards
         });
 
         renderer.drawBottomBox();
         renderer.drawBottomOutbox(selectedCards);
-
-        if (cards.length == 0) {
-            // hold
-        } else {
-            // put
-
-            for (var idx in this.players) {
-                var player = this.players[idx];
-                if (putPlayerId == player.id) {
-                    console.log(' cards num ' + cards.length);
-
-                    var tmpCards = [];
-                    for (var idx01 in player.cards) {
-                        var found = false;
-                        for (var idx02 in cards) {
-                            if (player.cards[idx01].isEqual(cards[idx02])) {
-                                found = true; break;
-                            }
-                        }
-                        if (found == false) {
-                            tmpCards.push(player.cards[idx01]);
-                        }
-                    }
-
-                    this.players[idx].cards = tmpCards;
-                    // simple
-                    this.players[idx].cardsNum -= cards.length;
-
-                    break;
-                }
-            }
-            this.lastCards = cards;
-            this.lastPut = new Put(putPlayerId, cards);
-        }
     }
 
     game.fillbox = function (players) {
         this.bb.cards = players[this.mySeat].cards;
-        this.lb.cardsNum = players[(this.mySeat + 1) % 4].cardsNum;
+        this.rb.cardsNum = players[(this.mySeat + 1) % 4].cardsNum;
         this.tb.cardsNum = players[(this.mySeat + 2) % 4].cardsNum;
-        this.rb.cardsNum = players[(this.mySeat + 3) % 4].cardsNum;
+        this.lb.cardsNum = players[(this.mySeat + 3) % 4].cardsNum;
     }
 
     exports.game = game;

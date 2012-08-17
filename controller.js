@@ -31,10 +31,7 @@
         });
 
         $('#btnHold').click(function () {
-            curPut = new Put(clientId, false);
-            socket.emit('Put', {
-                put: curPut
-            });
+            game.hold();
         });
 
         $('#btnPrompt').click(function () {

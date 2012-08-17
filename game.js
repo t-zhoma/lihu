@@ -237,13 +237,6 @@
         this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
     }
 
-    // verify put cards
-    Game.prototype.canPut = function (cards) {
-        // TODO
-        // 
-        return true;
-    }
-
     Game.prototype.buildImgSrcs = function () {
         var n;
         var si;
@@ -436,7 +429,7 @@
     }
 
     Game.prototype.removeSelectedCards = function (cards) {
-        for (var i = cards.length - 1; i >= 0; i++) {
+        for (var i = cards.length - 1; i >= 0; i--) {
             if (cards[i].selected) { cards.splice(i, 1); }
         }
     }
@@ -626,13 +619,13 @@
             case 2:
                 {
                     switch (type1) {
-                        case SINGLE:
-                        case PAIR:
-                        case THREE_BOMB:
-                        case FOUR_BOMB:
+                        case this.PutType.SINGLE:
+                        case this.PutType.PAIR:
+                        case this.PutType.THREE_BOMB:
+                        case this.PutType.FOUR_BOMB:
                             return this.getOrder(cards1[0]) > this.getOrder(cards2[0]);
-                        case PAIRS:
-                        case STRAIGHT:
+                        case this.PutType.PAIRS:
+                        case this.PutType.STRAIGHT:
                             {
                                 if (cards1.length != cards2.length) { return false; }
                                 return this.getOrder(cards1[0]) > this.getOrder(cards2[0]);
@@ -709,17 +702,11 @@
         return temp;
     }
 
-    var Put = function (playerId, cards) {
-        this.playerId = playerId;
-        this.cards = cards;
-    };
-
     exports.Game = Game;
     exports.Card = Card;
     exports.Box = Box;
     exports.BottomBox = BottomBox;
     exports.Player = Player;
-    exports.Put = Put;
     exports.Rect = Rect;
 
 })(typeof global === "undefined" ? window : exports);

@@ -97,9 +97,12 @@
 
         this.curPutterSeat = this.lihuRule[idx].firstPutterSeat;
         this.firstPutterSeat = this.lihuRule[idx].firstPutterSeat;
-        this.needPut = this.lihuRule[idx].needPut;
+        this.needPut = [this.lihuRule[idx].needPut[0], this.lihuRule[idx].needPut[1], 
+                        this.lihuRule[idx].needPut[2], this.lihuRule[idx].needPut[3]];
         this.needPutCount = this.lihuRule[idx].needPutCount;
         this.lihuType = this.lihuRule[idx].lihuType;
+
+        console.log('lihuType: ' + this.lihuType + ', needPutCount: ' + this.needPutCount + ', firstPutterSeat: ' + this.firstPutterSeat);
     }
 
     Game.prototype.getLihuPlayersName = function () {
