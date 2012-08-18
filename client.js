@@ -124,6 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
     });
 
+    socket.on('PlayerFinish',function(data){
+        renderer.drawRank(data.seat, data.rank);
+    });
+    
     // round over
     /*
     data = {

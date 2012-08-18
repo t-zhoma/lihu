@@ -6,12 +6,13 @@
 
     Game.prototype.deck = [];
     Game.prototype.firstPutterSeat = 0;
-    Game.prototype.curPutterSeat = 0; // seat of the current put player
+    Game.prototype.curPutterSeat = 0;      // seat of the current put player
     Game.prototype.lihuResponsNum = 0;
-    Game.prototype.lihuType = 0; // 0:no lihu, 1: one lihu, 2 two lihu
+    Game.prototype.lihuType = 0;          // 0:no lihu, 1: one lihu, 2 two lihu
     Game.prototype.needPut = [];
     Game.prototype.needPutCount = 0;
-
+    Game.prototype.finishPlayers = [];     // Players that have put all cards in current round
+    
     // Rules of lihu, each bit of index of array means the lihuResons of each player in the room
     // firstPutterSeat map to the low bit of index
     // i.e. lihuRule[3] means seat (firstPutter+2)%4 and (firstPutterSeat+3)%4 lihu, the others not lihu

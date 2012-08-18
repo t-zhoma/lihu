@@ -232,6 +232,31 @@
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    CanvasRenderer.prototype.drawRank = function(seat, rank){
+        this.ctx.font = '30px Arial';
+        this.ctx.color = 'red';
+        
+        // bb
+        if (seat == game.mySeat) { 
+           this.ctx.fillText(rank, game.bb.rect.x, game.bb.rect.y);
+        }
+
+        // rb
+        if ((game.mySeat + 1) % 4 == seat) {
+            this.ctx.fillText(rank, game.rb.rect.x, game.rb.rect.y);
+        }
+
+        // tb
+        if ((game.mySeat + 2) % 4 == seat) {
+            this.ctx.fillText(rank, game.tb.rect.x, game.tb.rect.y);
+        }
+
+        // lb
+        if ((game.mySeat + 3) % 4 == seat) {
+            this.ctx.fillText(rank, game.lb.rect.x, game.lb.rect.y);
+        }
+    }
+    
     // TODO
     // for cache & preload 
     var Source = {
