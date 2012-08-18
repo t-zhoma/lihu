@@ -13,12 +13,12 @@ var Util = {
         return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
       };
       return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-    }
-   pause:function(millseconds){
+    },
+   pause : function(millseconds){
    	var dt = new Date();
-   	while((new Data()) - dt <= millseconds){/*Do nothing*/}
+   	while((new Date()) - dt <= millseconds){/*Do nothing*/}
    }
 };
 
 exports.Util = Util;
-})(window);
+})(typeof global === "undefined" ? window : exports);

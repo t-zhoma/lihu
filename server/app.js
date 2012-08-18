@@ -47,6 +47,8 @@ var server = http.createServer(function(request, response) {
 }).listen(8080);
 
 
+var utiljs = new require('../utility.js');
+var Util = utiljs.Util;
 var servergamejs = new require('./serverGame.js');
 var Game = servergamejs.Game;
 var Player = servergamejs.Player;
@@ -243,8 +245,8 @@ io.sockets.on('connection', function (socket) {
         roomBroadCast(data.room, 'Put', { putterSeat: data.seat, putCards: data.putCards }, true);
         
         if (putter.cards.length == 0) {
-           game.finishPlayers.push(game.curPutterSeat);
-           roomBroadCast(data.room, 'PlayerFinish', {seat: game.curPutterSeat, rank: game.finishPlayers.length}, false);
+           var rank = game.addFinishPlayer(game.curPutterSeat);
+           roomBroadCast(data.room, 'PlayerFinish', {seat: game.curPutterSeat, rank: rank}, false);
         }
             
         game.curPutterSeat = game.nextSeat(game.curPutterSeat);
@@ -335,7 +337,7 @@ io.sockets.on('connection', function (socket) {
                 game.curPutterSeat = game.nextSeat(game.curPutterSeat);
                 continue;
             }
-			
+		  Util.pause(500); // Robot thinking !
             if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
 
             var cards = game.players[game.curPutterSeat].cards;
@@ -361,8 +363,8 @@ io.sockets.on('connection', function (socket) {
             roomBroadCast(room, 'Put', { putterSeat: game.curPutterSeat, putCards: putCards }, true);
 
             if (cards.length == 0) {
-               game.finishPlayers.push(game.curPutterSeat);
-               roomBroadCast(room, 'PlayerFinish', {seat: game.curPutterSeat, rank: game.finishPlayers.length}, false);
+               var rank = game.addFinishPlayer(game.curPutterSeat);
+               roomBroadCast(room, 'PlayerFinish', {seat: game.curPutterSeat, rank: rank}, false);
             }
 
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);

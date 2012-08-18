@@ -1,4 +1,4 @@
-﻿(function (exports) {
+(function (exports) {
     var gamejs = new require('../game.js');
 
     var Game = gamejs.Game;
@@ -33,6 +33,38 @@
                                { firstPutterSeat: 0, needPut: [true, true, true, true], needPutCount: 4, lihuType: 2 },
                                { firstPutterSeat: 0, needPut: [true, true, true, true], needPutCount: 4, lihuType: 2}];
 
+	// Rules of level calculate
+	// Dimension 1 means whether level 'a'(0: no, 1:yes)
+	// Dimension 2 means lihuType
+	// Dimension 3 means finishPlayer's length
+	// Dimension 4 means finish player( include finish order )
+	Game.prototype.levelRule = [[[[/*len 0*/],
+				      [{isRoundOver: false}, {isRoundOver: false}, {isRoundOver: false}, {isRoundOver: false}], 
+	                              [[{}, {isRoundOver: false}, {isRoundOver: true, is0_2Win: true, levels: 2}, {isRoundOver: false}],
+				       [{isRoundOver: false}, {}, {isRoundOver: false}, {isRoundOver: true, is0_2Win: false, levels: 2}],
+				       [{isRoundOver: true, is0_2Win: true, levels: 2}, {isRoundOver: false}, {}, {isRoundOver: false}],
+				       [{isRoundOver: false}, {isRoundOver: true, is0_2Win: false, levels: 2}, {isRoundOver: false}, {}]], 
+	                              [[[[{}, {}, {}, {}], 
+				         [{}, {}, {isRoundOver: true, is0_2Win: true, levels: 1}, {isRoundOver: true, is0_2Win: true, levels: 0}], 
+					 [{}, {}, {}, {}], 
+					 [{}, {isRoundOver: true, is0_2Win: true, levels: 0}, {isRoundOver: true, is0_2Win: true, levels: 1}, {}]], 
+					 [[{}, {}, {isRoundOver: true, is0_2Win: false, levels: 0}, {isRoundOver: true, is0_2Win: false, levels: 1}], 
+					  [{}, {}, {}, {}], 
+					  [{isRoundOver: true, is0_2Win: false, levels: 0}, {}, {}, {isRoundOver: true, is0_2Win: false, levels: 1}], 
+					  [{}, {}, {}, {}]], 
+					  [[{}, {}, {}, {}], 
+					   [{isRoundOver: true, is0_2Win: true, levels: 1}, {}, {}, {isRoundOver: true, is0_2Win: true, levels: 0}], 
+					   [{}, {}, {}, {}], 
+					   [{isRoundOver: true, is0_2Win: true, levels: 1}, {isRoundOver: true, is0_2Win: true, levels: 0}, {}, {}]], 
+					  [[{}, {isRoundOver: true, is0_2Win: false, levels: 1}, {isRoundOver: true, is0_2Win: false, levels: 0}, {}], 
+					   [{}, {}, {}, {}], 
+					   [{isRoundOver: true, is0_2Win: false, levels: 0}, {isRoundOver: true, is0_2Win: false, levels: 1}, {}, {}], 
+					   [{}, {}, {}, {}]]]], 
+				      [/*lihuType 1*/], [/*lihuType 2*/]], 
+				     [/*level 'a'*/]]];
+	
+	
+	
     // Function related to card logic
     Game.prototype.builddeck = function () {
         var n;
@@ -128,6 +160,22 @@
 
         return players;
     }
+
+	Game.prototype.addFinishPlayer = function(seat){
+		this.finishPlayers.push(seat);
+		
+		switch(this.lihuType){
+			case 0:
+			break;
+			case 1:
+			break;
+			case 2:
+			break;  
+		}
+		//## is game over
+		//## calc new level 
+		return this.finishPlayers.length;
+	}
 
     exports.Game = Game;
     exports.Player = gamejs.Player;
