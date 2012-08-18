@@ -1,4 +1,4 @@
-﻿var http = require('http')
+var http = require('http')
 	, fs = require('fs');
 var path = require('path');
 
@@ -335,7 +335,7 @@ io.sockets.on('connection', function (socket) {
                 game.curPutterSeat = game.nextSeat(game.curPutterSeat);
                 continue;
             }
-
+			
             if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
 
             var cards = game.players[game.curPutterSeat].cards;
@@ -362,7 +362,7 @@ io.sockets.on('connection', function (socket) {
 
             if (cards.length == 0) {
                game.finishPlayers.push(game.curPutterSeat);
-               roomBroadCast(room, 'PlayerFinish', {seat: game.curPutterSeat, rank: game.finishPlayers.length+1}, false);
+               roomBroadCast(room, 'PlayerFinish', {seat: game.curPutterSeat, rank: game.finishPlayers.length}, false);
             }
 
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);

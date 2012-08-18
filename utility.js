@@ -14,7 +14,10 @@ var Util = {
       };
       return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
-
+   pause:function(millseconds){
+   	var dt = new Date();
+   	while((new Data()) - dt <= millseconds){/*Do nothing*/}
+   }
 };
 
 exports.Util = Util;
