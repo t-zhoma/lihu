@@ -1,4 +1,4 @@
-var http = require('http')
+﻿var http = require('http')
 	, fs = require('fs');
 var path = require('path');
 
@@ -66,8 +66,7 @@ var curRoomId = false;
 // init games , five games init
 for(var i = 0; i < GAME_COUNT; i++){ 
     var temp = new Game();
-    temp.players = []; // 4 player, init empty seat
-    for(var j = 0; j < 4; j++){ temp.players.push(null); }
+    temp.initPlayers();
     games.push(temp); 
 }
 
@@ -243,12 +242,11 @@ io.sockets.on('connection', function (socket) {
         }
 
         roomBroadCast(data.room, 'Put', { putterSeat: data.seat, putCards: data.putCards }, true);
-        
+
         if (putter.cards.length == 0) {
-           var rank = game.addFinishPlayer(game.curPutterSeat);
-           roomBroadCast(data.room, 'PlayerFinish', {seat: game.curPutterSeat, rank: rank}, false);
+            if (addFinishPlayer(data.room, game.curPutterSeat)) { return; }
         }
-            
+
         game.curPutterSeat = game.nextSeat(game.curPutterSeat);
         putCards(data.room);
     });
@@ -273,8 +271,11 @@ io.sockets.on('connection', function (socket) {
     function roundStart(room) {
         console.log('new round start in room ' + room);
 
-        games[room].finishPlayers =[];
-        
+        // init game state
+        games[room].finishPlayers = [];
+        games[room].lastPutCards = [];
+        games[room].lihuResponsNum = 0;
+
         // build deck and shuffle
         games[room].start();
 
@@ -303,33 +304,30 @@ io.sockets.on('connection', function (socket) {
         }
     }
 
+    // return true means game over or round over
     function putCards(room) {
         var game = games[room];
         robotPut(room);
         while (!game.needPut[game.curPutterSeat]) {
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);
         }
-            
-        if(game.players[game.curPutterSeat].cards.length == 0) {
-           game.needPut[game.curPutterSeat] = false;
-           if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
-           game.curPutterSeat = game.nextSeat(game.curPutterSeat);
-           robotPut(room);   
-           
-           // if game not over
-           /*while (!game.needPut[game.curPutterSeat]) {
-               game.curPutterSeat = game.nextSeat(game.curPutterSeat);
-           }*/
-           // game over then return
+
+        if (game.players[game.curPutterSeat].cards.length == 0) {
+            game.needPut[game.curPutterSeat] = false;
+            if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
+            game.curPutterSeat = game.nextSeat(game.curPutterSeat);
+            if (robotPut(room)) { return true; }
         }
-            
+
         roomBroadCast(room, 'NewPut', { curPutterSeat: game.curPutterSeat,
             lastPutterSeat: game.lastPutterSeat,
             lastPutCards: game.lastPutCards
         }, false);
+
+        return false;
     }
 
-    function robotPut(room) {
+    function robotPut(room) { // return true means game over or round over
         var game = games[room];
 
         while (game.players[game.curPutterSeat].isRobot || !game.needPut[game.curPutterSeat]) {
@@ -337,19 +335,19 @@ io.sockets.on('connection', function (socket) {
                 game.curPutterSeat = game.nextSeat(game.curPutterSeat);
                 continue;
             }
-		  Util.pause(500); // Robot thinking !
+            Util.pause(500); // Robot thinking !
             if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
 
             var cards = game.players[game.curPutterSeat].cards;
-            
-            if(cards.length == 0) {
-               game.needPut[game.curPutterSeat] = false;
-               if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
 
-               game.curPutterSeat = game.nextSeat(game.curPutterSeat);
-               continue;
+            if (cards.length == 0) {
+                game.needPut[game.curPutterSeat] = false;
+                if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
+
+                game.curPutterSeat = game.nextSeat(game.curPutterSeat);
+                continue;
             }
-            
+
             game.choosePrompt(cards, game.lastPutCards);
             var putCards = game.getSelectedCards(cards);
 
@@ -363,12 +361,37 @@ io.sockets.on('connection', function (socket) {
             roomBroadCast(room, 'Put', { putterSeat: game.curPutterSeat, putCards: putCards }, true);
 
             if (cards.length == 0) {
-               var rank = game.addFinishPlayer(game.curPutterSeat);
-               roomBroadCast(room, 'PlayerFinish', {seat: game.curPutterSeat, rank: rank}, false);
+                if (addFinishPlayer(room, game.curPutterSeat)) { return true; }
             }
 
             game.curPutterSeat = game.nextSeat(game.curPutterSeat);
         }
+
+        return false;
+    }
+
+    // return true means game over or round over
+    function addFinishPlayer(room, seat) {
+        var ret = false;
+        game = games[room];
+        var data = game.addFinishPlayer(seat);
+
+        if (data.isGameOVer) {
+            ret = true;
+            roomBroadCast(room, 'GameOver', { is0_2Win: data.is0_2Win }, false);
+            var temp = new Game();
+            temp.initPlayers();
+            games[room] = temp;
+        }
+        else if (data.isRoundOver) {
+            ret = true;
+            roundStart(room);
+        }
+        else {
+            roomBroadCast(room, 'PlayerFinish', { seat: seat, rank: data.rank }, false);
+        }
+
+        return ret;
     }
 
     function leaveRoom(data) {

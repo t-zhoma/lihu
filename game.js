@@ -66,12 +66,6 @@
         // last put info
         this.lastPutterSeat = 0;
         this.lastPutCards = [];
-
-        this.gameLevel = [0, 0];
-        this.curLevel = 0;
-        this.lastWinnerId = false;
-
-        this.lastPut = false;
     };
 
     Game.prototype.getIdxByPlayerId = function (playerId) {
@@ -123,20 +117,6 @@
         return false;
     }
 
-    Game.prototype.roundOver = function () {
-        for (var i in this.players) {
-            if (this.players[i].cardsNum <= 0) {
-
-                // caculate level
-                this.gameLevel[i % 2]++; // level up
-                this.curLevel = this.gameLevel[i % 2];
-                this.lastWinnerId = this.players[i].id;
-
-                return;
-            }
-        }
-    }
-
     // user leave room,
     Game.prototype.leaveRoom = function () {
         this.players = [];
@@ -151,16 +131,6 @@
         for (var idx in this.players) {
             if (this.players[idx].cardsNum == 0) {
                 return this.players[idx].id;
-            }
-        }
-    }
-
-    Game.prototype.getLastWinnerId = function () {
-        if (this.lastWinnerId !== false) return this.lastWinnerId;
-        for (var i in this.players) {
-            if (this.players[i].isRobot == false) {
-                this.curPutPlayerIdx = i;
-                return this.players[i].id;
             }
         }
     }
@@ -264,6 +234,12 @@
 
     Game.prototype.getCurrentLevel = function () {
         return this.isLevel_0_2 ? this.level_0_2 : this.level_1_3;
+    }
+
+    Game.prototype.addLevel = function (isAddTo0_2, levels) {
+        isLevel_0_2 = isAddTo0_2;
+        isAddTo0_2 ? (this.level_0_2 = Math.min(this.level_0_2 + levels, 11)) :
+                     (this.level_1_3 = Math.min(this.level_1_3 + levels, 11))
     }
 
     Game.prototype.cardFullName = function (suitname, num) {

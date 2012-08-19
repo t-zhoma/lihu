@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         game.level_0_2 = data.level_0_2;
         game.level_1_3 = data.level_1_3;
         game.isLevel_0_2 = data.isLevel_0_2;
+        $('#home #game #cur_level').html(data.isLevel_0_2 ? data.level_0_2 : data.level_1_3);
 
         game.buildCardOrder();
         game.sort(game.bb.cards);
@@ -124,10 +125,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
     });
 
-    socket.on('PlayerFinish',function(data){
+    socket.on('PlayerFinish', function (data) {
         renderer.drawRank(data.seat, data.rank);
     });
-    
+
     // round over
     /*
     data = {
@@ -152,6 +153,10 @@ document.addEventListener('DOMContentLoaded', function () {
         //##game.over();
     });
 
+    socket.on('GameOver', function (data) {
+        if (data.is0_2Win && (game.mySeat == 0 || game.mySeat == 2)) { smoke.signal('You win!'); }
+        if (!data.is0_2Win && (game.mySeat == 1 || game.mySeat == 3)) { smoke.signal('You lose!'); }
+    });
 
     // select seat
     // TODO
