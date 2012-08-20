@@ -237,7 +237,7 @@
     }
 
     Game.prototype.addLevel = function (isAddTo0_2, levels) {
-        isLevel_0_2 = isAddTo0_2;
+        this.isLevel_0_2 = isAddTo0_2;
         isAddTo0_2 ? (this.level_0_2 = Math.min(this.level_0_2 + levels, 11)) :
                      (this.level_1_3 = Math.min(this.level_1_3 + levels, 11))
     }

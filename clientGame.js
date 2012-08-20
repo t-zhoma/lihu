@@ -28,6 +28,7 @@
             return;
         }
 
+        allowPut(false);
         socket.emit('Put', { room: this.myRoom, seat: this.mySeat,
             putCards: new Array,
             remainCards: this.bb.cards
@@ -48,6 +49,8 @@
             smoke.signal('Invalid cards!');
             return;
         }
+
+        allowPut(false);
 
         this.removeSelectedCards(this.bb.cards);
 

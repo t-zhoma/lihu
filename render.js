@@ -1,4 +1,4 @@
-(function (exports) {
+﻿(function (exports) {
 
     var CanvasRenderer = function () {
         this.canvas = document.getElementById('canvas');
@@ -89,6 +89,8 @@
 
 
     CanvasRenderer.prototype.drawBottomOutbox = function (cards) {
+        this.ctx.clearRect(game.bob.rect.x, game.bob.rect.y, game.bob.rect.w, game.bob.rect.h);
+
         var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
@@ -97,7 +99,11 @@
         var x = (game.bob.rect.w - w) / 2 + game.bob.rect.x;
         var y = game.bob.rect.y;
 
-        this.ctx.clearRect(game.bob.rect.x, game.bob.rect.y, game.bob.rect.w, game.bob.rect.h);
+        if (cards.length == 0) {
+            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            return;
+        }
+
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -105,6 +111,8 @@
     }
 
     CanvasRenderer.prototype.drawTopOutbox = function (cards) {
+        this.ctx.clearRect(game.tob.rect.x, game.tob.rect.y, game.tob.rect.w, game.tob.rect.h);
+
         var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
@@ -112,7 +120,11 @@
         var x = (game.tob.rect.w - w) / 2 + game.tob.rect.x;
         var y = game.tob.rect.y;
 
-        this.ctx.clearRect(game.tob.rect.x, game.tob.rect.y, game.tob.rect.w, game.tob.rect.h);
+        if (cards.length == 0) {
+            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            return;
+        }
+
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -120,10 +132,16 @@
     }
 
     CanvasRenderer.prototype.drawLeftOutbox = function (cards) {
+        this.ctx.clearRect(game.lob.rect.x, game.lob.rect.y, game.lob.rect.w, game.lob.rect.h);
+
         var x = game.lob.rect.x;
         var y = game.lob.rect.y;
 
-        this.ctx.clearRect(game.lob.rect.x, game.lob.rect.y, game.lob.rect.w, game.lob.rect.h);
+        if (cards.length == 0) {
+            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            return;
+        }
+        
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -131,6 +149,8 @@
     }
 
     CanvasRenderer.prototype.drawRightOutbox = function (cards) {
+        this.ctx.clearRect(game.rob.rect.x, game.rob.rect.y, game.rob.rect.w, game.rob.rect.h);
+
         var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
         if (cards.length == 0) {
             w += Game.CARD_SPACE;
@@ -138,7 +158,11 @@
         var x = game.rob.rect.w - w + game.rob.rect.x;
         var y = game.rob.rect.y;
 
-        this.ctx.clearRect(game.rob.rect.x, game.rob.rect.y, game.rob.rect.w, game.rob.rect.h);
+        if (cards.length == 0) {
+            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            return;
+        }
+
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
@@ -232,13 +256,13 @@
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    CanvasRenderer.prototype.drawRank = function(seat, rank){
+    CanvasRenderer.prototype.drawRank = function (seat, rank) {
         this.ctx.font = '30px Arial';
         this.ctx.color = 'red';
-        
+
         // bb
-        if (seat == game.mySeat) { 
-           this.ctx.fillText(rank, game.bb.rect.x, game.bb.rect.y);
+        if (seat == game.mySeat) {
+            this.ctx.fillText(rank, game.bb.rect.x, game.bb.rect.y);
         }
 
         // rb
@@ -256,7 +280,7 @@
             this.ctx.fillText(rank, game.lb.rect.x, game.lb.rect.y);
         }
     }
-    
+
     // TODO
     // for cache & preload 
     var Source = {

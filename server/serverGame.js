@@ -61,7 +61,14 @@
     // |              |....
     // |    
     // |----level 'a'
-    // |    |....
+    // |    |----finish players's length 0
+    // |    |----finish players's length 1
+    // |    |    |----finish players(include order)
+    // |    |         |----results
+    // |    |----finish players's length 2
+    // |         |....
+    // |    |----finish players's length 3
+    // |         |....
 
     Game.prototype.levelRule = [[[[],
 				                [{ isRoundOver: false }, { isRoundOver: false }, { isRoundOver: false }, { isRoundOver: false}], // len 1
@@ -99,7 +106,20 @@
                                   [],
                                   [{ isRoundOver: true, is0_2Win: true, levels: 8 }, { isRoundOver: true, is0_2Win: false, levels: 8 },
                                    {}, { isRoundOver: true, is0_2Win: false, levels: 8}]]]]], // lihu type 2
-				              [/*level 'a'*/]];
+				              [[],
+                               [{ isRoundOver: false }, { isRoundOver: false }, { isRoundOver: false }, { isRoundOver: false}],
+                               [[{}, { isRoundOver: true, is0_2Win: true, levels: 0 }, { isRoundOver: true, is0_2Win: true, levels: 1 }, { isRoundOver: true, is0_2Win: true, levels: 0}],
+                                [{ isRoundOver: false }, {}, { isRoundOver: false }, { isRoundOver: true, is0_2Win: false, levels: 2}],
+                                [{ isRoundOver: true, is0_2Win: true, levels: 1 }, { isRoundOver: true, is0_2Win: true, levels: 0 }, {}, { isRoundOver: true, is0_2Win: true, levels: 0}],
+                                [{ isRoundOver: false }, { isRoundOver: true, is0_2Win: false, levels: 2 }, { isRoundOver: false }, {}]],
+                               [[],
+                                [[{}, {}, { isRoundOver: true, is0_2Win: false, levels: 0 }, { isRoundOver: true, is0_2Win: false, levels: 1}],
+                                 [],
+                                 [{ isRoundOver: true, is0_2Win: false, levels: 0 }, {}, {}, { isRoundOver: true, is0_2Win: false, levels: 1}]],
+                                [],
+                                [[{}, { isRoundOver: true, is0_2Win: false, levels: 1 }, { isRoundOver: true, is0_2Win: false, levels: 0 }, {}],
+                                 [],
+                                 [{ isRoundOver: true, is0_2Win: false, levels: 0 }, { isRoundOver: true, is0_2Win: false, levels: 1 }, {}, {}]]]]];
 
     // Function related to card logic
     Game.prototype.builddeck = function () {
@@ -160,14 +180,15 @@
     // lihu type
     Game.prototype.calcLihuType = function () {
         var idx = 0;
+        var offset = this.firstPutterSeat;
         for (var i = 0; i < 4; i++) {
-            if (this.players[(this.firstPutterSeat + i) % 4].isLihu) { idx += Math.pow(2, 3 - i); }
+            if (this.players[(offset + i) % 4].isLihu) { idx += Math.pow(2, 3 - i); }
         }
 
-        this.curPutterSeat = this.lihuRule[idx].firstPutterSeat;
-        this.firstPutterSeat = this.lihuRule[idx].firstPutterSeat;
-        this.needPut = [this.lihuRule[idx].needPut[0], this.lihuRule[idx].needPut[1],
-                        this.lihuRule[idx].needPut[2], this.lihuRule[idx].needPut[3]];
+        this.firstPutterSeat = (this.lihuRule[idx].firstPutterSeat + offset) % 4;
+        this.curPutterSeat = this.firstPutterSeat;
+        this.needPut = [this.lihuRule[idx].needPut[(0 - offset + 4) % 4], this.lihuRule[idx].needPut[(1 - offset + 4) % 4],
+                        this.lihuRule[idx].needPut[(2 - offset + 4) % 4], this.lihuRule[idx].needPut[(3 - offset + 4) % 4]];
         this.needPutCount = this.lihuRule[idx].needPutCount;
         this.lihuType = this.lihuRule[idx].lihuType;
         this.lihu2Type = this.lihuRule[idx].lihu2Type;
@@ -198,9 +219,9 @@
         return players;
     }
 
-    Game.prototype.initPlayers = function() {
+    Game.prototype.initPlayers = function () {
         this.players = []; // 4 player, init empty seat
-        for(var j = 0; j < 4; j++){ this.players.push(null); }
+        for (var j = 0; j < 4; j++) { this.players.push(null); }
     }
 
     Game.prototype.addFinishPlayer = function (seat) {
@@ -209,6 +230,7 @@
 
         var res = null;
         if (this.getCurrentLevel() == 11) { // level 'a'
+            res = this.levelRule[1][this.finishPlayers.length];
         }
         else { // not level 'a'
             res = this.levelRule[0][this.lihuType];
@@ -223,9 +245,10 @@
                     res = res[this.lihu2Type][this.finishPlayers.length];
                     break;
             }
-            for (var i = 0; i < this.finishPlayers.length; i++) {
-                res = res[(this.finishPlayers[i] - this.firstPutterSeat + 4) % 4];
-            }
+        }
+
+        for (var i = 0; i < this.finishPlayers.length; i++) {
+            res = res[(this.finishPlayers[i] - this.firstPutterSeat + 4) % 4];
         }
 
         if (res.isRoundOver) {
@@ -249,14 +272,13 @@
                 }
             }
 
-            console.log('isGameOver:' + ret.isGameOver);
-
             // calc new level & firstPutter in next round
             if (!ret.isGameOver) {
-                this.addLevel(res.is0_2Win, res.levels);
+                this.addLevel(is0_2Win, res.levels);
                 for (var i = 0; i < this.finishPlayers.length; i++) {
-                    if (res.is0_2Win && (i == 0 || i == 2)) { this.firstPutterSeat = i; break;}
-                    if (!res.is0_2Win && (i == 1 || i == 3)) { this.firstPutterSeat = i; break;}
+                    var seat = this.finishPlayers[i];
+                    if (res.is0_2Win && (seat == 0 || seat == 2)) { this.firstPutterSeat = seat; break; }
+                    if (!res.is0_2Win && (seat == 1 || seat == 3)) { this.firstPutterSeat = seat; break; }
                 }
             }
         }
