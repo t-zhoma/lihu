@@ -39,14 +39,22 @@
         });
 
         $('#quit_btn').click(function () {
-            smoke.confirm('are you sure to quit the game?', function (e) {
+            smoke.confirm('are you sure to quit?', function (e) {
                 if (e) {
                     // confirm
-                    socket.emit('LeaveRoom', {
-                        room: game.myRoom,
-                        seat: game.mySeat,
-                        name: game.myName
-                    });
+                    switch (game.stage) {
+                        case game.StageType.CHOOSE_GAME:
+                            // Do nothing
+                            break;
+                        case game.StageType.WAITING:
+                            socket.emit('LeaveRoom', { room: game.myRoom, seat: game.mySeat, name: game.myName });
+                            socket.emit('GameList', {});
+                            break;
+                        case game.StageType.PLAYING:
+                            socket.emit('LeaveRoom', { room: game.myRoom, seat: game.mySeat, name: game.myName });
+                            socket.emit('GameList', {});
+                            break;
+                    }
                 } else {
                     // cancel
                 }

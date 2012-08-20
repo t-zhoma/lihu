@@ -37,14 +37,32 @@ document.addEventListener('DOMContentLoaded', function () {
     //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://localhost:8080');
 
+    socket.on('Connected', function (data) {
+        switch (game.stage) {
+            case game.StageType.CHOOSE_GAME:
+                socket.emit('GameList', {});
+                break;
+            case game.StageType.WAITING:
+                // Do nothing
+                break;
+            case game.StageType.PLAYING:
+                // Do nothing
+                break;
+        }
+    });
 
     // Update game list
     socket.on('GameList', function (data) {
         game.gameList = data;
+        renderer.clear();
         renderer.drawGameList();
         game.stage = game.StageType.CHOOSE_GAME;
+
+        $('#home #waiting').hide();
+        $('#home #game').show();
     });
 
+    // Self or other player enter room
     socket.on('EnterRoom', function (data) {
         if (data.code != 0) {
             alert('fail to join the game' + data.errorMsg);
@@ -56,25 +74,20 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#home #game').hide();
 
             renderer.updateWaitingPage(data);
-
             game.stage = game.StageType.WAITING;
-            if (game.mySeat == 0) {
-                $('#btnStart').show();
-            }
-            else {
-                $('#btnStart').hide();
-            }
+            game.mySeat == 0 ? $('#btnStart').show() : $('#btnStart').hide();
         }
         else if (game.stage == game.StageType.WAITING) {
             renderer.updateWaitingPage(data);
         }
         else if (game.stage == game.StageType.PLAYING) {
-            // TODO
+            // Now do nothing
         }
     });
 
     // start game, get cards from server
     socket.on('RoundStart', function (data) {
+        game.stage = game.StageType.PLAYING;
         game.players = data.players;
         game.fillbox(data.players);
 
@@ -138,27 +151,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     */
     socket.on('LeaveRoom', function (data) {
-        smoke.signal(data.name + ' leaved the game !');
-        renderer.updateWaitingPage(data);
-        //##game.over();
+        switch (game.stage) {
+            case game.StageType.CHOOSE_GAME:
+                // update room info
+                break;
+            case game.StageType.WAITING:
+                smoke.signal(data.name + ' leaved the game !');
+                renderer.updateWaitingPage(data);
+                break;
+            case game.StageType.PLAYING:
+                break;
+        }
+    });
+
+    socket.on('GameAbort', function (data) {
+        smoke.signal(data.msg);
+        socket.emit('GameList', {});
     });
 
     socket.on('GameOver', function (data) {
         if (data.is0_2Win && (game.mySeat == 0 || game.mySeat == 2)) { smoke.signal('You win!'); }
         if (!data.is0_2Win && (game.mySeat == 1 || game.mySeat == 3)) { smoke.signal('You lose!'); }
+        socket.emit('GameList', {});
     });
-
-    // select seat
-    // TODO
-    /*
-    data = {
-    seatId : ,
-    roomId : ,
-    playerId : ,
-    }
-    */
-    socket.on('SelectSeat', function (data) {
-
-    });
-
 });

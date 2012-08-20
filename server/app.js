@@ -77,20 +77,25 @@ io.sockets.on('connection', function (socket) {
     console.log(socket.id);
     observerCount++;
 
-    var gameList = [];
-    for (var i = 0; i < GAME_COUNT; i++) {
-        gameList[i] = new Array;
-        for (var j = 0; j < 4; j++) {
-            if (games[i].players[j] == null) {
-                gameList[i][j] = null;
-                continue;
+    socket.emit('Connected', {});
+
+    // GameList request
+    socket.on('GameList', function (data) {
+        var gameList = [];
+        for (var i = 0; i < GAME_COUNT; i++) {
+            gameList[i] = new Array;
+            for (var j = 0; j < 4; j++) {
+                if (games[i].players[j] == null) {
+                    gameList[i][j] = null;
+                    continue;
+                }
+
+                gameList[i][j] = { name: games[i].players[j].name };
             }
-
-            gameList[i][j] = { name: games[i].players[j].name };
         }
-    }
 
-    socket.emit('GameList', gameList);
+        socket.emit('GameList', gameList);
+    });
 
     // Enter Room
     socket.on('EnterRoom', function (data) {
@@ -121,6 +126,8 @@ io.sockets.on('connection', function (socket) {
             return;
         }
 
+        games[data.room].isStart = true;
+
         // robot needed?
         for (var i = 0; i < 4; i++) {
             if (games[data.room].players[i] == null) {
@@ -139,14 +146,14 @@ io.sockets.on('connection', function (socket) {
     /*
     player leave room
     data = {
-    playerId : ,
-    roomId : ,
+    room : ,
+    seat : ,
+    name :
     }
     */
     socket.on('LeaveRoom', function (data) {
         console.log(data.name + ' Leave room ' + data.room + ', seat ' + data.seat);
         leaveRoom(data);
-        //## send roomlist
     });
 
     //user put cards
@@ -308,9 +315,7 @@ io.sockets.on('connection', function (socket) {
         if (data.isGameOver) {
             ret = true;
             roomBroadCast(room, 'GameOver', { is0_2Win: data.is0_2Win }, false);
-            var temp = new Game();
-            temp.initPlayers();
-            games[room] = temp;
+            resetGame(room);
         }
         else if (data.isRoundOver) {
             ret = true;
@@ -324,10 +329,21 @@ io.sockets.on('connection', function (socket) {
     }
 
     function leaveRoom(data) {
-        var player = games[data.room].players[data.seat];
         games[data.room].players[data.seat] = null;
 
-        roomBroadCast(data.room, 'LeaveRoom', { room: data.room, name: data.name }, true);
+        if (games[data.room].isStart) {
+            roomBroadCast(data.room, 'GameAbort', { msg: data.name + ' leave!' }, true);
+            resetGame(data.room);
+        }
+        else {
+            roomBroadCast(data.room, 'LeaveRoom', data, true);
+        }
+    }
+
+    function resetGame(room) {
+        var temp = new Game();
+        temp.initPlayers();
+        games[room] = temp;
     }
 
     function roomBroadCast(room, action, data, isSendPlayerInfo) {

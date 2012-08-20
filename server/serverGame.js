@@ -13,6 +13,7 @@
     Game.prototype.needPut = [];
     Game.prototype.needPutCount = 0;
     Game.prototype.finishPlayers = [];     // Players that have put all cards in current round
+    Game.prototype.isStart = false;
 
     // Rules of lihu, each bit of index of array means the lihuResons of each player in the room
     // firstPutterSeat map to the low bit of index
