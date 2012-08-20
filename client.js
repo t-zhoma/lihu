@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         game.level_0_2 = data.level_0_2;
         game.level_1_3 = data.level_1_3;
         game.isLevel_0_2 = data.isLevel_0_2;
-        $('#home #game #cur_level').html(data.isLevel_0_2 ? data.level_0_2 : data.level_1_3);
+        $('#home #game #cur_level').html(data.isLevel_0_2 ? game.level[data.level_0_2] : game.level[data.level_1_3]);
 
         game.buildCardOrder();
         game.sort(game.bb.cards);
@@ -127,16 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     socket.on('PlayerFinish', function (data) {
         renderer.drawRank(data.seat, data.rank);
-    });
-
-    // round over
-    /*
-    data = {
-    winnerId: 
-    }
-    */
-    socket.on('RoundOver', function (data) {
-        alert('round over! winner is ' + game.players[game.getIdxByPlayerId(data.winnerId)].name);
     });
 
     // leave room

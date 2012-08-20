@@ -113,77 +113,6 @@ io.sockets.on('connection', function (socket) {
         games[data.room].players[data.seat] = player;
 
         roomBroadCast(data.room, 'EnterRoom', { room: data.room, code: 0 }, true);
-
-        //##
-        return;
-
-        if (games[curRoomId] === false || games[curRoomId].isRoomEmpty() == true) {
-            console.log('new game');
-            games[curRoomId] = new Game();
-            var robotCnt = 0;
-            // create robot
-            if (!isNaN(data.robotCnt)) {
-                robotCnt = parseInt(data.robotCnt);
-                if (robotCnt > 3) robotCnt = 3;
-                for (var idx = 1; idx <= robotCnt; idx++) {
-                    robot = new Player('robot0' + idx, 'robot0' + idx);
-                    robot.isRobot = true;
-                    games[curRoomId].addPlayer(robot);
-                }
-            }
-        } else {
-            console.log('player num ' + games[curRoomId].players.length);
-        }
-
-        // already join the game
-        if (games[curRoomId].inRoom(data.playerId) == true) {
-            socket.emit('EnterRoom', {
-                code: 0,
-                msg: ''
-            });
-            return;
-        }
-
-        // check is there any seat for the player
-        if (games[curRoomId].isRoomFull() == true) {
-            socket.emit('EnterRoom', {
-                code: 1,
-                errorMsg: 'room is full'
-            });
-            return;
-        }
-
-        curPlayer = new Player(data.playerId, data.playerName);
-        curPlayer.socketId = socket.id;
-        curPlayer.seatId = data.seatId;
-
-        console.log(curPlayer.id + ' ' + curPlayer.name);
-
-        // have seat
-        if (games[curRoomId].addPlayer(curPlayer) === false) {
-            return;
-        }
-
-        // Broadcast that client has joined
-        var returnData = {
-            code: 0,
-            roomId: curRoomId
-        };
-
-        roomBroadCast('EnterRoom', returnData);
-        /*
-        for (var idx in games[curRoomId].players) {
-        var player = games[curRoomId].players[idx];
-        if (player.isRobot == true) continue;
-        io.sockets.socket(player.socketId).emit('EnterRoom', returnData);
-        }
-        // socket.emit('join', returnData);
-        */
-
-        // could start
-        if (games[curRoomId].ready()) {
-            roundStart();
-        }
     });
 
     socket.on('StartGame', function (data) {
@@ -376,7 +305,7 @@ io.sockets.on('connection', function (socket) {
         game = games[room];
         var data = game.addFinishPlayer(seat);
 
-        if (data.isGameOVer) {
+        if (data.isGameOver) {
             ret = true;
             roomBroadCast(room, 'GameOver', { is0_2Win: data.is0_2Win }, false);
             var temp = new Game();

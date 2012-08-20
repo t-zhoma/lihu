@@ -5,28 +5,7 @@
     // Common
     ////////////////////////////
     var Game = function () {
-        // Card parameter
-        Game.CARD_WIDTH = 75;
-        Game.CARD_HEIGHT = 107;
-        Game.CARD_SPACE = 18;     // space btw cards
-        Game.CARD_EXTEND = 25;    // extend space when card is selected
-
         // Cards
-        this.imgSrcs = new Array;
-
-        this.startX;
-        this.startY;
-
-        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
-        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
-        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
-        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
-
-        this.tob = new OutBox(new Rect(300, 167, 600, Game.CARD_HEIGHT));
-        this.lob = new OutBox(new Rect(267, 396, 326, Game.CARD_HEIGHT));
-        this.rob = new OutBox(new Rect(594, 396, 326, Game.CARD_HEIGHT));
-        this.bob = new OutBox(new Rect(300, 583, 600, Game.CARD_HEIGHT));
-
         this.cardNums = ["3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a", "2", "joker-b", "joker-r"];
         this.suitnames = ["clubs", "hearts", "spades", "diamonds"];
         this.cardOrder = new Object(); // Card order related to current level
@@ -68,16 +47,9 @@
         this.lastPutCards = [];
     };
 
-    Game.prototype.getIdxByPlayerId = function (playerId) {
-        for (var idx in this.players) {
-            var player = this.players[idx];
-            if (player != false && player.id == playerId) {
-                return parseInt(idx);
-            }
-        }
-        return false;
+    Game.prototype.nextSeat = function (seat) {
+        return (seat + 1) % 4;
     }
-
 
     Game.prototype.swapcard = function (cards, j, k) {
         var temp = new Card(cards[j].suit, cards[j].num, cards[j].src);
@@ -97,130 +69,6 @@
             }
             this.swapcard(cards, i, max);
         }
-    }
-
-    ////////////////////////////
-    // Server Code
-    ////////////////////////////
-    Game.prototype.nextSeat = function (seat) {
-        return (seat + 1) % 4;
-    }
-
-    // check is game over
-    Game.prototype.isGameOver = function () {
-        for (var i in this.players) {
-            if (this.players[i].cardsNum <= 0) {
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // user leave room,
-    Game.prototype.leaveRoom = function () {
-        this.players = [];
-        this.players.push(new Player(false, false));
-        this.players.push(new Player(false, false));
-        this.players.push(new Player(false, false));
-        this.players.push(new Player(false, false));
-    }
-
-    Game.prototype.getWinnerId = function () {
-        if (this.isGameOver() == false) return false;
-        for (var idx in this.players) {
-            if (this.players[idx].cardsNum == 0) {
-                return this.players[idx].id;
-            }
-        }
-    }
-
-    // game ready
-    // now just check players num, later will add to check player's status
-    Game.prototype.ready = function () {
-        return (this.isRoomFull());
-    }
-
-    // 
-    Game.prototype.isRoomFull = function () {
-        for (var idx in this.players) {
-            if (this.players[idx].id === false) return false;
-        }
-        return true;
-    }
-    Game.prototype.isRoomEmpty = function () {
-        for (var idx in this.players) {
-            if (this.players[idx].id !== false) return false;
-        }
-        return true;
-    }
-
-    Game.prototype.inRoom = function (playerId) {
-        for (var idx in this.palyers) {
-            var player = this.players[idx];
-            if (player.id == playerId) return true;
-        }
-        return false;
-    }
-    Game.prototype.isSeatOccupy = function (seatId) {
-        return (this.players[seatId].id !== false);
-    }
-
-    Game.prototype.addPlayer = function (player) {
-        // check user in the room
-        console.log('add player ' + player.id + ' ' + player.name + ' ' + player.seatId);
-        console.log(this.inRoom(player.id) + ' ' + this.isSeatOccupy(player.seatId));
-        if (this.inRoom(player.id) == true) {
-            console.log('add player fail: in room ');
-            return false;
-        }
-
-        if (this.isSeatOccupy(player.seatId)) {
-            // arrange a seat
-            for (var idx in this.players) {
-                if (this.players[idx].id == false) {
-                    player.seatId = idx;
-                }
-            }
-        }
-
-        // have seat
-        this.players[player.seatId] = player;
-        console.log('add player success ' + player.name + ' ' + player.seatId);
-
-        return player;
-
-    }
-
-    ////////////////////////////
-    // Client Code
-    ////////////////////////////
-
-    Game.prototype.getCurrentPlayerIdx = function () {
-        return this.getIdxByPlayerId(clientId);
-    }
-
-    Game.prototype.resetBox = function () {
-        this.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
-        this.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
-        this.rb = new Box(14, new Rect(930, 125, Game.CARD_HEIGHT, 600));
-        this.bb = new BottomBox(new Rect(300, 700, 600, Game.CARD_HEIGHT + Game.CARD_EXTEND));
-    }
-
-    Game.prototype.buildImgSrcs = function () {
-        var n;
-        var si;
-        var picname;
-        for (var si = 0; si < 4; si++) {
-            for (var n = 0; n < 13; n++) {
-                picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
-                this.imgSrcs.push(picname);
-            }
-        }
-        this.imgSrcs.push("img\\joker-b-75.png");
-        this.imgSrcs.push("img\\joker-r-75.png");
-        this.imgSrcs.push("img\\back-blue-75-1.png");
-        this.imgSrcs.push("img\\back-blue-h-75-1.png");
     }
 
     // return true when card1 < card2, else return false, need buildCardOrder first
@@ -630,20 +478,6 @@
         return (this.suit == cardB.suit && this.num == cardB.num);
     }
 
-    var Box = function (cardsNum, rect) {
-        this.cardsNum = cardsNum;
-        this.rect = rect;
-    }
-
-    var BottomBox = function (rect) {
-        this.cards = [];
-        this.rect = rect;
-    }
-
-    var OutBox = function (rect) {
-        this.rect = rect;
-    }
-
     var Rect = function (x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -680,8 +514,6 @@
 
     exports.Game = Game;
     exports.Card = Card;
-    exports.Box = Box;
-    exports.BottomBox = BottomBox;
     exports.Player = Player;
     exports.Rect = Rect;
 

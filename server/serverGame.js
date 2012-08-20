@@ -259,17 +259,19 @@
 
             // is game over ?
             if (this.getCurrentLevel() == 11) { // > level 'a'
-                if (is0_2Win && this.isLevel_0_2) {
+                if (is0_2Win && this.isLevel_0_2 && res.levels > 0) {
                     // game over 0_2 win
                     ret.isGameOver = true;
                     ret.is0_2Win = true;
                 }
 
-                if (!is0_2Win && !this.isLevel_0_2) {
+                if (!is0_2Win && !this.isLevel_0_2 && res.levels > 0) {
                     // game over 1_3 win
                     ret.isGameOver = true;
                     ret.is0_2Win = false;
                 }
+
+                if (ret.isGameOver) { console.log('GameOver!'); }
             }
 
             // calc new level & firstPutter in next round
@@ -284,6 +286,11 @@
         }
 
         return ret;
+    }
+
+    // user leave room,
+    Game.prototype.leaveRoom = function () {
+        this.initPlayers();
     }
 
     exports.Game = Game;

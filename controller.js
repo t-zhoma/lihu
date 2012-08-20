@@ -52,40 +52,6 @@
                 }
             });
         });
-
-        $('#join_btn').click(function () {
-            smoke.prompt("what is your name", function (name) {
-                if (name) {
-                    //smoke.signal('name is: ' + name );
-                    $('#player_name').html(name);
-                    var robotCnt = $('#robot_cnt').val();
-                    socket.emit('EnterRoom',
-                    {
-                        roomId: $('#select_room_id').val(),
-                        seatId: $('#select_seat').val(),
-                        playerId: clientId,
-                        playerName: name,
-                        robotCnt: robotCnt
-                    });
-                } else {
-                    smoke.signal('sorry, name required');
-                }
-            });
-
-            var name = "short";
-            $('#player_name').html(name);
-            var robotCnt = $('#robot_cnt').val();
-            game.roomId = parseInt($('#select_room_id').val());
-            socket.emit('EnterRoom',
-            {
-                roomId: $('#select_room_id').val(),
-                seatId: 0,
-                playerId: clientId,
-                playerName: name,
-                robotCnt: robotCnt
-            });
-
-        });
     }
 
     Controller.prototype.mouseDown = function (x, y) {
