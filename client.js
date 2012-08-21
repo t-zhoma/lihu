@@ -97,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
         game.level_1_3 = data.level_1_3;
         game.isLevel_0_2 = data.isLevel_0_2;
         $('#home #game #cur_level').html(data.isLevel_0_2 ? game.level[data.level_0_2] : game.level[data.level_1_3]);
+        var yourLevel = data.isLevel_0_2 ? (game.mySeat % 2 == 0) : (game.mySeat % 2 == 1);
+        $('#home #game #your_level').html(yourLevel ? 'yes' : 'no');
 
         game.buildCardOrder();
         game.sort(game.bb.cards);

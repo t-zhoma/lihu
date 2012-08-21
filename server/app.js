@@ -11,7 +11,7 @@ var server = http.createServer(function(request, response) {
 
     var filePath = '.' + request.url;
     if (request.url.length == 1)
-        filePath = './index.html';
+        filePath = './home.html';
          
     var extname = path.extname(filePath);
     var contentType = 'text/html';
