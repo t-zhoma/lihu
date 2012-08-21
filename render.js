@@ -84,6 +84,9 @@
             game.bb.cards[i].x = x;
             game.bb.cards[i].y = realY;
             x += Game.CARD_SPACE;
+
+            //##
+            //Util.pause(500);
         }
     }
 
@@ -141,7 +144,7 @@
             this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
             return;
         }
-        
+
         for (i = 0; i < cards.length; i++) {
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;

@@ -111,6 +111,7 @@
         var y1 = Math.min(game.startY, y);
         var w1 = Math.abs(game.startX - x);
         var h1 = Math.abs(game.startY - y);
+        var needDraw = false;
 
         var last = game.bb.cards.length - 1;
         if (game.bb.cards[last].x < x1 && x1 < game.bb.cards[last].x + Game.CARD_WIDTH) { // Prevent error choose on the rightest card
@@ -119,6 +120,7 @@
 
         for (i = game.bb.cards.length - 1; i >= 0; i--) {
             if (Util.isRectCross(x1, y1, w1, h1, game.bb.cards[i].x, game.bb.cards[i].y, Game.CARD_WIDTH, Game.CARD_HEIGHT)) {
+                needDraw = true;
                 game.bb.cards[i].selected = !game.bb.cards[i].selected;
                 if (game.bb.cards[i].x < x1 && x1 < game.bb.cards[i].x + Game.CARD_SPACE) {
                     break;
@@ -126,7 +128,7 @@
             }
         }
 
-        renderer.drawBottomBox();
+        if (needDraw) { renderer.drawBottomBox(); }
     }
 
     exports.Controller = Controller;

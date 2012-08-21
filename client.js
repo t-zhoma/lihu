@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Globals
     //socket = io.connect('http://o.smus.com:5050');
-    socket = io.connect('http://localhost:8080');
+    //socket = io.connect('http://localhost:8080');
+    socket = io.connect('http://10.172.4.74:8080');
 
     socket.on('Connected', function (data) {
         switch (game.stage) {
@@ -128,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     socket.on('Put', function (data) {
         game.fillbox(data.players);
         renderer.drawPutCards(data.putterSeat, data.putCards);
+        renderer.drawBottomBox();
     });
 
     socket.on('NewPut', function (data) {
@@ -173,5 +175,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.is0_2Win && (game.mySeat == 0 || game.mySeat == 2)) { smoke.signal('You win!'); }
         if (!data.is0_2Win && (game.mySeat == 1 || game.mySeat == 3)) { smoke.signal('You lose!'); }
         socket.emit('GameList', {});
+    });
+
+    socket.on('GameListUpdate', function (data) {
+        if (game.stage == game.StageType.CHOOSE_GAME) {
+            socket.emit('GameList', {});
+        }
     });
 });

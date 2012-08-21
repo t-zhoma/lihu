@@ -54,14 +54,7 @@ var Game = servergamejs.Game;
 var Player = servergamejs.Player;
 var GAME_COUNT = 10;
 var games = [];
-
-var observerCount = 0;
-
-// for test
-// set robot
-
-var curPlayer = false;
-var curRoomId = false;
+var socketIds = [];
 
 // init games , five games init
 for(var i = 0; i < GAME_COUNT; i++){ 
@@ -75,7 +68,7 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
     console.log(socket.id);
-    observerCount++;
+    socketIds.push(socket.id);
 
     socket.emit('Connected', {});
 
@@ -118,6 +111,7 @@ io.sockets.on('connection', function (socket) {
         games[data.room].players[data.seat] = player;
 
         roomBroadCast(data.room, 'EnterRoom', { room: data.room, code: 0 }, true);
+        gameListUpdate();
     });
 
     socket.on('StartGame', function (data) {
@@ -189,7 +183,20 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function (data) {
         console.log('recv disconnect', data);
-        //##leaveRoom(false);
+        // delete from socketIds
+        for (var i = 0; i < socketIds.length; i++) {
+            if (socketIds[i] == socket.id) { socketIds.splice(i, 1); }
+        }
+
+        for (var i = 0; i < GAME_COUNT; i++) {
+            for (var j = 0; j < 4; j++) {
+                var player = games[i].players[j];
+                if (player == null || player.isRobot) { continue; }
+                if (player.socketId == socket.id) {
+                    leaveRoom({ name: player.name, room: i, seat: j });
+                }
+            }
+        }
     });
 
     socket.on('lihu', function (data) {
@@ -338,6 +345,8 @@ io.sockets.on('connection', function (socket) {
         else {
             roomBroadCast(data.room, 'LeaveRoom', data, true);
         }
+
+        gameListUpdate();
     }
 
     function resetGame(room) {
@@ -367,6 +376,19 @@ io.sockets.on('connection', function (socket) {
 
             tmpData.players = players;
             io.sockets.socket(player.socketId).emit(action, tmpData);
+        }
+    }
+
+    function gameListUpdate() {
+        //##
+        console.log('gameListUpdate');
+
+        allBroadCast('GameListUpdate', {});
+    }
+
+    function allBroadCast(action, data) {
+        for (var i = 0; i < socketIds.length; i++) {
+            io.sockets.socket(socketIds[i]).emit(action, data);
         }
     }
 

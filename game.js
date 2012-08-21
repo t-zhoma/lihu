@@ -53,6 +53,7 @@
 
     Game.prototype.swapcard = function (cards, j, k) {
         var temp = new Card(cards[j].suit, cards[j].num, cards[j].src);
+        temp.selected = cards[j].selected;
         cards[j] = cards[k];
         cards[k] = temp;
     }
