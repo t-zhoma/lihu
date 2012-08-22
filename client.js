@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tmp += players[i] + ' ';
         }
         if (tmp == '') { tmp = 'No one ' }
-        smoke.signal(tmp + 'lihu!');
+        $('#home #game #lihu_player').html(tmp);
     });
 
     // bradcast get user put cards and server result
@@ -140,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
         game.lastPutCards = data.lastPutCards;
 
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
+
+        $('#home #game #putter_name').html(game.players[data.curPutterSeat].name);
     });
 
     socket.on('PlayerFinish', function (data) {

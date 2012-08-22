@@ -9,6 +9,8 @@
     clear: both;
 }
 
+body {background:#000 url(/img/Floor.jpg)}
+
 body.game {
 	background-image: url(/img/Floor.jpg);
 }
