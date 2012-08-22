@@ -380,9 +380,7 @@ io.sockets.on('connection', function (socket) {
     }
 
     function gameListUpdate() {
-        //##
         console.log('gameListUpdate');
-
         allBroadCast('GameListUpdate', {});
     }
 

@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     socket.on('RoundStart', function (data) {
         game.stage = game.StageType.PLAYING;
         game.players = data.players;
-        game.fillbox(data.players);
+        game.fillbox(data.players, true);
 
         game.curPutterSeat = data.curPutterSeat;
         game.level_0_2 = data.level_0_2;
@@ -126,14 +126,13 @@ document.addEventListener('DOMContentLoaded', function () {
             tmp += players[i] + ' ';
         }
         if (tmp == '') { tmp = 'No one ' }
-        smoke.signal(tmp + 'lihu!');
+        $('#home #game #lihu_player').html(tmp);
     });
 
     // bradcast get user put cards and server result
     socket.on('Put', function (data) {
-        game.fillbox(data.players);
+        game.fillbox(data.players, false);
         renderer.drawPutCards(data.putterSeat, data.putCards);
-        renderer.drawBottomBox();
     });
 
     socket.on('NewPut', function (data) {
@@ -142,6 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
         game.lastPutCards = data.lastPutCards;
 
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
+
+        $('#home #game #putter_name').html(game.players[data.curPutterSeat].name);
     });
 
     socket.on('PlayerFinish', function (data) {

@@ -10,7 +10,9 @@
 }
 
 body {
+    background:#000 url(/img/Floor.jpg);
     margin:0 auto;
+}
 }
 
 body.game {
