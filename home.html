@@ -10,49 +10,69 @@
 	</head>
 	<body>
 
-		<div class="well" style='padding:0px; margin:0px;'>
+		<div class="well" style='padding:0px; margin:0 auto;border:0px;'>
 			
 			<div id='home'>
 				<div id = 'game_block' class="">
 					<div id = 'waiting' style='display:none'>
 						<p>waiting people to join the room.</p>
-                        <p>room id : <span id = 'room_id'></span></p>
+                        				<p>room id : <span id = 'room_id'></span></p>
+                        				<p>
+                        					<button id="btnStart" class='btn btn-primary'>开始</button>
+                        					<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+                        				</p>
 
-						current users :
-						<ul id = 'player_list' ></ul>
-
-                        <div id='tb'></div>
-                        <div id='lb'></div>
-                        <div id='rb'></div>
-                        <div id='bb'></div>
-                        <button id="btnStart" class='btn btn-primary''>开始</button>
-					</div>
+				                       <table class='waiting-table'>
+				                       	<tr>
+				                       		<td></td>
+				                       		<td><div class='seat tb' id = 'tb'></div></td>
+				                       		<td></td>
+				                       	</tr>
+				                       	<tr>
+				                       		<td><div class='seat lb' id = 'lb'></div></td>
+				                       		<td></td>
+				                       		<td><div class='seat rb' id = 'rb'></div></td>
+				                       	</tr>
+				                       	<tr>
+				                       		<td></td>
+				                       		<td><div class='seat bb' id = 'bb'></div></td>
+				                       		<td></td>
+				                       	</tr>
+				                       </table>
+                        			</div>
 
 					<div id = 'game'>
-					<canvas width="1800" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
-			        		<div style='width:100%; margin:auto; padding:auto;'>
-			        			<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
-			        		<button id="btnHold" class='btn btn-primary''>不出</button>
-			        		<button id="btnPrompt" class='btn btn-primary'>提示</button>
-			        		<button id="btnPut" class='btn btn-primary'>出牌</button>
-			        			<div style='margin-top:10px;'>
-			        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
-			        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
-			        				<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
-                                    <p>Your Level:<span id='your_level' style='font-weight:bold;'></span></p>
-			        			</div>
+						<canvas width="1800" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+			        			<div style='width:100%; margin:auto; padding:auto;'>
+			        				<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
+						        		<button id="btnHold" class="btn btn-primary">不出</button>
+						        		<button id="btnPrompt" class='btn btn-primary'>提示</button>
+						        		<button id="btnPut" class='btn btn-primary'>出牌</button>
+					        			<div style='margin-top:10px;'>
+					        				<p>Current Player: <span id='player_name' style='font-weight:bold;'>Guest</span></p>  
+					        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
+					        				<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
+		                                    				<p>Your Level:<span id='your_level' style='font-weight:bold;'></span></p>
+		                                    				<p>
+		                                    					<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+		                                    				</p>
+					        			</div>
 			        			
-			        		</div>
+			        				</div>
 
-			        		</div>
-			       	</div>
-			       	<div>
-			       		<button id="quit_btn" class='btn btn-warning'>Quit</button>
-			       	</div>
+			        			</div>
+			       		</div>
 
 				</div>
 
 				<div class='clr'></div>
+			</div>
+			<div id = 'select_room'>
+				<h1 style='padding:20px;text-align:center;'>Select Room</h1>
+				<div id = 'room_list'>
+
+				</div>
+				<div class="clr"></div>
 			</div>
 			<div id = 'loading' class = 'span12' >
 				loading...

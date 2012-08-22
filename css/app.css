@@ -9,6 +9,10 @@
     clear: both;
 }
 
+body {
+    margin:0 auto;
+}
+
 body.game {
 	background-image: url(/img/Floor.jpg);
 }
@@ -28,20 +32,75 @@ body.game {
     text-align: center;
 }
 
-.room-list {
+#select_room {
+    background-color: white;
+    margin:0 auto;
+    width:95%;
+}
+#room_list {
+    padding:5px;
+}
+#room_list .room-item {
+    width: 200px;
+    padding: 10px;
+    background-color: whiteSmoke;
+    margin: 10px;
+}
+#room_list .room-item td {
+    width:60px;
+    height:60px;
+    vertical-align: middle;
+    line-height: 60px;
+}
+#room_list .room-item .seat {
+    width:40px;
+    height: 40px;
+    line-height: 40px;
 
 }
-.room-item {
 
+#room_list .room-item .game-status {
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    padding: 5px;
+    font-weight: bold;
 }
-.room-item .room-name {
-
-}
-
-.room-item .member-name {
-
+#room_list .room-item .room-name {
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 10px;
 }
 
 #home {
     
+}
+
+#waiting {
+    width: 95%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.waiting-table {
+    width:80%;
+    margin:0 auto;
+}
+
+.waiting-table  td {
+    width: 30%;
+    height: 200px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 3em;
+    color: white;
+}
+.waiting-table .seat {
+    width: 180px;
+    height: 100px;
+    padding: 10px;
+    line-height: 100px;
+    vertical-align: middle;
+    background-color: #0074CC;
+    margin:0 auto;
 }

@@ -38,7 +38,7 @@
             game.prompt();
         });
 
-        $('#quit_btn').click(function () {
+        $('.quit-btn').click(function () {
             smoke.confirm('are you sure to quit?', function (e) {
                 if (e) {
                     // confirm
@@ -60,10 +60,12 @@
                 }
             });
         });
+
     }
 
     Controller.prototype.mouseDown = function (x, y) {
         if (game.stage == game.StageType.CHOOSE_GAME) {
+            /*
             for (var i = 0; i < game.gameList.length; i++) {
                 var gameRect = game.gameList[i].rect;
                 if (game.gameList[i].rect.contain(x, y)) { // Room
@@ -95,6 +97,8 @@
                     break;
                 }
             }
+            */
+
         } // end of if(isChooseGame)
         else {
             game.startX = x;

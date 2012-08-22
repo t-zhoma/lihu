@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Globals
     //socket = io.connect('http://o.smus.com:5050');
-    //socket = io.connect('http://localhost:8080');
-    socket = io.connect('http://10.172.4.74:8080');
+    socket = io.connect('http://localhost:8080');
+    //socket = io.connect('http://10.172.4.74:8080');
 
     socket.on('Connected', function (data) {
         switch (game.stage) {
@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
         game.stage = game.StageType.CHOOSE_GAME;
 
         $('#home #waiting').hide();
-        $('#home #game').show();
+        $('#home #game').hide();
+        $('#select_room').show();
     });
 
     // Self or other player enter room
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (game.stage == game.StageType.CHOOSE_GAME) {
             $('#home #waiting').show();
             $('#home #game').hide();
+            $('#select_room').hide();
 
             renderer.updateWaitingPage(data);
             game.stage = game.StageType.WAITING;
