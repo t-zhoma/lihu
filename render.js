@@ -252,23 +252,23 @@
                         "   <tr>" + 
                         "        <td></td>" + 
                         "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='0' room ='" + i + "' >" + ( players[0] == null ? "" : players[0].name ) + "</div>" + 
+                        "            <div class='seat btn btn-primary' seat ='2' room ='" + i + "' >" + ( players[2] == null ? "" : players[2].name ) + "</div>" + 
                         "        </td>" + 
                         "        <td></td>" + 
                         "    </tr>" + 
                         "    <tr>" + 
+                        "        <td>" + 
+                        "            <div class='seat btn btn-primary' seat ='3' room ='" + i + "' >" + ( players[3] == null ? "" : players[3].name ) + "</div>" + 
+                        "        </td>" + 
+                        "        <td></td>" + 
                         "        <td>" + 
                         "            <div class='seat btn btn-primary' seat ='1' room ='" + i + "' >" + ( players[1] == null ? "" : players[1].name ) + "</div>" + 
                         "        </td>" + 
-                        "        <td></td>" + 
-                        "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='2' room ='" + i + "' >" + ( players[3] == null ? "" : players[3].name ) + "</div>" + 
-                        "        </td>" + 
                         "    </tr>" + 
                         "    <tr>" + 
                         "        <td></td>" + 
                         "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='3' room ='" + i + "' >" + ( players[2] == null ? "" : players[2].name ) + "</div>" + 
+                        "            <div class='seat btn btn-primary' seat ='0' room ='" + i + "' >" + ( players[0] == null ? "" : players[0].name ) + "</div>" + 
                         "        </td>" + 
                         "        <td></td>" + 
                         "    </tr>" + 

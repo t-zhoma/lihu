@@ -95,6 +95,7 @@ io.sockets.on('connection', function (socket) {
         if (isNaN(data.room) || isNaN(data.seat) || data.playerName == '' ||
            data.room >= GAME_COUNT || data.seat >= 4 ||
            games[data.room].players[data.seat] != null) {
+            console.log(games[data.room].players[data.seat] );
             console.log('invalid parameter in join request.');
             socket.emit('EnterRoom', {
                 code: 1,

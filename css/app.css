@@ -10,9 +10,8 @@
 }
 
 body {
-    background:#000 url(/img/Floor.jpg);
+    /*background:#000 url(/img/Floor.jpg);*/
     margin:0 auto;
-}
 }
 
 body.game {
@@ -85,17 +84,18 @@ body.game {
 }
 
 .waiting-table {
-    width:80%;
+    width:60%;
     margin:0 auto;
 }
 
 .waiting-table  td {
     width: 30%;
-    height: 200px;
+    height: 100px;
     vertical-align: middle;
     text-align: center;
     font-size: 3em;
     color: white;
+    padding:10px;
 }
 .waiting-table .seat {
     width: 180px;
