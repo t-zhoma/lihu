@@ -17,7 +17,7 @@
     Game.CARD_HEIGHT = 107;
     Game.CARD_SPACE = 18;     // space btw cards
     Game.CARD_EXTEND = 25;    // extend space when card is selected
-    
+
     game = new Game();
     game.gameList = [];
     game.seatPos = [new Rect(30, 90, 60, 30), new Rect(90, 30, 30, 60),
@@ -115,8 +115,8 @@
         renderer.drawBottomOutbox(selectedCards);
     }
 
-    game.fillbox = function (players) {
-        this.bb.cards = players[this.mySeat].cards;
+    game.fillbox = function (players, isFillBottom) {
+        if (isFillBottom) { this.bb.cards = players[this.mySeat].cards; } 
         this.rb.cardsNum = players[(this.mySeat + 1) % 4].cardsNum;
         this.tb.cardsNum = players[(this.mySeat + 2) % 4].cardsNum;
         this.lb.cardsNum = players[(this.mySeat + 3) % 4].cardsNum;

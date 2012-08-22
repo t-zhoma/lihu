@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     socket.on('RoundStart', function (data) {
         game.stage = game.StageType.PLAYING;
         game.players = data.players;
-        game.fillbox(data.players);
+        game.fillbox(data.players, true);
 
         game.curPutterSeat = data.curPutterSeat;
         game.level_0_2 = data.level_0_2;
@@ -129,9 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // bradcast get user put cards and server result
     socket.on('Put', function (data) {
-        game.fillbox(data.players);
+        game.fillbox(data.players, false);
         renderer.drawPutCards(data.putterSeat, data.putCards);
-        renderer.drawBottomBox();
     });
 
     socket.on('NewPut', function (data) {

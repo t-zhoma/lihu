@@ -36,6 +36,11 @@
             this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
             y += Game.CARD_SPACE;
         }
+
+        if (game.lb.cardsNum != 0) {
+            y -= Game.CARD_SPACE;
+            this.fillTextCenter(game.lb.cardsNum, x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH, '30px Arial', 'red');
+        }
     }
 
     CanvasRenderer.prototype.drawRightBox = function () {
@@ -52,6 +57,11 @@
             this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
             y += Game.CARD_SPACE;
         }
+
+        if (game.rb.cardsNum != 0) {
+            y -= Game.CARD_SPACE;
+            this.fillTextCenter(game.rb.cardsNum, x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH, '30px Arial', 'red');
+        }
     }
 
     CanvasRenderer.prototype.drawTopBox = function () {
@@ -66,6 +76,11 @@
         for (i = 0; i < game.tb.cardsNum; i++) {
             this.ctx.drawImage(Source.imgMap["img\\back-blue-75-1.png"], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
+        }
+
+        if (game.tb.cardsNum != 0) {
+            x -= Game.CARD_SPACE;
+            this.fillTextCenter(game.tb.cardsNum, x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT, '30px Arial', 'red');
         }
     }
 
@@ -84,9 +99,6 @@
             game.bb.cards[i].x = x;
             game.bb.cards[i].y = realY;
             x += Game.CARD_SPACE;
-
-            //##
-            //Util.pause(500);
         }
     }
 
@@ -198,6 +210,7 @@
 
     CanvasRenderer.prototype.drawPlayersInfo = function () {
         this.ctx.font = '20pt Calibri';
+        this.ctx.fillStyle = 'black';
 
         for (var i = 0; i < 4; i++) {
             switch ((i - game.mySeat + 4) % 4) {
@@ -260,28 +273,39 @@
     }
 
     CanvasRenderer.prototype.drawRank = function (seat, rank) {
-        this.ctx.font = '30px Arial';
-        this.ctx.color = 'red';
+        var font = '30px Arial';
+        var fillStyle = 'red';
 
         // bb
         if (seat == game.mySeat) {
-            this.ctx.fillText(rank, game.bb.rect.x, game.bb.rect.y);
+            this.fillTextCenter('第' + rank + '名', game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h, font, fillStyle);
         }
 
         // rb
         if ((game.mySeat + 1) % 4 == seat) {
-            this.ctx.fillText(rank, game.rb.rect.x, game.rb.rect.y);
+            this.fillTextCenter('第' + rank + '名', game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h, font, fillStyle);
         }
 
         // tb
         if ((game.mySeat + 2) % 4 == seat) {
-            this.ctx.fillText(rank, game.tb.rect.x, game.tb.rect.y);
+            this.fillTextCenter('第' + rank + '名', game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h, font, fillStyle);
         }
 
         // lb
         if ((game.mySeat + 3) % 4 == seat) {
-            this.ctx.fillText(rank, game.lb.rect.x, game.lb.rect.y);
+            this.fillTextCenter('第' + rank + '名', game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h, font, fillStyle);
         }
+    }
+
+    CanvasRenderer.prototype.fillTextCenter = function (text, x, y, w, h, font, fillStyle) {
+        this.ctx.font = font;
+        this.ctx.fillStyle = fillStyle;
+        this.ctx.textAlign = 'center';
+        var metrics = this.ctx.measureText(text);
+        var xReal = x + w / 2;
+        var yReal = y + h / 2 + 10;
+        this.ctx.fillText(text, xReal, yReal);
+        this.ctx.textAlign = 'start';
     }
 
     // TODO
