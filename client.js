@@ -59,9 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderer.drawGameList();
         game.stage = game.StageType.CHOOSE_GAME;
 
-        $('#home #waiting').hide();
-        $('#home #game').hide();
-        $('#select_room').show();
+        showGameList();
     });
 
     // Self or other player enter room
@@ -72,9 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (game.stage == game.StageType.CHOOSE_GAME) {
-            $('#home #waiting').show();
-            $('#home #game').hide();
-            $('#select_room').hide();
+            showWaitingRoom();
 
             renderer.updateWaitingPage(data);
             game.stage = game.StageType.WAITING;
@@ -90,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // start game, get cards from server
     socket.on('RoundStart', function (data) {
+        showGameStart();
+
         game.stage = game.StageType.PLAYING;
         game.players = data.players;
         game.fillbox(data.players, true);
@@ -98,17 +96,17 @@ document.addEventListener('DOMContentLoaded', function () {
         game.level_0_2 = data.level_0_2;
         game.level_1_3 = data.level_1_3;
         game.isLevel_0_2 = data.isLevel_0_2;
-        $('#home #game #cur_level').html(data.isLevel_0_2 ? game.level[data.level_0_2] : game.level[data.level_1_3]);
+        $('#cur_level').html(data.isLevel_0_2 ? game.level[data.level_0_2] : game.level[data.level_1_3]);
         var yourLevel = data.isLevel_0_2 ? (game.mySeat % 2 == 0) : (game.mySeat % 2 == 1);
-        $('#home #game #your_level').html(yourLevel ? 'yes' : 'no');
+        $('#your_level').html(yourLevel ? 'yes' : 'no');
 
         game.buildCardOrder();
         game.sort(game.bb.cards);
         renderer.clear();
         renderer.drawBox();
 
-        $('#home #waiting').hide();
-        $('#home #game').show();
+showGameStart();
+
         allowPut(false);
 
         // li hu ?
@@ -142,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
 
-        $('#home #game #putter_name').html(game.players[data.curPutterSeat].name);
+        $('#putter_name').html(game.players[data.curPutterSeat].name);
     });
 
     socket.on('PlayerFinish', function (data) {
@@ -187,4 +185,49 @@ document.addEventListener('DOMContentLoaded', function () {
             socket.emit('GameList', {});
         }
     });
+
+    /*
+    data {
+        name: 
+        room:
+        msg:
+    }
+    */
+    socket.on('RoomChat', function(data) {
+        if ( isNaN(data.room) ||  data.msg == '' ||
+        data.name == '' || data.room != game.myRoom) {
+            // invalid data
+            return;
+        }
+        var chatItem = '<div class="chat-msg-item">' + 
+                            '<span class="username">[' + data.name +']</span>' + data.msg
+                        '</div>';
+        $("#chat_mag_list").append(chatItem);
+        
+    });
 });
+
+function showWaitingRoom() {
+    $('#home #waiting').show();
+    $('#home #nav_bar').show();
+    $('#home #nav_bar #chat_msg_list').html('');
+    $('#home #game').hide();
+    $('#select_room').hide();
+    $('#opt_playing').hide();
+    $('#opt_waiting').show();
+
+}
+
+function showGameStart() {
+    $('#home #waiting').hide();
+    $('#home #game').show();
+    $('#opt_playing').show();
+    $('#opt_waiting').hide();
+}
+
+function showGameList() {
+    $('#home #waiting').hide();
+    $('#home #game').hide();
+    $('#home #nav_bar').hide();
+    $('#select_room').show();
+}

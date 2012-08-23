@@ -45,6 +45,8 @@
         // last put info
         this.lastPutterSeat = 0;
         this.lastPutCards = [];
+
+        this.chatMsg = [];
     };
 
     Game.prototype.nextSeat = function (seat) {

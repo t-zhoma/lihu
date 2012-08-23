@@ -10,60 +10,76 @@
 	</head>
 	<body>
 
-		<div class="well" style='padding:0px; margin:0 auto;border:0px;'>
+		<div class="" style='padding:0px; margin:0 auto;border:0px;'>
 			
 			<div id='home'>
-				<div id = 'game_block' class="">
-					<div id = 'waiting' style='display:none'>
-						<h1 style='text-align:center;'>Room <span id = 'room_id'></h1>
+				<div id = 'game_block' class="row-fluid">
+					<div id = 'waiting' style='display:none' class="span8 well" >
+						
+						<table class='waiting-table'>
+				            <tr>
+				            	<td></td>
+				                <td><div class='seat tb' id = 'tb'></div></td>
+				                <td></td>
+				            </tr>
+				            <tr>
+				                <td><div class='seat lb' id = 'lb'></div></td>
+				                <td></td>
+				                <td><div class='seat rb' id = 'rb'></div></td>
+				            </tr>
+				            <tr>
+				                <td></td>
+				                <td><div class='seat bb' id = 'bb'></div></td>
+				                <td></td>
+				            </tr>
+				        </table>
+                    </div>
 
-				                       <table class='waiting-table'>
-				                       	<tr>
-				                       		<td></td>
-				                       		<td><div class='seat tb' id = 'tb'></div></td>
-				                       		<td></td>
-				                       	</tr>
-				                       	<tr>
-				                       		<td><div class='seat lb' id = 'lb'></div></td>
-				                       		<td></td>
-				                       		<td><div class='seat rb' id = 'rb'></div></td>
-				                       	</tr>
-				                       	<tr>
-				                       		<td></td>
-				                       		<td><div class='seat bb' id = 'bb'></div></td>
-				                       		<td></td>
-				                       	</tr>
-				                       </table>
+					<div id = 'game' style='display:none;' class="well" >
+						<canvas width="1200" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+			        	<div style='width:100%; margin:auto; padding:auto;'>
+			        		<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
+								<button id="btnHold" class="btn btn-primary">不出</button>
+								<button id="btnPrompt" class='btn btn-primary'>提示</button>
+								<button id="btnPut" class='btn btn-primary'>出牌</button>
+			        		</div>
+			        	</div>
+			       	</div>
+			       	<div id="nav_bar" class="nav-bar span2 well" style='display:none;margin-left:20px;'>
+			       		<div id="options">
+			       			<h1 style='text-align:center;'>Room <span id = 'room_id'></h1>
 
-				                       <p style="text-align:center">waiting people to join the room.</p>
-                        				
-                        				<p style="text-align:center">
-                        					<button id="btnStart" class='btn btn-primary'>开始</button>
-                        					<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
-                        				</p>
-                        			</div>
+			       			<div id="opt_playing">
+						    	<div>
+						    			<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
+						    			<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
+			                            <p>Your Level:<span id='your_level' style='font-weight:bold;'></span></p>
+	                            		<p>Lihu player:<span id='lihu_player' style='font-weight:bold;'></span></p>
+			                            
+						    		</div>
 
-					<div id = 'game'>
-						<canvas width="1800" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
-			        			<div style='width:100%; margin:auto; padding:auto;'>
-			        				<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
-						        		<button id="btnHold" class="btn btn-primary">不出</button>
-						        		<button id="btnPrompt" class='btn btn-primary'>提示</button>
-						        		<button id="btnPut" class='btn btn-primary'>出牌</button>
-					        			<div style='margin-top:10px;'>
-					        				<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
-					        				<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
-		                                    				<p>Your Level:<span id='your_level' style='font-weight:bold;'></span></p>
-                                    						<p>Lihu player:<span id='lihu_player' style='font-weight:bold;'></span></p>
-		                                    				<p>
-		                                    					<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
-		                                    				</p>
-					        			</div>
-			        			
-			        				</div>
+						    		<p>
+			                            	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+			                        </p>
+				        	
+				        	</div>
 
-			        			</div>
+				        	<div id="opt_waiting">
+					        	<p>waiting people to join the room.</p>
+	                        	<p>
+	                        	<button id="btnStart" class='btn btn-primary'>开始</button>
+	                        	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+	                        </p>
+				        	</div>
 			       		</div>
+			       		<div id="chat_mag_list" class="chat-msg-list">
+			       			
+			       		</div>
+			       		<div class="chat-input-box form-inline">
+			       			<input type="text" id="chat_text" name="chat_text" placeholder = "let's talk~	"/>
+			       			<input type="button" id="btn_chat_text" value="Submit" class="btn-chat-text btn"/>
+			       		</div>
+			       	</div>
 
 				</div>
 
@@ -85,7 +101,7 @@
 
 	</body>
 	
-		<script type="text/javascript" src="lib\jquery.js"></script>
+		<script type="text/javascript" src="lib/jquery.js"></script>
 		<script src="lib/socket.io.js"></script>
 		<script src="lib/smoke.min.js"></script>
 		<script src="game.js"></script>

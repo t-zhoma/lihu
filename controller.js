@@ -61,6 +61,28 @@
             });
         });
 
+        $('#btn_chat_text').click(function(){
+            sendChatMsg(game.myRoom, game.myName, $('#chat_text').val() );
+        });
+
+        $('#chat_text').bind('keypress', function(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { //Enter keycode
+                //Do something
+                sendChatMsg(game.myRoom, game.myName, $('#chat_text').val() );
+            }
+        });
+
+    }
+
+    function sendChatMsg(room, name, msg) {
+        if ( room != game.myRoom || name == '' || $.trim(msg) == '') return ;
+        socket.emit('RoomChat', {
+            room: room,
+            name: name,
+            msg: msg
+        });
+        $('#chat_text').val('');
     }
 
     Controller.prototype.mouseDown = function (x, y) {

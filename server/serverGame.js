@@ -294,6 +294,16 @@
         this.initPlayers();
     }
 
+    Game.prototype.inRoom = function (name) {
+        for( var idx in this.players ) {
+            if ( this.players[idx] === null ) continue;
+            if ( this.players[idx].name == name ) {
+                return true;
+            }
+        }
+        return false;
+    } 
+
     exports.Game = Game;
     exports.Player = gamejs.Player;
     exports.Put = gamejs.Put;

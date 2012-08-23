@@ -231,7 +231,7 @@
     }
 
     CanvasRenderer.prototype.updateWaitingPage = function (data) {
-        $('#home #waiting #room_id').html(data.room);
+        $('#nav_bar #room_id').html(data.room);
         for (var i = 0; i < data.players.length; i++) {
             var player = data.players[i];
             var name = player == null ? '' : player.name;

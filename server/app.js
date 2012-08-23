@@ -203,6 +203,29 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
+    /*
+    data {
+        name: 
+        room:
+        msg:
+    }
+    */
+    socket.on('RoomChat', function(data) {
+        if ( isNaN(data.room) || data.room >= GAME_COUNT || data.msg == '' ||
+        data.name == '' ) {
+            // invalid data
+            return;
+        }
+
+        roomBroadCast(data.room, 'RoomChat', { 
+            name: data.name,
+            room: data.room,
+            msg: data.msg 
+            }, false);
+            
+
+    });
+
     socket.on('lihu', function (data) {
         var game = games[data.room];
         game.lihuResponsNum++;
