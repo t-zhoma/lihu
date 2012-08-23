@@ -33,7 +33,7 @@
         this.ctx.clearRect(game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h);
 
         for (i = 0; i < game.lb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
+            this.ctx.drawImage(Source.imgMap["img/back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
             y += Game.CARD_SPACE;
         }
 
@@ -54,7 +54,7 @@
 
         this.ctx.clearRect(game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h);
         for (i = 0; i < game.rb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img\\back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
+            this.ctx.drawImage(Source.imgMap["img/back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
             y += Game.CARD_SPACE;
         }
 
@@ -74,7 +74,7 @@
 
         this.ctx.clearRect(game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h);
         for (i = 0; i < game.tb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img\\back-blue-75-1.png"], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
+            this.ctx.drawImage(Source.imgMap["img/back-blue-75-1.png"], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
         }
 

@@ -130,13 +130,13 @@
 
         for (var si = 0; si < 4; si++) {
             for (var n = 0; n < 13; n++) {
-                src = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
+                src = "img/" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
                 this.deck.push(new Card(this.suitnames[si], n, src));
             }
         }
 
-        this.deck.push(new Card("", 13, "img\\joker-b-75.png"));     // joker-b
-        this.deck.push(new Card("", 14, "img\\joker-r-75.png"));     // joker-r
+        this.deck.push(new Card("", 13, "img/joker-b-75.png"));     // joker-b
+        this.deck.push(new Card("", 14, "img/joker-r-75.png"));     // joker-r
     }
 
     Game.prototype.shuffle = function () {
