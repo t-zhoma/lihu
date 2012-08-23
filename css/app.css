@@ -51,12 +51,14 @@ body.game {
     width:60px;
     height:60px;
     vertical-align: middle;
-    line-height: 60px;
+
+    white-space: normal;
+    word-break: break-all;
 }
 #room_list .room-item .seat {
     width:40px;
     height: 40px;
-    line-height: 40px;
+    line-height: 20px;
 
 }
 
@@ -96,12 +98,15 @@ body.game {
     font-size: 3em;
     color: white;
     padding:10px;
+
+    white-space: normal;
+    word-break: break-all;
 }
 .waiting-table .seat {
     width: 180px;
     height: 100px;
     padding: 10px;
-    line-height: 100px;
+    line-height: 50px;
     vertical-align: middle;
     background-color: #0074CC;
     margin:0 auto;
@@ -146,8 +151,8 @@ body.game {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    min-height: 600px;
-
+    height: 580px;
+    overflow-y: scroll;
 }
 
 .nav-bar .chat-msg-item {
@@ -170,6 +175,7 @@ body.game {
 }
 
 #game {
-    width:70%;
+    width:1200px;
     float: left;
+    padding:20px 0px;
 }

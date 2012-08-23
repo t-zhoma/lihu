@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Lihu - Help</title>
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+        <link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css">
+    </head>
+<body>
+    <div class="container well">
+ 
+    <p><strong>【游戏界面】</strong></p>
+    <p style="text-align:center"><img width='900' src='img/game_interface.png' class="img-polaroid"/></p>
+    <p>&nbsp;</p>
+    <p align="left">简介：该游戏由四人玩一副牌，对门一家，分别从 '3' 开始打升级，按出完手中牌的顺序计算级数，先打到 'A' 并且出户的一方胜出。</p>
+    <p align="left"><b>游戏规则</b><b> &nbsp; </b> </p>
+    <p align="left"><b>1 </b><b>、发牌</b><b> </b> </p>
+    <p align="left">一副牌 54 张，前两家各 14 张，后两家各 13 张。 </p>
+    <p align="left"><b>2 </b><b>、立户</b><b> </b> </p>
+    <p align="left">如果当前级为 'A'， 则不用立户；反之，按出牌的顺序轮流立户。立户时可以选择 “立” 和 “不立”。立户结束后系统确定立户类型。 </p>
+    <p align="left"><b>3 </b><b>、第一个叫立户的玩家</b><b> </b> </p>
+    <p align="left">第一轮叫立户的玩家为上一轮第一个打完牌的玩家。 </p>
+    <p align="left"><b>4 </b><b>、立户类型</b><b> </b> </p>
+    <p align="left">不立：即 4 个玩家都不立户， 则双方4个玩家对打，由上一轮胜出的玩家首先出牌，如果一家是第1，2个出完牌就升两级；1，3个出完牌则升一级；如果1，4个出完牌，不升级，
+        但是下一次还是打你们的主动。反之另一家升级，升级规则一样。<br /><br />
+        单立：即只有一位玩家选择立户， 则立户玩家和两位对方玩家对打，由立户玩家首先出牌， 立户玩家第 1 个出完牌才胜出，胜出升 4 级，否则对方升 4 级；<br /><br />
+        对立：即一方的两个玩家选择立户， 则 4 个人都要打，由立户方先选择立户的玩家首先出牌，立户方第1， 2个出完牌才胜出, 胜出升 8 级，否则对方升 8 级。 <br /><br />
+        斜立：即非一方的两个玩家选择立户， 则由立户的两个玩家对打，先出完牌的一方胜出，胜出方升8级。<br />
+    <p align="left"><b>4 </b><b>、出牌</b><b> </b> </p>
+    <p align="left">按逆时针顺序依次出牌，轮到用户跟牌时，用户可以选择 “ 不出 ” 或出比上一个玩家大的牌。 </p>
+    <p align="left"><b>5 </b><b>、牌型</b><b> </b> </p>
+    <p align="left">单牌：单个牌（如红桃 5 ）。 <br>
+        对牌：数值相同的两张牌（如梅花 4+ 方块 4 ）。 <br>
+        双顺（滚子）：三对或更多的连续对牌（如： 334455 、7788991010JJ ）。不包括 2 点、主（当前级数）和双王。 <br>
+        单顺：三张或更多的连续单牌（如： 456 或 6789 ）。不包括 2 点、主和双王。 <br>
+        小炸弹：数值相同的三张牌（如三个 J ）。 <br>
+        炸弹：四张同数值牌（如四个 7 ）。 <br>
+        火箭：即双王（大王和小王），最大的牌。 <br>
+    <p align="left"><b>6 </b><b>、牌型的大小</b><b> </b> </p>
+    <p align="left">火箭最大，可以打任意其他的牌。 <br>
+        炸弹比火箭小，比其他牌大。都是炸弹时按牌的分值比大小。 <br>
+        小炸弹比炸弹和火箭小，比其他牌大。都是小炸弹时按牌的分会比大小。
+        除火箭、炸弹和小炸弹外，其他牌必须要牌型相同且总张数相同才能比大小。 <br>
+        单牌按分值比大小，依次是 大王 &gt; 小王 &gt; 红桃主 &gt; 非红桃主 &gt; 红桃2 &gt; 非红桃2 &gt; A &gt; ... &gt; 3 。 <br>
+    </div>
+</body>
+</html>

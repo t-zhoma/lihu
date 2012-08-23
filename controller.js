@@ -87,40 +87,7 @@
 
     Controller.prototype.mouseDown = function (x, y) {
         if (game.stage == game.StageType.CHOOSE_GAME) {
-            /*
-            for (var i = 0; i < game.gameList.length; i++) {
-                var gameRect = game.gameList[i].rect;
-                if (game.gameList[i].rect.contain(x, y)) { // Room
-                    for (var j = 0; j < game.seatPos.length; j++) { // Seat
-                        if (game.seatPos[j].contain(x - gameRect.x, y - gameRect.y)) {
-                            if (game.gameList[i][j] != null) {
-                                smoke.alert('This seat already have player!');
-                            }
-                            else {
-                                smoke.prompt("what is your name", function (name) {
-                                    if (name && name != "") {
-                                        game.myRoom = i;
-                                        game.mySeat = j;
-                                        game.myName = name;
-                                        socket.emit('EnterRoom',
-                                        {
-                                            room: i,
-                                            seat: j,
-                                            playerName: name
-                                        });
-                                    } else {
-                                        smoke.signal('sorry, name required');
-                                    }
-                                });
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-            */
-
+            // Do nothing
         } // end of if(isChooseGame)
         else {
             game.startX = x;

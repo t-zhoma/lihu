@@ -98,7 +98,7 @@ io.sockets.on('connection', function (socket) {
         if (isNaN(data.room) || isNaN(data.seat) || data.playerName == '' ||
            data.room >= GAME_COUNT || data.seat >= 4 ||
            games[data.room].players[data.seat] != null) {
-            console.log(games[data.room].players[data.seat] );
+            console.log(games[data.room].players[data.seat]);
             console.log('invalid parameter in join request.');
             socket.emit('EnterRoom', {
                 code: 1,
@@ -135,6 +135,8 @@ io.sockets.on('connection', function (socket) {
                 games[data.room].players[i] = player;
             }
         }
+
+        gameListUpdate();
 
         // new round
         roundStart(data.room);
@@ -270,6 +272,9 @@ io.sockets.on('connection', function (socket) {
             games[room].needPut = [true, true, true, true];
             games[room].needPutCount = 4;
             games[room].curPutterSeat = games[room].firstPutterSeat;
+            for (var i = 0; i < 4; i++) { games[room].players[i].isLihu = false; }
+            roomBroadCast(room, 'lihu', { lihuPlayersName: games[room].getLihuPlayersName() }, false);
+
             putCards(room);
         }
     }

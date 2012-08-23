@@ -203,6 +203,7 @@ showGameStart();
                             '<span class="username">[' + data.name +']</span>' + data.msg
                         '</div>';
         $("#chat_mag_list").append(chatItem);
+        $("#chat_mag_list").scrollTop($("#chat_mag_list")[0].scrollHeight);
         
     });
 });

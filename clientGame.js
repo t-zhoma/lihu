@@ -36,10 +36,10 @@
     game.mySeat = -1;
     game.playersInRoom = 0;
 
-    game.tn = new Rect(550, 30, 100, 20);
+    game.tn = new Rect(560, 30, 100, 20);
     game.ln = new Rect(40, 415, 100, 20);
     game.rn = new Rect(1080, 415, 100, 20);
-    game.bn = new Rect(550, 860, 100, 20);
+    game.bn = new Rect(575, 860, 100, 20);
 
     game.tb = new Box(14, new Rect(300, 50, 600, Game.CARD_HEIGHT));
     game.lb = new Box(14, new Rect(150, 125, Game.CARD_HEIGHT, 600));
@@ -116,10 +116,20 @@
     }
 
     game.fillbox = function (players, isFillBottom) {
-        if (isFillBottom) { this.bb.cards = players[this.mySeat].cards; } 
+        if (isFillBottom) { this.bb.cards = players[this.mySeat].cards; }
         this.rb.cardsNum = players[(this.mySeat + 1) % 4].cardsNum;
         this.tb.cardsNum = players[(this.mySeat + 2) % 4].cardsNum;
         this.lb.cardsNum = players[(this.mySeat + 3) % 4].cardsNum;
+    }
+
+    game.enterRoom = function (room, seat, name) {
+        game.myRoom = room;
+        game.mySeat = seat;
+        game.myName = name;
+        socket.emit('EnterRoom', { room: room,
+                                   seat: seat,
+                                   playerName: name
+                                  });
     }
 
     exports.game = game;
