@@ -73,6 +73,12 @@ for(var i = 0; i < GAME_COUNT; i++){
 
 var io = require('socket.io').listen(server);
 io.set('log level', 1);
+// assuming io is the Socket.IO server object
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
 
 io.sockets.on('connection', function (socket) {
     console.log(socket.id);
