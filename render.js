@@ -348,6 +348,17 @@
         this.ctx.textAlign = 'start';
     }
 
+    CanvasRenderer.prototype.drawCountDownNum = function (num) {
+        this.ctx.font = font;
+        this.ctx.fillStyle = fillStyle;
+        this.ctx.textAlign = 'center';
+        var metrics = this.ctx.measureText(text);
+        var xReal = x + w / 2;
+        var yReal = y + h / 2 + 10;
+        this.ctx.fillText(text, xReal, yReal);
+        this.ctx.textAlign = 'start';
+    }
+
     // TODO
     // for cache & preload 
     var Source = {

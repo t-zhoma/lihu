@@ -25,12 +25,17 @@ function ImagePreloadCallback(imgMap, nLoaded) {
 
 window.onload = preloadImg;
 
+var putInt = false;
+
 function allowPut(isAllow) {
     $('#btnHold').attr('disabled', !isAllow);
     $('#btnPrompt').attr('disabled', !isAllow);
     $('#btnPut').attr('disabled', !isAllow);
     if ( isAllow === true ) {
-        
+        if ( putInt !== false ) {
+            clearInterval(putInt);
+        }
+        putInt = setInterval(function(){renderer.drawCountDown()},1000);
     }
 }
 
