@@ -65,6 +65,7 @@
             sendChatMsg(game.myRoom, game.myName, $('#chat_text').val() );
         });
 
+        $('#chat_text').unbind('keypress');
         $('#chat_text').bind('keypress', function(e) {
             var code = (e.keyCode ? e.keyCode : e.which);
             if(code == 13) { //Enter keycode

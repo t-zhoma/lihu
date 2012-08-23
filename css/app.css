@@ -167,11 +167,11 @@ body.game {
 }
 
 .nav-bar #chat_text {
-    width: 150px;
+    width: 60%;
 }
 
 .nav-bar #btn_chat_text {
-
+    width: 30%;
 }
 
 #game {
