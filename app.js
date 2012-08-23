@@ -47,7 +47,12 @@ var server = http.createServer(function(request, response) {
         }
     });
 
-}).listen(8080);
+});
+
+var port = process.env.PORT || 5000;
+server.listen(port, function() {
+  console.log("Listening on " + port);
+});
 
 
 var utiljs = new require('./utility.js');
@@ -424,4 +429,3 @@ io.sockets.on('connection', function (socket) {
 
 });
 
-console.log("You can start the game by going to 127.0.0.1:8080, if you want to join the game with another pc go to <pc name or ip of server pc>:8080");
