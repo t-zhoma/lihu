@@ -43,7 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Globals
     //socket = io.connect('http://o.smus.com:5050');
-    socket = io.connect(SERVER_URL);
+    socket = io.connect('http://' + window.location.host);
+
+    
     //socket = io.connect('http://10.172.4.74:8080');
 
     socket.on('Connected', function (data) {
