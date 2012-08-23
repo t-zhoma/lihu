@@ -29,6 +29,9 @@ function allowPut(isAllow) {
     $('#btnHold').attr('disabled', !isAllow);
     $('#btnPrompt').attr('disabled', !isAllow);
     $('#btnPut').attr('disabled', !isAllow);
+    if ( isAllow === true ) {
+        
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -105,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderer.clear();
         renderer.drawBox();
 
-showGameStart();
+        showGameStart();
 
         allowPut(false);
 

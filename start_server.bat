@@ -1,1 +1,1 @@
-server\node.exe server\app.js
+node.exe app.js
