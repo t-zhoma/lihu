@@ -49,7 +49,7 @@ var server = http.createServer(function(request, response) {
 
 });
 
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 8080;
 server.listen(port, function() {
   console.log("Listening on " + port);
 });
@@ -82,6 +82,7 @@ io.sockets.on('connection', function (socket) {
 
     // GameList request
     socket.on('GameList', function (data) {
+        console.log('game list request');
         var gameList = [];
         for (var i = 0; i < GAME_COUNT; i++) {
             gameList[i] = new Array;

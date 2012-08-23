@@ -63,14 +63,14 @@
         var picname;
         for (var si = 0; si < 4; si++) {
             for (var n = 0; n < 13; n++) {
-                picname = "img\\" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
+                picname = "img/" + this.suitnames[si] + "-" + this.cardNums[n] + "-75.png";
                 this.imgSrcs.push(picname);
             }
         }
-        this.imgSrcs.push("img\\joker-b-75.png");
-        this.imgSrcs.push("img\\joker-r-75.png");
-        this.imgSrcs.push("img\\back-blue-75-1.png");
-        this.imgSrcs.push("img\\back-blue-h-75-1.png");
+        this.imgSrcs.push("img/joker-b-75.png");
+        this.imgSrcs.push("img/joker-r-75.png");
+        this.imgSrcs.push("img/back-blue-75-1.png");
+        this.imgSrcs.push("img/back-blue-h-75-1.png");
     }
 
     game.hold = function () {
