@@ -364,6 +364,7 @@ io.sockets.on('connection', function (socket) {
         }
         else if (data.isRoundOver) {
             ret = true;
+            Util.pause(1000); // Show last put cards
             roundStart(room);
         }
         else {

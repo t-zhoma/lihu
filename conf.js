@@ -1,2 +1,2 @@
 // domain/ip + port
-var SERVER_URL = 'http://localhost:8080';
+var SERVER_URL = 'http://10.172.4.74:8080';
