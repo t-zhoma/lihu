@@ -13,12 +13,12 @@
         this.PutType = {
             NONE: 0,        // 无
             SINGLE: 1,      // 单牌
-            PAIR: 2,        // 对子
-            PAIRS: 3,       // 连对（滚子）
+            PAIR: 2,        // 对牌
+            PAIRS: 3,       // 双顺（滚子）
             STRAIGHT: 4,    // 顺子
             THREE_BOMB: 5,  // 小炸弹（三张牌）
             FOUR_BOMB: 6,   // 大炸弹（四张牌）
-            KING_BOMB: 7,   // 王炸（大小王）
+            KING_BOMB: 7,   // 火箭（大小王）
             INVALID: 8      // 无效牌
         };
 

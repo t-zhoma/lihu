@@ -116,10 +116,20 @@
     }
 
     game.fillbox = function (players, isFillBottom) {
-        if (isFillBottom) { this.bb.cards = players[this.mySeat].cards; } 
+        if (isFillBottom) { this.bb.cards = players[this.mySeat].cards; }
         this.rb.cardsNum = players[(this.mySeat + 1) % 4].cardsNum;
         this.tb.cardsNum = players[(this.mySeat + 2) % 4].cardsNum;
         this.lb.cardsNum = players[(this.mySeat + 3) % 4].cardsNum;
+    }
+
+    game.enterRoom = function (room, seat, name) {
+        game.myRoom = room;
+        game.mySeat = seat;
+        game.myName = name;
+        socket.emit('EnterRoom', { room: room,
+                                   seat: seat,
+                                   playerName: name
+                                  });
     }
 
     exports.game = game;

@@ -246,66 +246,61 @@
         for (var i = 0; i < game.gameList.length; i++) {
             // Room
             var players = game.gameList[i];
-            roomHtml += "<div class='room-item fl'>" + 
+            roomHtml += "<div class='room-item fl'>" +
                         "<div class='room-name'>Room " + i + "</div>" +
-                        "<table>" + 
-                        "   <tr>" + 
-                        "        <td></td>" + 
-                        "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='2' room ='" + i + "' >" + ( players[2] == null ? "" : players[2].name ) + "</div>" + 
-                        "        </td>" + 
-                        "        <td></td>" + 
-                        "    </tr>" + 
-                        "    <tr>" + 
-                        "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='3' room ='" + i + "' >" + ( players[3] == null ? "" : players[3].name ) + "</div>" + 
-                        "        </td>" + 
-                        "        <td></td>" + 
-                        "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='1' room ='" + i + "' >" + ( players[1] == null ? "" : players[1].name ) + "</div>" + 
-                        "        </td>" + 
-                        "    </tr>" + 
-                        "    <tr>" + 
-                        "        <td></td>" + 
-                        "        <td>" + 
-                        "            <div class='seat btn btn-primary' seat ='0' room ='" + i + "' >" + ( players[0] == null ? "" : players[0].name ) + "</div>" + 
-                        "        </td>" + 
-                        "        <td></td>" + 
-                        "    </tr>" + 
-                        "</table>" + 
-                    "</div>" ;
+                        "<table>" +
+                        "   <tr>" +
+                        "        <td></td>" +
+                        "        <td>" +
+                        "            <div class='seat btn btn-primary' seat ='2' room ='" + i + "' >" + (players[2] == null ? "" : players[2].name) + "</div>" +
+                        "        </td>" +
+                        "        <td></td>" +
+                        "    </tr>" +
+                        "    <tr>" +
+                        "        <td>" +
+                        "            <div class='seat btn btn-primary' seat ='3' room ='" + i + "' >" + (players[3] == null ? "" : players[3].name) + "</div>" +
+                        "        </td>" +
+                        "        <td></td>" +
+                        "        <td>" +
+                        "            <div class='seat btn btn-primary' seat ='1' room ='" + i + "' >" + (players[1] == null ? "" : players[1].name) + "</div>" +
+                        "        </td>" +
+                        "    </tr>" +
+                        "    <tr>" +
+                        "        <td></td>" +
+                        "        <td>" +
+                        "            <div class='seat btn btn-primary' seat ='0' room ='" + i + "' >" + (players[0] == null ? "" : players[0].name) + "</div>" +
+                        "        </td>" +
+                        "        <td></td>" +
+                        "    </tr>" +
+                        "</table>" +
+                    "</div>";
         }
 
         roomHtml += "<div class='clr'></div>";
         $('#room_list').html(roomHtml);
 
 
-        $('#room_list .seat').click(function(){
+        $('#room_list .seat').click(function () {
             var name = $(this).html();
-            var seat = $(this).attr('seat') ;
+            var seat = $(this).attr('seat');
             var room = $(this).attr('room')
 
-            if ( name != '' ) {
-                                smoke.alert('This seat already have player!');
-                            }
-                            else {
-                                smoke.prompt("what is your name", function (name) {
-                                    if (name && name != "") {
-                                        game.myRoom = room;
-                                        game.mySeat = seat;
-                                        game.myName = name;
-                                        socket.emit('EnterRoom',
-                                        {
-                                            room: room,
-                                            seat: seat,
-                                            playerName: name
-                                        });
-                                    } else {
-                                        smoke.signal('sorry, name required');
-                                    }
-                                });
-                            }
-
+            if (name != '') {
+                smoke.alert('This seat already have player!');
+            }
+            else if (game.myName != '') {
+                name = game.myName;
+                game.enterRoom(parseInt(room), parseInt(seat), name);
+            }
+            else {
+                smoke.prompt("what is your name", function (name) {
+                    if (name && name != "") {
+                        game.enterRoom(parseInt(room), parseInt(seat), name);
+                    } else {
+                        smoke.signal('sorry, name required');
+                    }
+                });
+            }
         });
 
     }
