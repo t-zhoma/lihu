@@ -124,7 +124,7 @@ showGameStart();
             tmp += players[i] + ' ';
         }
         if (tmp == '') { tmp = 'No one ' }
-        $('#home #game #lihu_player').html(tmp);
+        $('#home #nav_bar #lihu_player').html(tmp);
     });
 
     // bradcast get user put cards and server result
