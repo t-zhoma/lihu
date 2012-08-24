@@ -38,7 +38,7 @@ Just play as normal poke games.
 Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
 Enjoy it. :)
 
-# 游戏指南
+# 游戏指南  
 1. 游戏地址 [lihu@heroku](http://lihu.herokuapp.com/)  (支持 IE9+,Chrome, Firefox, Safari)  
 2. 选择房间      
 有10个房间，每个房间有四个座位，上下左右。点击任何一个座位，在弹出框中填写你的nickname，即可进入游戏。  
@@ -91,7 +91,7 @@ Ask the Heroku project owner add your email to the **Collaborators** list, or cr
 https://devcenter.heroku.com/articles/keys  
 
 3. Cd to PATH/lihu/  
-`git remote add heroku git@heroku.com:lihu.git`  
+`git remote add heroku git@heroku.com:YOU_PROJECT_NAME.git`  
 
 4. Deploy to heroku  
 `git push heroku master`  
