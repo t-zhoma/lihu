@@ -8,7 +8,7 @@ var clientId = Util.guidGenerator();
 
 
 function preloadImg() {
-    $('#loading').html('loading... please wait');
+    $('#loading').show();
     game.buildImgSrcs();
     var imgPreloader = new ImagePreloader(game.imgSrcs, ImagePreloadCallback);
 }
@@ -20,11 +20,14 @@ function ImagePreloadCallback(imgMap, nLoaded) {
     }
 
     Source.imgMap = imgMap;
-    $('#loading').hide();
+    $('#loading').fadeOut('slow', function() {
+        $('#select_room').fadeIn('slow');
+    });
 }
 
 window.onload = preloadImg;
 
+// for count down
 var putInt = false;
 
 function allowPut(isAllow) {
@@ -130,14 +133,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tmp == '') { tmp = 'No one ' }
         $('#home #nav_bar #lihu_player').html(tmp);
 
-        createCountDown(30);
+        //createCountDown(30);
     });
 
     // bradcast get user put cards and server result
     socket.on('Put', function (data) {
         game.fillbox(data.players, false);
         renderer.drawPutCards(data.putterSeat, data.putCards);
-        createCountDown(30);
+        //createCountDown(30);
     });
 
     socket.on('NewPut', function (data) {
@@ -237,7 +240,7 @@ function showGameList() {
     $('#home #waiting').hide();
     $('#home #game').hide();
     $('#home #nav_bar').hide();
-    $('#select_room').show();
+    
 }
 
 function createCountDown(num) {

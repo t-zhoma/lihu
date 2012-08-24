@@ -18,6 +18,12 @@ body.game {
 	/* background-image: url(/img/Floor.jpg);*/
 }
 
+#loading {
+    width:100%;
+    text-align:center;
+    margin: 100px 0px;
+}
+
 .container {
     width: 100%;
     /*width:1400px;*/
@@ -187,3 +193,4 @@ body.game {
     font-weight: bold;
     font-size: 6em;
 }
+
