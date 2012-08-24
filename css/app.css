@@ -200,3 +200,6 @@ body.game {
     border-top: 1px solid #CCC;
     padding: 20px 0px;
 }
+#footer p a {
+    margin-right: 20px;
+}

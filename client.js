@@ -219,27 +219,35 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function showWaitingRoom() {
-    $('#home #waiting').show();
-    $('#home #nav_bar').show();
-    $('#home #nav_bar #chat_msg_list').html('');
-    $('#home #game').hide();
-    $('#select_room').hide();
-    $('#opt_playing').hide();
-    $('#opt_waiting').show();
+
+    
+    $('#select_room').fadeOut('slow', function() {
+        $('#home #nav_bar #chat_msg_list').html('');
+        $('#home #waiting').show();
+        $('#home #nav_bar').show();
+        $('#opt_playing').hide();
+        $('#opt_waiting').show();
+        $('#home #game').hide();
+    });
 
 }
 
 function showGameStart() {
-    $('#home #waiting').hide();
-    $('#home #game').show();
-    $('#opt_playing').show();
-    $('#opt_waiting').hide();
+    $('#home #waiting').fadeOut('slow', function() {
+        $('#home #game').show();
+        $('#opt_playing').show();
+        $('#opt_waiting').hide();
+    });
+    
 }
 
 function showGameList() {
     $('#home #waiting').hide();
     $('#home #game').hide();
     $('#home #nav_bar').hide();
+    if ( $('#loading').is(':hidden') ) {
+        $('#select_room').fadeIn('slow');
+    }   
     
 }
 
