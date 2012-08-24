@@ -42,13 +42,14 @@ body.game {
     padding:5px;
 }
 #room_list .room-item {
-    width: 200px;
+    width: 220px;
     padding: 10px;
     background-color: whiteSmoke;
     margin: 10px;
+    text-align: center;
 }
 #room_list .room-item td {
-    width:60px;
+    width:30%;
     height:60px;
     vertical-align: middle;
 
@@ -178,4 +179,11 @@ body.game {
     width:1200px;
     float: left;
     padding:0px;
+}
+#game #count_down {
+    position: absolute;
+    top: 500px;
+    left: 550px;
+    font-weight: bold;
+    font-size: 6em;
 }

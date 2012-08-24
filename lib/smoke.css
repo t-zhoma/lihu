@@ -61,6 +61,7 @@
   line-height: 13px;
   font-weight: bold;
   padding: 9px 12px;
+  width:80px;
 }
 
 .dialog-prompt input {

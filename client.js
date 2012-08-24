@@ -31,12 +31,6 @@ function allowPut(isAllow) {
     $('#btnHold').attr('disabled', !isAllow);
     $('#btnPrompt').attr('disabled', !isAllow);
     $('#btnPut').attr('disabled', !isAllow);
-    if ( isAllow === true ) {
-        if ( putInt !== false ) {
-            clearInterval(putInt);
-        }
-        putInt = setInterval(function(){renderer.drawCountDown()},1000);
-    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -115,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderer.clear();
         renderer.drawBox();
 
-        showGameStart();
+        
 
         allowPut(false);
 
@@ -135,12 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (tmp == '') { tmp = 'No one ' }
         $('#home #nav_bar #lihu_player').html(tmp);
+
+        createCountDown(30);
     });
 
     // bradcast get user put cards and server result
     socket.on('Put', function (data) {
         game.fillbox(data.players, false);
         renderer.drawPutCards(data.putterSeat, data.putCards);
+        createCountDown(30);
     });
 
     socket.on('NewPut', function (data) {
@@ -212,8 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var chatItem = '<div class="chat-msg-item">' + 
                             '<span class="username">[' + data.name +']</span>' + data.msg
                         '</div>';
-        $("#chat_mag_list").append(chatItem);
-        $("#chat_mag_list").scrollTop($("#chat_mag_list")[0].scrollHeight);
+        $("#chat_msg_list").append(chatItem);
+        $("#chat_msg_list").scrollTop($("#chat_msg_list")[0].scrollHeight);
         
     });
 });
@@ -241,4 +238,10 @@ function showGameList() {
     $('#home #game').hide();
     $('#home #nav_bar').hide();
     $('#select_room').show();
+}
+
+function createCountDown(num) {
+    clearInterval(putInt);
+    $('#home #game #count_down').html(num);
+    putInt = setInterval(function(){renderer.drawCountDown()}, 1000);
 }

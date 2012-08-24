@@ -297,7 +297,7 @@
                     
                     if ( !name || $.trim(name) == '') { 
                         smoke.signal('sorry, name required');
-                    } else if ( $.trim(name).length > 10) {
+                    } else if ( $.trim(name).length > 8) {
                         smoke.signal('name length must less than 10');
                     } else {
                         game.enterRoom(parseInt(room), parseInt(seat), $.trim(name));
@@ -348,15 +348,16 @@
         this.ctx.textAlign = 'start';
     }
 
-    CanvasRenderer.prototype.drawCountDownNum = function (num) {
-        this.ctx.font = font;
-        this.ctx.fillStyle = fillStyle;
-        this.ctx.textAlign = 'center';
-        var metrics = this.ctx.measureText(text);
-        var xReal = x + w / 2;
-        var yReal = y + h / 2 + 10;
-        this.ctx.fillText(text, xReal, yReal);
-        this.ctx.textAlign = 'start';
+    CanvasRenderer.prototype.drawCountDown = function (num) {
+        var num = $('#count_down').html();
+        if ( isNaN(num)  || ( parseInt(num) - 1 <= 0) ) {
+            $('#count_down').fadeOut('slow');
+            alert('time out');
+            clearInterval(putInt);
+            return ;
+        }
+        $('#count_down').fadeIn('slow');
+        $('#count_down').html( parseInt(num) - 1 );
     }
 
     // TODO
