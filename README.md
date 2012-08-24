@@ -1,8 +1,11 @@
 # About Lihu
 Lihu is a online multiplayer poke game. Detail rules you could check [lihu - help](http://lihu.herokuapp.com/help.htm)  
 
+
 # Online demo
-[lihu@heroku](http://lihu.herokuapp.com/)
+[lihu@heroku](http://lihu.herokuapp.com/)  
+Support: IE9+, Chrome, Firefox
+
 
 # Install
 Install [nodejs](http://nodejs.org/), add node dir to PATH, make sure command line works
@@ -30,8 +33,10 @@ PS: **Only the bottom seat user could control the game start**
 3. Waiting game room  
 You'll be waiting users here, and you can also talk to the users in the same room user the chat-nav-bar on the right side.  
 The people sit on the **bottom seat** could start the game.  
-4. Start Lihu.
-Just play as normal poke games. Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
+4. Start Lihu.  
+Just play as normal poke games. 
+Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
+Enjoy it. :)
 
 
 # Structure
