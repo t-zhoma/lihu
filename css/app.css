@@ -83,7 +83,7 @@ body.game {
 }
 
 #home {
-    
+    min-height: 700px;
 }
 
 #waiting {
@@ -194,3 +194,9 @@ body.game {
     font-size: 6em;
 }
 
+#footer {
+    text-align: center;
+    margin: 20px 0px;
+    border-top: 1px solid #CCC;
+    padding: 20px 0px;
+}

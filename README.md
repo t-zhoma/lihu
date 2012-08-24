@@ -32,8 +32,8 @@ robots we provide :)
 PS: **Only the bottom seat user could control the game start**  
 3. Waiting game room  
 You'll be waiting users here, and you can also talk to the users in the same room user the chat-nav-bar on the right side.  
-The people sit on the **bottom seat** could start the game.  
-4. Start Lihu.  
+The people sit on the **bottom seat** could start the game.   
+4. Start Lihu.    
 Just play as normal poke games. 
 Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
 Enjoy it. :)
