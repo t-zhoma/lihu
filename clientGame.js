@@ -36,6 +36,8 @@
     game.mySeat = -1;
     game.playersInRoom = 0;
 
+    game.curPutterSeat = -1;
+
     game.tn = new Rect(560, 30, 100, 20);
     game.ln = new Rect(40, 415, 100, 20);
     game.rn = new Rect(1080, 415, 100, 20);
@@ -92,11 +94,11 @@
         renderer.drawBottomBox();
     };
 
-    game.put = function () {
+    game.put = function ( isTimeOut ) {
         var selectedCards = this.getSelectedCards(this.bb.cards);
 
         // verify whether can put
-        if (!game.compareCards(selectedCards, this.lastPutCards)) {
+        if ( this.isValidPut() == false) {
             smoke.signal('Invalid cards!');
             return;
         }
@@ -108,7 +110,7 @@
         // send to server
         socket.emit('Put', { room: this.myRoom, seat: this.mySeat,
             putCards: selectedCards,
-            remainCards: this.bb.cards
+            remainCards: this.bb.cards,
         });
 
         renderer.drawBottomBox();
@@ -131,6 +133,13 @@
                                    playerName: name
                                   });
     }
-
+    
+    // check if select cards valid to put
+    game.isValidPut = function() {
+        var selectedCards = this.getSelectedCards(this.bb.cards);
+        // verify whether can put
+        return (game.compareCards(selectedCards, this.lastPutCards));
+    }
+    
     exports.game = game;
 })(window);

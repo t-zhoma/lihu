@@ -182,6 +182,8 @@ io.sockets.on('connection', function (socket) {
         var game = games[data.room];
         var putter = game.players[data.seat];
 
+        if ( putter == null ) return;
+
         if (data.putCards.length != 0) {
             game.lastPutterSeat = data.seat;
             game.lastPutCards = data.putCards;
@@ -319,7 +321,7 @@ io.sockets.on('connection', function (socket) {
     function robotPut(room) { // return true means game over or round over
         var game = games[room];
 
-        while (game.players[game.curPutterSeat].isRobot || !game.needPut[game.curPutterSeat]) {
+        while ( game.players[game.curPutterSeat] !== null && game.players[game.curPutterSeat].isRobot || !game.needPut[game.curPutterSeat]) {
             if (!game.needPut[game.curPutterSeat]) {
                 game.curPutterSeat = game.nextSeat(game.curPutterSeat);
                 continue;

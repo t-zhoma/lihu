@@ -181,6 +181,24 @@ body.game {
     width: 30%;
 }
 
+.nav-bar #opt_playing span {
+    font-weight:bold;
+    margin-left: 5px;
+}
+.nav-bar #opt_playing #putter_name {
+
+}
+.nav-bar #opt_playing #cur_level {
+    text-transform:uppercase;
+}
+.nav-bar #opt_playing #your_level {
+    text-transform:uppercase;'
+}
+.nav-bar #opt_playing #lihu_player {
+    
+}
+
+
 #game {
     width:1200px;
     float: left;
@@ -188,10 +206,21 @@ body.game {
 }
 #game #count_down {
     position: absolute;
-    top: 500px;
-    left: 550px;
+    top: 400px;
+    left: 545px;
     font-weight: bold;
-    font-size: 6em;
+    text-align: center;
+    width: 100px;
+}
+#game #count_down #putter_name {
+    font-size: 30px;
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+#game #count_down #count_down_num {
+    font-size: 90px;
+    line-height: 90px;
 }
 
 #footer {

@@ -112,15 +112,18 @@ document.addEventListener('DOMContentLoaded', function () {
         renderer.clear();
         renderer.drawBox();
 
-        
-
         allowPut(false);
 
         // li hu ?
         if (game.getCurrentLevel() != 11) { // 'a'
-            smoke.confirm('Do you want to li hu?', function (e) { socket.emit('lihu', { room: game.myRoom, seat: game.mySeat, isLihu: e }); });
+            smoke.confirm('Do you want to li hu?', function (e) { 
+                socket.emit('lihu', { 
+                    room: game.myRoom, 
+                    seat: game.mySeat, 
+                    isLihu: e 
+                }); 
+            });
         }
-
     });
 
     // lihu players
@@ -133,24 +136,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tmp == '') { tmp = 'No one ' }
         $('#home #nav_bar #lihu_player').html(tmp);
 
-        //createCountDown(30);
+        // show count down
+        createCountDown();
     });
 
     // bradcast get user put cards and server result
     socket.on('Put', function (data) {
         game.fillbox(data.players, false);
         renderer.drawPutCards(data.putterSeat, data.putCards);
-        //createCountDown(30);
     });
 
     socket.on('NewPut', function (data) {
         allowPut(data.curPutterSeat == game.mySeat);
+        game.curPutterSeat = data.curPutterSeat;
         game.lastPutterSeat = data.lastPutterSeat;
         game.lastPutCards = data.lastPutCards;
 
         if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
 
-        $('#putter_name').html(game.players[data.curPutterSeat].name);
+        $('#opt_playing #putter_name').html(game.players[data.curPutterSeat].name);
+        $('#count_down #putter_name').html(game.players[data.curPutterSeat].name);
+
+
+        // show count down
+        createCountDown();
     });
 
     socket.on('PlayerFinish', function (data) {
@@ -233,6 +242,13 @@ function showWaitingRoom() {
 }
 
 function showGameStart() {
+
+    // clean data
+    $('#opt_playing #putter_name').html('');
+    $('#opt_playing #cur_level').html('');
+    $('#opt_playing #your_level').html('');
+    $('#opt_playing #lihu_player').html('');
+
     $('#home #waiting').fadeOut('slow', function() {
         $('#home #game').show();
         $('#opt_playing').show();
@@ -251,8 +267,10 @@ function showGameList() {
     
 }
 
-function createCountDown(num) {
+function createCountDown() {
+    var num = 20;
     clearInterval(putInt);
-    $('#home #game #count_down').html(num);
+    $('#home #game #count_down #count_down_num').html(num);
+    $('#count_down').fadeIn('slow');
     putInt = setInterval(function(){renderer.drawCountDown()}, 1000);
 }

@@ -43,7 +43,8 @@
 								<button id="btnPut" class='btn btn-primary'>Put</button>
 			        		</div>
 			        		<div id="count_down" style='display:none;'>
-			        			30
+			        			<div id="putter_name"></div>
+			        			<div id="count_down_num"></div>
 			        		</div>
 			        	</div>
 			       	</div>
@@ -53,18 +54,17 @@
 
 			       			<div id="opt_playing">
 						    	<div>
-						    			<p>Current Putter:<span id='putter_name' style='font-weight:bold;'></span></p>
-						    			<p>Current Level:<span id='cur_level' style='font-weight:bold;'></span></p>
-			                            <p>Your Level:<span id='your_level' style='font-weight:bold;'></span></p>
-	                            		<p>Lihu player:<span id='lihu_player' style='font-weight:bold;'></span></p>
+						    		<p>Current Putter:<span id='putter_name' ></span></p>
+						    		<p>Current Level:<span id='cur_level'></span></p>
+			                            			<p>Your Level:<span id='your_level'></span></p>
+	                            					<p>Lihu player:<span id='lihu_player'></span></p>
 			                            
-						    		</div>
+						    	</div>
 
-						    		<p>
-						    			<a href="help.htm" class="btn btn-success" target="_blank">Help</a>
-
-			                            	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
-			                        </p>
+						    	<p>
+						    		<a href="help.htm" class="btn btn-success" target="_blank">Help</a>
+			                            		<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+			                        		</p>
 				        	
 				        	</div>
 
@@ -116,27 +116,25 @@
 
 	</body>
 	
-		<script type="text/javascript" src="lib/jquery.js"></script>
-		<script src="lib/socket.io.js"></script>
-		<script src="lib/smoke.min.js"></script>
-		<script src="conf.js"></script>
-		<script src="game.js"></script>
-		<script src="lib/imgpreloader.js"></script>
-		<script src="utility.js"></script>
-		<script src="render.js"></script>
-		<script src="controller.js"></script>
-		<!--
-		<script src="sound.js"></script>-->
-        <script src="clientGame.js"></script>
-		<script src="client.js"></script>
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script src="lib/socket.io.js"></script>
+	<script src="lib/smoke.min.js"></script>
+	<script src="conf.js"></script>
+	<script src="game.js"></script>
+	<script src="lib/imgpreloader.js"></script>
+	<script src="utility.js"></script>
+	<script src="render.js"></script>
+	<script src="controller.js"></script>
+        	<script src="clientGame.js"></script>
+	<script src="client.js"></script>
 
 	<script type="text/javascript">
-		if ( $.browser.msie&&($.browser.version == "6.0" || $.browser.version == "5.0" || $.browser.version == "7.0" ||
+	// IE version check
+	if ( $.browser.msie&&($.browser.version == "6.0" || $.browser.version == "5.0" || $.browser.version == "7.0" ||
 			$.browser.version == "8.0") ) {
-			smoke.alert('Please use IE9+,Chrome,Firefox,Safari for better HTML5 support');
-		} 
+		smoke.alert('Please use IE9+,Chrome,Firefox,Safari for better HTML5 support');
+	} 
 	</script>
-
 
 	<script type="text/javascript">
 

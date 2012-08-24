@@ -349,15 +349,30 @@
     }
 
     CanvasRenderer.prototype.drawCountDown = function (num) {
-        var num = $('#count_down').html();
+        var num = $('#count_down #count_down_num').html();
         if ( isNaN(num)  || ( parseInt(num) - 1 <= 0) ) {
-            $('#count_down').fadeOut('slow');
-            alert('time out');
+            // disable button
+            $('#btnHold').attr('disabled', true);
+            $('#btnPrompt').attr('disabled', true);
+            $('#btnPut').attr('disabled', true);
+
             clearInterval(putInt);
+            $('#count_down').fadeOut('slow');
+
+            if ( game.curPutterSeat != game.mySeat ) {
+                return;
+            }
+
+            // promote
+            game.prompt();
+            if ( game.isValidPut() == false) {
+                game.hold();
+            } else {
+                game.put();
+            }
             return ;
-        }
-        $('#count_down').fadeIn('slow');
-        $('#count_down').html( parseInt(num) - 1 );
+        } 
+        $('#count_down #count_down_num').html( parseInt(num) - 1 );
     }
 
     // TODO
