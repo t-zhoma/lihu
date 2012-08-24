@@ -70,5 +70,19 @@ Enjoy it. :)
 	-> Ptocfile
 		use for Heroku deployment
 
+# Project @heroku   
+1. https://devcenter.heroku.com/articles/quickstart  
+Register and configure heroku at you PC.  
+
+2. Import you SSH keys, this support git push to heroku  
+https://devcenter.heroku.com/articles/keys  
+
+3. Cd to PATH/lihu/  
+`git remote add heroku git@heroku.com:lihu.git`  
+
+4. Deploy to heroku  
+`git push heroku master`  
+Use `git push` to push to origin github.
+
 
 
