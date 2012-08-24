@@ -162,5 +162,8 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
+# exe
+*.exe
+
 node_modules/
 node.exe

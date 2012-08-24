@@ -199,9 +199,10 @@ io.sockets.on('connection', function (socket) {
         putCards(data.room);
     });
 
-    socket.on('disconnect', function (data) {
-        console.log('recv disconnect', data);
+    socket.on('disconnect', function () {
+        console.log('recv disconnect');
         // delete from socketIds
+        
         for (var i = 0; i < socketIds.length; i++) {
             if (socketIds[i] == socket.id) { socketIds.splice(i, 1); }
         }
@@ -215,6 +216,7 @@ io.sockets.on('connection', function (socket) {
                 }
             }
         }
+        
     });
 
     /*

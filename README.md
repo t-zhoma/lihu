@@ -38,6 +38,17 @@ Just play as normal poke games.
 Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
 Enjoy it. :)
 
+# 游戏指南
+1. 游戏地址 [lihu@heroku](http://lihu.herokuapp.com/)  (支持 IE9+,Chrome, Firefox, Safari)  
+2. 选择房间      
+有10个房间，每个房间有四个座位，上下左右。点击任何一个座位，在弹出框中填写你的nickname，即可进入游戏。  
+该游戏需要四个人，如果凑不够游戏人数，请选择“下方”的座位（“下方”的座位控制游戏的开始），选择开始游戏后，系统会提供相应数量的机器人玩家以使游戏正常开始。  
+3. 房间等待   
+当进入房间，游戏尚未开始时候，你可以在房间内等待其它玩家。右侧侧边栏有简易聊天功能，可以和当前房间的其它玩家进行交流。   
+坐在“下”座位的玩家可以选择游戏开始   
+4. 开始游戏.     
+像一般扑克游戏一样。详细规则可以查看[lihu - help](http://lihu.herokuapp.com/help.htm)  
+
 
 # Structure
 
@@ -70,9 +81,11 @@ Enjoy it. :)
 	-> Ptocfile
 		use for Heroku deployment
 
-# Project @heroku   
+# Heroku deployment guide   
+
 1. https://devcenter.heroku.com/articles/quickstart  
 Register and configure heroku at you PC.  
+Ask the Heroku project owner add your email to the **Collaborators** list, or create the project your self.  
 
 2. Import you SSH keys, this support git push to heroku  
 https://devcenter.heroku.com/articles/keys  
@@ -82,7 +95,7 @@ https://devcenter.heroku.com/articles/keys
 
 4. Deploy to heroku  
 `git push heroku master`  
-Use `git push` to push to origin github.
+Use `git push` to push to origin github.  
 
 
 
