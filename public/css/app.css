@@ -9,6 +9,10 @@
     clear: both;
 }
 
+.ctr {
+    text-align: center;
+}
+
 body {
     /*background:#000 url(/img/Floor.jpg);*/
     margin:0 auto;
@@ -231,4 +235,28 @@ body.game {
 }
 #footer p a {
     margin-right: 20px;
+}
+
+
+/* help */
+.help {
+
+}
+.help .help-block {
+    margin: 5px 0px 10px 0px;
+}
+.help .help-block-header {
+    padding: 5px 0px; 
+}
+.help .help-block-header h2 {
+    padding: 0px;
+    margin: 0px;
+    font-size:14px;
+    line-height: 20px;
+}
+.help .help-block-content h3 {
+    padding: 0px;
+    font-size:14px;
+    line-height: 20px;
+    margin: 0px;
 }

@@ -9,8 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="/lib/smoke.css">
 	</head>
 	<body>
-		<div class="" style='padding:0px; margin:0;border:0px;'>
-			
+		<div class="" style='padding:0px; margin:0;border:0px;'>	
 			<div id='home'>
 				<div id = 'game_block' class="row-fluid" style='width:1600px;'>
 					<div id = 'waiting' style='display:none' class="span8 well" >
@@ -32,7 +31,7 @@
 				                <td></td>
 				            </tr>
 				        </table>
-                    </div>
+                    </div><!-- End waiting-->
 
 					<div id = 'game' style='display:none;' class="well" >
 						<canvas width="1200" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
@@ -47,25 +46,21 @@
 			        			<div id="count_down_num"></div>
 			        		</div>
 			        	</div>
-			       	</div>
+			       	</div><!-- End game -->
 			       	<div id="nav_bar" class="nav-bar span3 well" style='display:none;margin-left:20px;'>
 			       		<div id="options" style="text-align:center">
 			       			<h1 style='text-align:center;'>Room <span id = 'room_id'></h1>
-
 			       			<div id="opt_playing">
 						    	<div>
 						    		<p>Current Putter:<span id='putter_name' ></span></p>
 						    		<p>Current Level:<span id='cur_level'></span></p>
-			                            			<p>Your Level:<span id='your_level'></span></p>
-	                            					<p>Lihu player:<span id='lihu_player'></span></p>
-			                            
+			                        <p>Your Level:<span id='your_level'></span></p>
+	                            	<p>Lihu player:<span id='lihu_player'></span></p>
 						    	</div>
-
 						    	<p>
 						    		<a href="help" class="btn btn-success" target="_blank">Help</a>
-			                            		<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
-			                        		</p>
-				        	
+			                        <button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+			                    </p>
 				        	</div>
 
 				        	<div id="opt_waiting">
@@ -84,10 +79,11 @@
 			       			<input type="text" id="chat_text" name="chat_text" placeholder = "let's talk~	"/>
 			       			<input type="button" id="btn_chat_text" value="Submit" class="btn-chat-text btn"/>
 			       		</div>
-			       	</div>
+			       	</div><!-- End nav bar -->
 
 				<div class='clr'></div>
 			</div>
+			<!-- select room -->
 			<div id = 'select_room' style='display:none'>
 				<h1 style='padding:20px;text-align:center;'>Select Room</h1>
 
@@ -98,10 +94,11 @@
 				<p style='text-align:center;'>
 					Lihu is a online multiplayer poke game. Detail rules you could read <a href="help" target="_blank">lihu - help</a> please.
 				</p>
-			</div>
+			</div><!-- End select room -->
+			<!-- loading animation -->
 			<div id = 'loading' >
 				<img src="img/loading.gif"/>
-			</div>
+			</div> <!-- End loading animation -->
 		</div>
 
 		<div id="footer">
@@ -124,7 +121,7 @@
 	<script src="utility.js"></script>
 	<script src="render.js"></script>
 	<script src="controller.js"></script>
-        	<script src="clientGame.js"></script>
+    <script src="clientGame.js"></script>
 	<script src="client.js"></script>
 
 	<script type="text/javascript">

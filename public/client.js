@@ -1,11 +1,7 @@
 renderer = new Renderer();
 controller = new Controller();
-//var input = new Input(game);
-//sound = new SoundManager();
-
 
 var clientId = Util.guidGenerator();
-
 
 function preloadImg() {
     $('#loading').show();
@@ -37,13 +33,8 @@ function allowPut(isAllow) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
     // Globals
-    //socket = io.connect('http://o.smus.com:5050');
     socket = io.connect('http://' + window.location.host);
-
-    
-    //socket = io.connect('http://10.172.4.74:8080');
 
     socket.on('Connected', function (data) {
         switch (game.stage) {
@@ -157,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#opt_playing #putter_name').html(game.players[data.curPutterSeat].name);
         $('#count_down #putter_name').html(game.players[data.curPutterSeat].name);
 
-
         // show count down
         createCountDown();
     });
@@ -228,8 +218,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function showWaitingRoom() {
-
-    
     $('#select_room').fadeOut('slow', function() {
         $('#home #nav_bar #chat_msg_list').html('');
         $('#home #waiting').show();
@@ -238,11 +226,9 @@ function showWaitingRoom() {
         $('#opt_waiting').show();
         $('#home #game').hide();
     });
-
 }
 
 function showGameStart() {
-
     // clean data
     $('#opt_playing #putter_name').html('');
     $('#opt_playing #cur_level').html('');
@@ -264,7 +250,6 @@ function showGameList() {
     if ( $('#loading').is(':hidden') ) {
         $('#select_room').fadeIn('slow');
     }   
-    
 }
 
 function createCountDown() {
