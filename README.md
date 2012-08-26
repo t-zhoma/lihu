@@ -54,30 +54,36 @@ Enjoy it. :)
 
 	-> app.js
 		node js server side, handle request.
-	-> client.js:
+	-> public: client static files(image, css, js)
+		-> client.js:
+			
+		-> controller.js:
+			handle mouse, keyboard input event, bind event
+		-> game.js:
+			game logic and game data
+		-> clientGame.js
+			inherit from game.js, use on client side
+		-> serverGame.js
+			inherit from game.js, use on server side
+		-> home.html:
+			game page
+		-> render.js:
+			canvas draw
+		-> sound.js:
+			TODO.  sound manager
+		-> utility.js:
+			common function
+		-> lib/
+			some 3rd js lib
+		-> css/
 
-	-> controller.js:
-		handle mouse, keyboard input event, bind event
-	-> game.js:
-		game logic and game data
-	-> clientGame.js
-		inherit from game.js, use on client side
-	-> serverGame.js
-		inherit from game.js, use on server side
-	-> home.html:
-		game page
-	-> render.js:
-		canvas draw
-	-> sound.js:
-		TODO.  sound manager
-	-> utility.js:
-		common function
-	-> lib/
-		some 3rd js lib
-	-> css/
-
-	-> img/
-		image folder
+		-> img/
+			image folder  
+	-> views: html files  
+		-> home.html  
+			game page  
+		-> help.html  
+			help & guide page  
 	-> Ptocfile
 		use for Heroku deployment
 
