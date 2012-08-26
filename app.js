@@ -1,43 +1,52 @@
-﻿var http = require('http')
-	, fs = require('fs');
-var path = require('path');
-
-var pipeFile = function(path, res) {
-	res.writeHead('200');
-	fs.createReadStream(path).pipe(res);
-}
-
-
-var express = require('express');
+﻿var express = require('express');
 var app = express()
   , http = require('http')
   , server = http.createServer(app)
-  , io = require('socket.io').listen(server);
+  , io = require('socket.io').listen(server)
+  , path = require('path');
+
+app.configure(function(){
+  app.set('port', process.env.PORT || 8080);
+  app.set('views', __dirname + '/views');
+  // Without this you would need to
+  // supply the extension to res.render() 
+  // ex: res.render('users.html').
+  app.set('view engine', 'html');
+
+  // Register ejs as .html. If we did
+  // not call this, we would need to
+  // name our views foo.ejs instead
+  // of foo.html. The __express method
+  // is simply a function that engines
+  // use to hook into the Express view
+  // system by default, so if we want
+  // to change "foo.ejs" to "foo.html"
+  // we simply pass _any_ function, in this
+  // case `ejs.__express`.
+  app.engine('.html', require('ejs').__express);
+
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  // session support
+  app.use(express.cookieParser('some secret here'));
+  app.use(express.session());
+});
 
 
-// Register ejs as .html. If we did
-// not call this, we would need to
-// name our views foo.ejs instead
-// of foo.html. The __express method
-// is simply a function that engines
-// use to hook into the Express view
-// system by default, so if we want
-// to change "foo.ejs" to "foo.html"
-// we simply pass _any_ function, in this
-// case `ejs.__express`.
+// define a custom res.message() method
+// which stores messages in the session
+app.response.message = function(msg){
+  // reference `req.session` via the `this.req` reference
+  var sess = this.req.session;
+  // simply add the msg to an array for later
+  sess.messages = sess.messages || [];
+  sess.messages.push(msg);
+  return this;
+};
 
-app.engine('.html', require('ejs').__express);
-
-// Optional since express defaults to CWD/views
-
-app.set('views', __dirname + '/views');
-// Without this you would need to
-// supply the extension to res.render()
-// ex: res.render('users.html').
-app.set('view engine', 'html');
-
-// serve static files
-app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
   res.render('home');
@@ -46,61 +55,16 @@ app.get('/help', function(req, res){
   res.render('help');
 });
 
-
 if (!module.parent) {
-  var port = process.env.PORT || 8080;
-  server.listen(port);
-  console.log('Express app started on port ' + port);
+  server.listen(app.get('port'), function(){
+    console.log("Express server listening on port " + app.get('port'));
+  });
 }
 
-/*
-var server = http.createServer(function(request, response) {
 
-    var filePath = '.' + request.url;
-    if (request.url.length == 1)
-        filePath = './home.html';
-         
-    var extname = path.extname(filePath);
-    var contentType = 'text/html';
-    switch (extname) {
-        case '.js':
-            contentType = 'text/javascript';
-            break;
-        case '.css':
-            contentType = 'text/css';
-            break;
-        case '.png' : 
-            contentType = 'image/png';
-            break;
-    }
-
-    fs.exists(filePath, function(exists) {
-        
-        if (exists) {
-            fs.readFile(filePath, function(error, content) {
-                if (error) {
-                    response.writeHead(500);
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, { 'Content-Type': contentType });
-                    response.end(content, 'utf-8');
-                }
-            });
-        }
-        else {
-            response.writeHead(404);
-            response.end();
-        }
-    });
-
-});
-
-var port = process.env.PORT || 8080;
-server.listen(port, function() {
-  console.log("Listening on " + port);
-});
-*/
+/////////////////////////
+/// Socket.io handle
+/////////////////////////
 
 var utiljs = new require('./public/utility.js');
 var Util = utiljs.Util;
@@ -118,7 +82,6 @@ for(var i = 0; i < GAME_COUNT; i++){
     games.push(temp); 
 }
 
-//var io = require('socket.io').listen(app);
 io.set('log level', 1);
 // assuming io is the Socket.IO server object
 io.configure(function () { 
@@ -205,9 +168,9 @@ io.sockets.on('connection', function (socket) {
     /*
     player leave room
     data = {
-    room : ,
-    seat : ,
-    name :
+        room : ,
+        seat : ,
+        name :
     }
     */
     socket.on('LeaveRoom', function (data) {
@@ -217,10 +180,10 @@ io.sockets.on('connection', function (socket) {
 
     //user put cards
     /*data = {
-    room : ,
-    seat : ,
-    putCards : ,
-    remainCards :
+        room : ,
+        seat : ,
+        putCards : ,
+        remainCards :
     }
     */
     socket.on('Put', function (data) {
