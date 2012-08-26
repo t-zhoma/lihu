@@ -115,7 +115,7 @@
         var y = game.bob.rect.y;
 
         if (cards.length == 0) {
-            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
             return;
         }
 
@@ -136,7 +136,7 @@
         var y = game.tob.rect.y;
 
         if (cards.length == 0) {
-            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
             return;
         }
 
@@ -153,7 +153,7 @@
         var y = game.lob.rect.y;
 
         if (cards.length == 0) {
-            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
             return;
         }
 
@@ -174,7 +174,7 @@
         var y = game.rob.rect.y;
 
         if (cards.length == 0) {
-            this.ctx.fillText('不出', x, y + Game.CARD_HEIGHT / 2);
+            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
             return;
         }
 

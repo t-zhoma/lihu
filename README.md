@@ -1,5 +1,5 @@
 # About Lihu
-Lihu is a online multiplayer poke game. Detail rules you could check [lihu - help](http://lihu.herokuapp.com/help.htm)  
+Lihu is a online multiplayer poke game. Detail rules you could check [lihu - help](http://lihu.herokuapp.com/help)  
 
 
 # Online demo
@@ -35,7 +35,7 @@ You'll be waiting users here, and you can also talk to the users in the same roo
 The people sit on the **bottom seat** could start the game.   
 4. Start Lihu.    
 Just play as normal poke games. 
-Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help.htm)  
+Detail rules please goto [lihu - help](http://lihu.herokuapp.com/help)  
 Enjoy it. :)
 
 # 游戏指南  
@@ -47,7 +47,7 @@ Enjoy it. :)
 当进入房间，游戏尚未开始时候，你可以在房间内等待其它玩家。右侧侧边栏有简易聊天功能，可以和当前房间的其它玩家进行交流。   
 坐在“下”座位的玩家可以选择游戏开始   
 4. 开始游戏.     
-像一般扑克游戏一样。详细规则可以查看[lihu - help](http://lihu.herokuapp.com/help.htm)  
+像一般扑克游戏一样。详细规则可以查看[lihu - help](http://lihu.herokuapp.com/help)  
 
 
 # Structure

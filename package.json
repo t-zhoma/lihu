@@ -4,7 +4,9 @@
 	"author": "J.M.S.Z",
 	"description": "poke game",
 	"dependencies": {
-		"socket.io": "*"
+		"socket.io": "*",
+		"ejs": "*",
+		"express": "*"
 	},
 	"engines": {
 	    "node": "0.8.x",

@@ -1,5 +1,5 @@
 ﻿(function (exports) {
-    var gamejs = new require('./game.js');
+    var gamejs = new require('../public/game.js');
 
     var Game = gamejs.Game;
     var Card = gamejs.Card;

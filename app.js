@@ -7,6 +7,53 @@ var pipeFile = function(path, res) {
 	fs.createReadStream(path).pipe(res);
 }
 
+
+var express = require('express');
+var app = express()
+  , http = require('http')
+  , server = http.createServer(app)
+  , io = require('socket.io').listen(server);
+
+
+// Register ejs as .html. If we did
+// not call this, we would need to
+// name our views foo.ejs instead
+// of foo.html. The __express method
+// is simply a function that engines
+// use to hook into the Express view
+// system by default, so if we want
+// to change "foo.ejs" to "foo.html"
+// we simply pass _any_ function, in this
+// case `ejs.__express`.
+
+app.engine('.html', require('ejs').__express);
+
+// Optional since express defaults to CWD/views
+
+app.set('views', __dirname + '/views');
+// Without this you would need to
+// supply the extension to res.render()
+// ex: res.render('users.html').
+app.set('view engine', 'html');
+
+// serve static files
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function(req, res){
+  res.render('home');
+});
+app.get('/help', function(req, res){
+  res.render('help');
+});
+
+
+if (!module.parent) {
+  var port = process.env.PORT || 8080;
+  server.listen(port);
+  console.log('Express app started on port ' + port);
+}
+
+/*
 var server = http.createServer(function(request, response) {
 
     var filePath = '.' + request.url;
@@ -53,11 +100,11 @@ var port = process.env.PORT || 8080;
 server.listen(port, function() {
   console.log("Listening on " + port);
 });
+*/
 
-
-var utiljs = new require('./utility.js');
+var utiljs = new require('./public/utility.js');
 var Util = utiljs.Util;
-var servergamejs = new require('./serverGame.js');
+var servergamejs = new require('./server/serverGame.js');
 var Game = servergamejs.Game;
 var Player = servergamejs.Player;
 var GAME_COUNT = 10;
@@ -71,7 +118,7 @@ for(var i = 0; i < GAME_COUNT; i++){
     games.push(temp); 
 }
 
-var io = require('socket.io').listen(server);
+//var io = require('socket.io').listen(app);
 io.set('log level', 1);
 // assuming io is the Socket.IO server object
 io.configure(function () { 
