@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
         game.lastPutCards = data.lastPutCards;
 
         if (data.curPutterSeat == data.lastPutterSeat) {
-            socket.emit('NewPutRound', {room, data.room});
+            socket.emit('NewPutRound', {room: game.myRoom});
             game.lastPutCards = []; 
         }
 
