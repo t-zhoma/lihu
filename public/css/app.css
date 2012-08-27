@@ -22,6 +22,12 @@ body.game {
 	/* background-image: url(/img/Floor.jpg);*/
 }
 
+.wrapper {
+    padding:0px; 
+    margin:0;
+    border:0px;
+}
+
 #loading {
     width:100%;
     text-align:center;
@@ -88,12 +94,15 @@ body.game {
 
 #home {
     min-height: 700px;
+    width: 1200px;
+    margin: 20px auto;
 }
 
 #waiting {
     margin: 0 auto;
     padding: 20px;
     min-height: 800px;
+    width: 790px;
 }
 
 .waiting-table {
@@ -148,6 +157,7 @@ body.game {
     padding: 20px;
     min-height: 800px;
     margin-left: 20px;
+    width: 300px;
 }
 
 .nav-bar .chat-msg-list {
@@ -204,9 +214,9 @@ body.game {
 
 
 #game {
-    width:1200px;
+    width: 790px;;
     float: left;
-    padding:0px;
+    padding:5px;
 }
 #game #count_down {
     position: absolute;
@@ -229,9 +239,8 @@ body.game {
 
 #footer {
     text-align: center;
-    margin: 20px 0px;
     border-top: 1px solid #CCC;
-    padding: 20px 0px;
+    padding: 10px 0px;
 }
 #footer p a {
     margin-right: 20px;

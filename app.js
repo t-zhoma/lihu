@@ -54,6 +54,13 @@ app.get('/', function(req, res){
 app.get('/help', function(req, res){
   res.render('help');
 });
+app.get('/new', function(req, res){
+  res.render('new');
+});
+
+app.get('/test', function(req, res){
+  res.render('test');
+});
 
 if (!module.parent) {
   server.listen(app.get('port'), function(){

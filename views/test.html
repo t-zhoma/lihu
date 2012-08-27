@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Lihu</title>
+		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/css/app.css">
+		<link rel="stylesheet" type="text/css" href="/lib/smoke.css">
+	</head>
+	<body>
+		<div class="wrapper">	
+			<div id='home'>
+				<div id = 'game_block' class="row-fluid" style='width:1600px;'>
+					
+
+					<div id = 'game' class="well fl" >
+						<div id="canvas"></div>
+
+					        	<div style='width:100%; margin:auto; padding:auto;'>
+					        		<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
+										<button id="btnHold" class="btn btn-primary">Hold</button>
+										<button id="btnPrompt" class='btn btn-primary'>Prompt</button>
+										<button id="btnPut" class='btn btn-primary'>Put</button>
+					        		</div>
+					        		<div id="count_down" style='display:none;'>
+					        			<div id="putter_name"></div>
+					        			<div id="count_down_num"></div>
+					        		</div>
+					        	</div>
+			       		</div><!-- End game -->
+				       	<div id="nav_bar" class="nav-bar well fl" style=''>
+				       		<div id="options" style="text-align:center">
+				       			<h1 style='text-align:center;'>Room <span id = 'room_id'></h1>
+				       			<div id="opt_playing">
+							    	<div>
+							    		<p>Current Putter:<span id='putter_name' ></span></p>
+							    		<p>Current Level:<span id='cur_level'></span></p>
+							                        <p>Your Level:<span id='your_level'></span></p>
+					                            		<p>Lihu player:<span id='lihu_player'></span></p>
+							    	</div>
+							    	<p>
+							    		<a href="help" class="btn btn-success" target="_blank">Help</a>
+						                        	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+						                    	</p>
+					        		</div>
+
+						        	<div id="opt_waiting">
+							        	<p>waiting people to join the room.</p>
+					                        	<p>
+						                        	<button id="btnStart" class='btn btn-primary'>Start</button>
+						                        	<a href="help" class="btn btn-success" target="_blank">Help</a>
+						                        	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+						                        </p>
+						        	</div>
+				       		</div>
+				       		<div id="chat_msg_list" class="chat-msg-list">
+				       			
+				       		</div>
+				       		<div class="chat-input-box form-inline">
+				       			<input type="text" id="chat_text" name="chat_text" placeholder = "let's talk~	"/>
+				       			<input type="button" id="btn_chat_text" value="Submit" class="btn-chat-text btn"/>
+				       		</div>
+				       	</div><!-- End nav bar -->
+					<div class='clr'></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="footer">
+			<p>
+				<a href="help" target="_blank">Help</a>
+				Lihu @github: <a href="https://github.com/t-zhoma/lihu" target="_blank">https://github.com/t-zhoma/lihu</a>
+			</p>
+			<p>&copy; 2012 <span>J.M.S.Z</span></p>
+		</div>
+	</body>
+	
+	<script src="http://www.html5canvastutorials.com/libraries/kinetic-v4.0.0.js"></script>
+    	
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script src="lib/imgpreloader.js"></script>
+	<script src="utility.js"></script>
+	<script src="render.js"></script>
+    	<script src="game.js"></script>
+    	<script src="clientGame.js"></script>
+
+<style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+	<script type="text/javascript">
+
+            var stage ;
+            var BUTTOM_ORIGIN_Y = 30;
+
+		function loadImages(sources, callback) {
+		        var assetDir = 'http://localhost:8080/img/';
+		        var images = {};
+		        var loadedImages = 0;
+		        var numImages = 0;
+		        for(var src in sources) {
+		          numImages++;
+		        }
+		        for(var src in sources) {
+		          images[src] = new Image();
+		          images[src].onload = function() {
+		            if(++loadedImages >= numImages) {
+		              callback(images);
+		            }
+		          };
+		          images[src].src = assetDir + sources[src];
+		        }
+		      }
+
+		 function initStage(images) {
+        stage = new Kinetic.Stage({
+          container: 'canvas',
+          width: 780,
+          height: 780
+        });
+
+        var shapesLayer = new Kinetic.Layer();
+        var messageLayer = new Kinetic.Layer();
+        /*
+        var cardback = new Kinetic.Image({
+          image: images.back,
+          x: 120,
+          y: 50,
+          width: Game.CARD_WIDTH,
+          height:Game.CARD_HEIGHT
+        });
+
+        var cardbackh = new Kinetic.Image({
+          image: images.backh,
+          x: 280,
+          y: 30,
+          width:Game.CARD_HEIGHT,
+          height:Game.CARD_WIDTH
+        });
+
+        var avatar = new Kinetic.Image({
+          image: images.avatar,
+          x: 380,
+          y: 30,
+          width: 50,
+          height:50
+        });
+
+        var card = new Kinetic.Image({
+          image: images.card,
+          x: 380,
+          y: 300,
+          width: Game.CARD_WIDTH,
+          height:Game.CARD_HEIGHT
+
+        });
+*/
+
+        // left box
+        var groupBox = new Kinetic.Group({
+          x: 0,
+          y: 150
+        });
+        var groupCardBox = new Kinetic.Group({
+          x: 10,
+          y: 10
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 380
+        });
+
+        x = 20;
+        y = 30;
+        // cards
+        for (var i = 0 ; i < 14; i++) {
+        	var card = new Kinetic.Image({
+	          image: images.backh,
+	          x: x,
+	          y: y,
+	          width:Game.CARD_HEIGHT,
+	          height:Game.CARD_WIDTH
+	        });
+	y = y + Game.CARD_SPACE;
+	groupCardBox.add(card);
+        }	
+        groupBox.add(groupCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: images.avatar,
+          x: 60,
+          y: 0,
+          width: 50,
+          height:50
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 60,
+          width: 180,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center'
+        });
+
+        groupAvatarBox.add(avatar);
+        groupAvatarBox.add(name);
+        groupBox.add(groupAvatarBox);
+        shapesLayer.add(groupBox);
+
+        // right box
+        var groupBox = new Kinetic.Group({
+          x: 580,
+          y: 150
+        });
+        var groupCardBox = new Kinetic.Group({
+          x: 0,
+          y: 10
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 380
+        });
+
+        x = 20;
+        y = 30;
+        // cards
+        for (var i = 0 ; i < 14; i++) {
+        	var card = new Kinetic.Image({
+	          image: images.backh,
+	          x: x,
+	          y: y,
+	          width:Game.CARD_HEIGHT,
+	          height:Game.CARD_WIDTH
+	        });
+	y = y + Game.CARD_SPACE;
+	groupCardBox.add(card);
+        }	
+        groupBox.add(groupCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: images.avatar,
+          x: 50,
+          y: 0,
+          width: 50,
+          height:50
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 60,
+          width: 150,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center'
+        });
+
+        groupAvatarBox.add(avatar);
+        groupAvatarBox.add(name);
+        groupBox.add(groupAvatarBox);
+        shapesLayer.add(groupBox);
+
+        // top box
+        var groupBox = new Kinetic.Group({
+          x: 150,
+          y: 0
+        });
+        var groupCardBox = new Kinetic.Group({
+          x: 100,
+          y: 10
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 0
+        });
+
+        x = 10;
+        y = 30;
+        // cards
+        for (var i = 0 ; i < 14; i++) {
+          var card = new Kinetic.Image({
+            image: images.back,
+            x: x,
+            y: y,
+            width:Game.CARD_WIDTH,
+            height:Game.CARD_HEIGHT
+          });
+  x = x + Game.CARD_SPACE;
+  groupCardBox.add(card);
+        } 
+        groupBox.add(groupCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: images.avatar,
+          x: 30,
+          y: 60,
+          width: 50,
+          height:50
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 120,
+          width: 110,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center'
+        });
+
+        groupAvatarBox.add(name);
+        groupAvatarBox.add(avatar);
+        groupBox.add(groupAvatarBox);
+        shapesLayer.add(groupBox);
+
+
+
+        // buttom box
+        var groupBox = new Kinetic.Group({
+          x: 150,
+          y: 600
+
+        });
+        var groupCardBox = new Kinetic.Group({
+          x: 100,
+          y: 10,
+          id: 'cardBox'
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 0
+        });
+
+        x = 10;
+        y = 30;
+
+        
+
+        // cards
+        for (var i = 0 ; i < 14; i++) {
+          var card = new Kinetic.Image({
+            image: images.card,
+            x: x,
+            y: y,
+            width:Game.CARD_WIDTH,
+            height:Game.CARD_HEIGHT
+          });
+          card.selected = false;
+
+          card.on('click' , function() {
+            var newY ;
+            if ( this.getY() == BUTTOM_ORIGIN_Y ) {
+              newY = BUTTOM_ORIGIN_Y - Game.CARD_EXTEND;
+              this.selected = true;
+            } else {
+              newY = BUTTOM_ORIGIN_Y;
+              this.selected = false;
+            }
+            this.transitionTo({
+                y: newY,
+                duration: 0.2,
+                easing: 'strong-ease-out'
+            });
+
+          });
+  x = x + Game.CARD_SPACE;
+  groupCardBox.add(card);
+        } 
+        groupBox.add(groupCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: images.avatar,
+          x: 30,
+          y: 60,
+          width: 50,
+          height:50
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 120,
+          width: 110,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center'
+        });
+
+        groupAvatarBox.add(name);
+        groupAvatarBox.add(avatar);
+        groupBox.add(groupAvatarBox);
+        shapesLayer.add(groupBox);
+
+
+
+
+
+
+        stage.add(shapesLayer);
+        stage.add(messageLayer);
+      }
+
+      window.onload = function() {
+        var sources = {
+          back: 'back-blue-75-1.png',
+          backh: 'back-blue-h-75-1.png',
+          card: 'clubs-2-75.png',
+          avatar: 'gravatar-user.png'
+         };
+        loadImages(sources, initStage);
+      };
+
+/*
+      $(function(){
+        $('#btnPut').click(function(){
+          var cards = stage.get('#cardBox')[0].getChilren();
+          for( var i in cards ) {
+            if ( cards[i].getY() ==
+          } 
+        }));
+      });
+*/
+
+	</script>
+	
+</html>
