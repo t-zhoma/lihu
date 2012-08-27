@@ -97,10 +97,12 @@
     }
 
     Controller.prototype.mouseUp = function (x, y) {
+        /*
         if (game.bb.cards.length == 0) {
             return;
         }
 
+        
         var x1 = Math.min(game.startX, x);
         var y1 = Math.min(game.startY, y);
         var w1 = Math.abs(game.startX - x);
@@ -123,6 +125,7 @@
         }
 
         if (needDraw) { renderer.drawBottomBox(); }
+        */
     }
 
     exports.Controller = Controller;

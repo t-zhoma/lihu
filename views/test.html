@@ -11,7 +11,7 @@
 	<body>
 		<div class="wrapper">	
 			<div id='home'>
-				<div id = 'game_block' class="row-fluid" style='width:1600px;'>
+				<div id = 'game_block' class="row-fluid">
 					
 
 					<div id = 'game' class="well fl" >
@@ -22,10 +22,13 @@
 										<button id="btnHold" class="btn btn-primary">Hold</button>
 										<button id="btnPrompt" class='btn btn-primary'>Prompt</button>
 										<button id="btnPut" class='btn btn-primary'>Put</button>
-					        		</div>
-					        		<div id="count_down" style='display:none;'>
+                    <button id="btn_left_put" class="btn btn-primary">left put</button>
+                    <button id="btn_right_put" class="btn btn-primary">right put</button>
+                    <button id="btn_top_put" class="btn btn-primary">top put</button>
+                      </div>
+					        		<div id="count_down">
 					        			<div id="putter_name"></div>
-					        			<div id="count_down_num"></div>
+					        			<div id="count_down_num">100</div>
 					        		</div>
 					        	</div>
 			       		</div><!-- End game -->
@@ -97,7 +100,9 @@
 	<script type="text/javascript">
 
             var stage ;
+            var shapesLayer;
             var BUTTOM_ORIGIN_Y = 30;
+            var source;
 
 		function loadImages(sources, callback) {
 		        var assetDir = 'http://localhost:8080/img/';
@@ -119,13 +124,15 @@
 		      }
 
 		 function initStage(images) {
+        source = images;
+
         stage = new Kinetic.Stage({
           container: 'canvas',
-          width: 780,
+          width: 980,
           height: 780
         });
 
-        var shapesLayer = new Kinetic.Layer();
+        shapesLayer = new Kinetic.Layer();
         var messageLayer = new Kinetic.Layer();
         /*
         var cardback = new Kinetic.Image({
@@ -165,21 +172,27 @@
         // left box
         var groupBox = new Kinetic.Group({
           x: 0,
-          y: 150
+          y: 150,
+          id: 'leftBox'
         });
         var groupCardBox = new Kinetic.Group({
-          x: 10,
-          y: 10
+          x: 100,
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
         });
         var groupAvatarBox = new Kinetic.Group({
           x: 0,
-          y: 380
+          y: 150,
+          id: 'avatarBox',
+          name: 'avatarBox'
         });
 
+        var cardNum = 2;
         x = 20;
-        y = 30;
+        y = (350 - (cardNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
         // cards
-        for (var i = 0 ; i < 14; i++) {
+        for (var i = 0 ; i < cardNum; i++) {
         	var card = new Kinetic.Image({
 	          image: images.backh,
 	          x: x,
@@ -187,14 +200,14 @@
 	          width:Game.CARD_HEIGHT,
 	          height:Game.CARD_WIDTH
 	        });
-	y = y + Game.CARD_SPACE;
-	groupCardBox.add(card);
+	         y = y + Game.CARD_SPACE;
+	         groupCardBox.add(card);
         }	
         groupBox.add(groupCardBox);
         // avatar
         var avatar = new Kinetic.Image({
           image: images.avatar,
-          x: 60,
+          x: 40,
           y: 0,
           width: 50,
           height:50
@@ -202,7 +215,7 @@
         var name = new Kinetic.Text({
           x: 0,
           y: 60,
-          width: 180,
+          width: 130,
           height:50,
           text: 'mcfnmcmc',
           fontSize: 12,
@@ -212,29 +225,45 @@
           align: 'center'
         });
 
+        var groupPutCardBox = new Kinetic.Group({
+          x: 280,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+
         groupAvatarBox.add(avatar);
         groupAvatarBox.add(name);
         groupBox.add(groupAvatarBox);
+        groupBox.add(groupPutCardBox);
         shapesLayer.add(groupBox);
 
         // right box
         var groupBox = new Kinetic.Group({
-          x: 580,
-          y: 150
+          x: 520,
+          y: 150,
+          id: 'rightBox'
         });
         var groupCardBox = new Kinetic.Group({
-          x: 0,
-          y: 10
+          x: 200,
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
         });
         var groupAvatarBox = new Kinetic.Group({
-          x: 0,
-          y: 380
+          x: 310,
+          y: 150,
+          id: 'avatarBox',
+          name: 'avatarBox'
         });
 
+        cardsNum = 5;
         x = 20;
-        y = 30;
+        var y = (350 - (cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        
         // cards
-        for (var i = 0 ; i < 14; i++) {
+        for (var i = 0 ; i < cardsNum; i++) {
+
         	var card = new Kinetic.Image({
 	          image: images.backh,
 	          x: x,
@@ -267,29 +296,45 @@
           align: 'center'
         });
 
+
+        var groupPutCardBox = new Kinetic.Group({
+          x: 100,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+
         groupAvatarBox.add(avatar);
         groupAvatarBox.add(name);
         groupBox.add(groupAvatarBox);
+        groupBox.add(groupPutCardBox);
         shapesLayer.add(groupBox);
 
         // top box
         var groupBox = new Kinetic.Group({
-          x: 150,
-          y: 0
+          x: 260,
+          y: 0,
+          id: 'topBox'
         });
         var groupCardBox = new Kinetic.Group({
           x: 100,
-          y: 10
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
         });
         var groupAvatarBox = new Kinetic.Group({
           x: 0,
-          y: 0
+          y: 0,
+          id: 'avatarBox',
+          name: 'avatarBox'
         });
 
-        x = 10;
+        cardsNum = 5;
+        var x = (350 - (cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        
         y = 30;
         // cards
-        for (var i = 0 ; i < 14; i++) {
+        for (var i = 0 ; i < cardsNum; i++) {
           var card = new Kinetic.Image({
             image: images.back,
             x: x,
@@ -319,39 +364,57 @@
           fontFamily: 'Calibri',
           textFill: '#555',
           padding: 0,
-          align: 'center'
+          align: 'center',
+          id: 'name',
+          name: 'name'
         });
+
+
+        var groupPutCardBox = new Kinetic.Group({
+          x: 150,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+
 
         groupAvatarBox.add(name);
         groupAvatarBox.add(avatar);
         groupBox.add(groupAvatarBox);
+        groupBox.add(groupPutCardBox);
         shapesLayer.add(groupBox);
 
 
 
         // buttom box
         var groupBox = new Kinetic.Group({
-          x: 150,
-          y: 600
-
+          x: 260,
+          y: 450,
+          id: 'bottomBox'
         });
         var groupCardBox = new Kinetic.Group({
           x: 100,
           y: 10,
-          id: 'cardBox'
+          id: 'cardBox',
+          name: 'cardBox'
         });
         var groupAvatarBox = new Kinetic.Group({
           x: 0,
-          y: 0
+          y: 130,
+          id: 'avatarBox',
+          name: 'avatarBox'
         });
 
-        x = 10;
-        y = 30;
+        cardsNum = 5;
+        var x = (350 - (cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        
+        y = 160;
+        BUTTOM_ORIGIN_Y = y;
 
         
 
         // cards
-        for (var i = 0 ; i < 14; i++) {
+        for (var i = 0 ; i < cardsNum; i++) {
           var card = new Kinetic.Image({
             image: images.card,
             x: x,
@@ -360,10 +423,11 @@
             height:Game.CARD_HEIGHT
           });
           card.selected = false;
+          card.isPut = false;
 
           card.on('click' , function() {
             var newY ;
-            if ( this.getY() == BUTTOM_ORIGIN_Y ) {
+            if ( this.selected === false ) {
               newY = BUTTOM_ORIGIN_Y - Game.CARD_EXTEND;
               this.selected = true;
             } else {
@@ -377,8 +441,8 @@
             });
 
           });
-  x = x + Game.CARD_SPACE;
-  groupCardBox.add(card);
+          x = x + Game.CARD_SPACE;
+          groupCardBox.add(card);
         } 
         groupBox.add(groupCardBox);
         // avatar
@@ -387,7 +451,9 @@
           x: 30,
           y: 60,
           width: 50,
-          height:50
+          height:50,
+          id: 'avatar',
+          name: 'avartar'
         });
         var name = new Kinetic.Text({
           x: 0,
@@ -399,18 +465,15 @@
           fontFamily: 'Calibri',
           textFill: '#555',
           padding: 0,
-          align: 'center'
+          align: 'center',
+          id: 'name',
+          name: 'name'
         });
 
         groupAvatarBox.add(name);
         groupAvatarBox.add(avatar);
         groupBox.add(groupAvatarBox);
         shapesLayer.add(groupBox);
-
-
-
-
-
 
         stage.add(shapesLayer);
         stage.add(messageLayer);
@@ -426,16 +489,226 @@
         loadImages(sources, initStage);
       };
 
-/*
+
       $(function(){
         $('#btnPut').click(function(){
-          var cards = stage.get('#cardBox')[0].getChilren();
+          var seatBox = stage.get('#bottomBox')[0];
+          var cardBox = seatBox.get('.cardBox')[0];
+          var cards = cardBox.getChildren();
+          var selectCards = [];
+          var handCards = [];
+
           for( var i in cards ) {
-            if ( cards[i].getY() ==
-          } 
-        }));
+            if ( cards[i].isPut === true ) {
+              cards[i].hide();
+              cardBox.remove(cards[i]); // remove putted cards
+            }
+          }
+          for( var i in cards ) {
+            if ( cards[i].isPut === true ) {
+              continue;
+            } else {
+              if ( cards[i].selected === true  ) {
+                selectCards.push( cards[i] );
+              } else {
+                handCards.push( cards[i] );
+              }
+            }
+            
+          }
+
+          // put animation
+          if ( selectCards.length > 0 ) {
+            var putW = ( selectCards.length - 1 ) * Game.CARD_SPACE + Game.CARD_WIDTH;
+            var sX = ( 300 - putW )/2;
+            for( var i in selectCards ) {
+              var card = selectCards[i];
+              card.off('click');
+              card.transitionTo({
+                x: sX,
+                y:  BUTTOM_ORIGIN_Y - Game.CARD_EXTEND - 10 - Game.CARD_HEIGHT,
+                duration: 0.5,
+                easing: 'strong-ease-out'
+              });
+              card.isPut = true;
+              sX += Game.CARD_SPACE;
+            }
+          }
+          
+          // fold animation
+          if ( handCards.length > 0 ) {
+            var putW = ( handCards.length - 1 ) * Game.CARD_SPACE + Game.CARD_WIDTH;
+            var sX = ( 300 - putW )/2;
+            for( var i in handCards ) {
+              var card = handCards[i];
+              card.transitionTo({
+                x: sX,
+                y: card.getY(),
+                duration: 0.5,
+                easing: 'strong-ease-out'
+              });
+              sX += Game.CARD_SPACE;
+            }
+          }
+
+        });
       });
-*/
+  
+      $('#btn_top_put').click(function() {
+        var cardsNum = 2;
+
+        var seatBox = stage.get('#topBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        putCardBox.removeChildren();
+        putCardBox.setX(0);
+        putCardBox.setY(150);
+
+        // hold
+        var message = new Kinetic.Text({
+          x: 200,
+          y: 10,
+          width: 100,
+          height:50,
+          text: 'Hold',
+          fontSize: 30,
+          fontFamily: 'Calibri',
+          textFill: 'red',
+          padding: 0,
+          align: 'center',
+          id: 'message',
+          name: 'message'
+        });
+        putCardBox.add( message );
+
+        /*
+        
+
+        var sX = (500 - (cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2 ;
+
+        for (var i = 0 ; i < cardsNum ; i++) {
+          var card = new Kinetic.Image({
+              image: source.card,
+              x: sX,
+              y: 0,
+              width:Game.CARD_WIDTH,
+              height:Game.CARD_HEIGHT
+          });
+          sX += Game.CARD_SPACE;
+          putCardBox.add( card );
+        }
+        */
+        shapesLayer.draw();
+        putCardBox.transitionTo({
+                y: putCardBox.getY() + 10 ,
+                duration: 1,
+                easing: 'strong-ease-out'
+              });
+
+      });
+
+      $('#btn_left_put').click(function() {
+        var cardsNum = 6;
+        
+        var seatBox = stage.get('#leftBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        putCardBox.removeChildren();
+        putCardBox.setX(210);
+        putCardBox.setY(160);
+
+        // hold
+        var message = new Kinetic.Text({
+          x: 0,
+          y: 20,
+          width: 100,
+          height:50,
+          text: 'Hold',
+          fontSize: 30,
+          fontFamily: 'Calibri',
+          textFill: 'red',
+          padding: 0,
+          align: 'center',
+          id: 'message',
+          name: 'message'
+        });
+        putCardBox.add( message );
+
+        /*
+        var sX = 0;
+
+        for (var i = 0 ; i < cardsNum ; i++) {
+          var card = new Kinetic.Image({
+              image: source.card,
+              x: sX,
+              y: 0,
+              width:Game.CARD_WIDTH,
+              height:Game.CARD_HEIGHT
+          });
+          sX += Game.CARD_SPACE;
+          putCardBox.add( card );
+        }
+        */
+        shapesLayer.draw();
+        putCardBox.transitionTo({
+                x: putCardBox.getX() + 30 ,
+                duration: 1,
+                easing: 'strong-ease-out'
+              });
+
+      });
+
+      $('#btn_right_put').click(function() {
+        var cardsNum = 6;
+
+        var seatBox = stage.get('#rightBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        putCardBox.removeChildren();
+        putCardBox.setX(240 - (cardsNum -1)*Game.CARD_SPACE - Game.CARD_WIDTH );
+        putCardBox.setY(160);
+
+        // hold
+        var message = new Kinetic.Text({
+          x: 60,
+          y: 20,
+          width: 100,
+          height:50,
+          text: 'Hold',
+          fontSize: 30,
+          fontFamily: 'Calibri',
+          textFill: 'red',
+          padding: 0,
+          align: 'center',
+          id: 'message',
+          name: 'message'
+        });
+        putCardBox.add( message );
+
+        /*
+        var sX = 0;
+
+        for (var i = 0 ; i < cardsNum ; i++) {
+          var card = new Kinetic.Image({
+              image: source.card,
+              x: sX,
+              y: 0,
+              width:Game.CARD_WIDTH,
+              height:Game.CARD_HEIGHT
+          });
+          sX += Game.CARD_SPACE;
+          putCardBox.add( card );
+        }
+        
+        */
+        shapesLayer.draw();
+        putCardBox.transitionTo({
+                x: putCardBox.getX() - 30 ,
+                duration: 1,
+                easing: 'strong-ease-out'
+              });
+      });
+
 
 	</script>
 	

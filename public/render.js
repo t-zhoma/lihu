@@ -1,9 +1,7 @@
 ﻿(function (exports) {
 
     var CanvasRenderer = function () {
-        this.canvas = document.getElementById('canvas');
-        this.canvas.onselectstart = function () { return false; }
-        this.ctx = this.canvas.getContext('2d');
+    
     };
 
     CanvasRenderer.prototype.drawBox = function () {
@@ -11,7 +9,7 @@
         this.drawTopBox();
         this.drawLeftBox();
         this.drawRightBox();
-        this.drawPlayersInfo();
+        game.layer.draw();
     };
 
     CanvasRenderer.prototype.emptyPutCards = function () {
@@ -22,88 +20,119 @@
     };
 
     CanvasRenderer.prototype.drawLeftBox = function () {
-        var h = Game.CARD_WIDTH + (game.lb.cardsNum - 1) * Game.CARD_SPACE;
-        if (game.lb.cardsNum == 0) {
-            h += Game.CARD_SPACE;
+        var cardBox = game.lb.group.get('.handCardBox')[0];
+        cardBox.removeChildren();
+        if ( game.rb.cardsNum == 0 ) {
+            return ;
         }
+        var x = 20;
+        var y = (350 - (game.lb.cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        
+        // cards
+        for (var i = 0 ; i < game.lb.cardsNum; i++) {
+            var card = new Kinetic.Image({
+              image: Source.imgMap["img/back-blue-h-75-1.png"],
+              x: x,
+              y: y,
+              width:Game.CARD_HEIGHT,
+              height:Game.CARD_WIDTH
+            });
+            y = y + Game.CARD_SPACE;
+            cardBox.add(card);
+        }   
 
-        var x = game.lb.rect.x;
-        var y = (game.lb.rect.h - h) / 2 + game.lb.rect.y;
-
-        this.ctx.clearRect(game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h);
-
-        for (i = 0; i < game.lb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img/back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
-            y += Game.CARD_SPACE;
-        }
-
-        if (game.lb.cardsNum != 0) {
-            y -= Game.CARD_SPACE;
-            this.fillTextCenter(game.lb.cardsNum, x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH, '30px Arial', 'red');
-        }
     }
 
     CanvasRenderer.prototype.drawRightBox = function () {
-        var h = Game.CARD_WIDTH + (game.rb.cardsNum - 1) * Game.CARD_SPACE;
-        if (game.rb.cardsNum == 0) {
-            h += Game.CARD_SPACE;
+        var cardBox = game.rb.group.get('.handCardBox')[0];
+        cardBox.removeChildren();
+        if ( game.rb.cardsNum == 0 ) {
+            return ;
         }
-
-        var x = game.rb.rect.x;
-        var y = (game.rb.rect.h - h) / 2 + game.rb.rect.y;
-
-        this.ctx.clearRect(game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h);
-        for (i = 0; i < game.rb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img/back-blue-h-75-1.png"], x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH);
-            y += Game.CARD_SPACE;
-        }
-
-        if (game.rb.cardsNum != 0) {
-            y -= Game.CARD_SPACE;
-            this.fillTextCenter(game.rb.cardsNum, x, y, Game.CARD_HEIGHT, Game.CARD_WIDTH, '30px Arial', 'red');
+        var x = 20;
+        var y = (350 - (game.rb.cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        
+        // cards
+        for (var i = 0 ; i < game.rb.cardsNum; i++) {
+            var card = new Kinetic.Image({
+              image: Source.imgMap["img/back-blue-h-75-1.png"],
+              x: x,
+              y: y,
+              width:Game.CARD_HEIGHT,
+              height:Game.CARD_WIDTH
+            });
+            y = y + Game.CARD_SPACE;
+            cardBox.add(card);
         }
     }
 
     CanvasRenderer.prototype.drawTopBox = function () {
-        var w = Game.CARD_WIDTH + (game.tb.cardsNum - 1) * Game.CARD_SPACE;
-        if (game.tb.cardsNum == 0) {
-            w += Game.CARD_SPACE;
+        var cardBox = game.tb.group.get('.handCardBox')[0];
+        cardBox.removeChildren();
+        if ( game.rb.cardsNum == 0 ) {
+            return ;
         }
-        var x = (game.tb.rect.w - w) / 2 + game.tb.rect.x;
-        var y = game.tb.rect.y;
-
-        this.ctx.clearRect(game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h);
-        for (i = 0; i < game.tb.cardsNum; i++) {
-            this.ctx.drawImage(Source.imgMap["img/back-blue-75-1.png"], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
-            x += Game.CARD_SPACE;
-        }
-
-        if (game.tb.cardsNum != 0) {
-            x -= Game.CARD_SPACE;
-            this.fillTextCenter(game.tb.cardsNum, x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT, '30px Arial', 'red');
+        var x = (350 - (game.tb.cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        var y = 30;
+        // cards
+        for (var i = 0 ; i < game.tb.cardsNum; i++) {
+            var card = new Kinetic.Image({
+              image: Source.imgMap["img/back-blue-75-1.png"],
+              x: x,
+              y: y,
+              width:Game.CARD_WIDTH,
+              height:Game.CARD_HEIGHT
+            });
+            x = x + Game.CARD_SPACE;
+            cardBox.add(card);
         }
     }
 
     CanvasRenderer.prototype.drawBottomBox = function () {
-        var w = Game.CARD_WIDTH + (game.bb.cards.length - 1) * Game.CARD_SPACE;
-        if (game.bb.cards.length == 0) {
-            w += Game.CARD_SPACE;
+        var cardBox = game.bb.group.get('.cardBox')[0];
+        if ( game.bb.cards.length == 0 ) {
+            // cardBox.removeChildren();
+            return ;
         }
-        var x = (game.bb.rect.w - w) / 2 + game.bb.rect.x;
-        var y = game.bb.rect.y;
+        var x = (350 - ( game.bb.cards.length - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2;
+        var y = 160;
+        // cards
+        for (var i = 0 ; i < game.bb.cards.length; i++) {
+            var card = new Kinetic.Image({
+                image: Source.imgMap[game.bb.cards[i].src],
+                x: x,
+                y: y,
+                width:Game.CARD_WIDTH,
+                height:Game.CARD_HEIGHT
+            });
+            card.selected = false;
+            card.isPut = false;
 
-        this.ctx.clearRect(game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h);
-        for (i = 0; i < game.bb.cards.length; i++) {
-            var realY = game.bb.cards[i].selected ? y : (y + Game.CARD_EXTEND);
-            this.ctx.drawImage(Source.imgMap[game.bb.cards[i].src], x, realY, Game.CARD_WIDTH, Game.CARD_HEIGHT);
-            game.bb.cards[i].x = x;
-            game.bb.cards[i].y = realY;
-            x += Game.CARD_SPACE;
+            card.on('click' , function() {
+                var newY ;
+                if ( this.selected === false ) {
+                  newY = y - Game.CARD_EXTEND;
+                  this.selected = true;
+                } else {
+                  newY = y;
+                  this.selected = false;
+                }
+                this.transitionTo({
+                    y: newY,
+                    duration: 0.2,
+                    easing: 'strong-ease-out'
+                });
+
+            });
+            x = x + Game.CARD_SPACE;
+            cardBox.add(card);
+            card.moveToTop();
         }
     }
 
 
     CanvasRenderer.prototype.drawBottomOutbox = function (cards) {
+        /*
         this.ctx.clearRect(game.bob.rect.x, game.bob.rect.y, game.bob.rect.w, game.bob.rect.h);
 
         var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
@@ -123,65 +152,117 @@
             this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
             x += Game.CARD_SPACE;
         }
+        */
     }
 
     CanvasRenderer.prototype.drawTopOutbox = function (cards) {
-        this.ctx.clearRect(game.tob.rect.x, game.tob.rect.y, game.tob.rect.w, game.tob.rect.h);
+        var cardsNum = cards.length;
+        var seatBox = game.tb.group;
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
 
-        var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
-        if (cards.length == 0) {
-            w += Game.CARD_SPACE;
+        putCardBox.removeChildren();
+        putCardBox.setX(0);
+        putCardBox.setY(150);
+        if ( cardsNum == 0 ) {
+            // hold
+            message = getPutMessage(200, 10, 'Hold');
+            putCardBox.add( message );
+        } else {
+            var sX = (500 - (cardsNum - 1) * Game.CARD_SPACE - Game.CARD_WIDTH )/2 ;
+            for (i = 0; i < cards.length; i++) {
+              var card = new Kinetic.Image({
+                  image: Source.imgMap[cards[i].src],
+                  x: sX,
+                  y: 0,
+                  width:Game.CARD_WIDTH,
+                  height:Game.CARD_HEIGHT
+              });
+              sX += Game.CARD_SPACE;
+              putCardBox.add( card );
+            }
         }
-        var x = (game.tob.rect.w - w) / 2 + game.tob.rect.x;
-        var y = game.tob.rect.y;
-
-        if (cards.length == 0) {
-            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
-            return;
-        }
-
-        for (i = 0; i < cards.length; i++) {
-            this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
-            x += Game.CARD_SPACE;
-        }
+        
+        game.layer.draw();
+        putCardBox.transitionTo({
+            y: putCardBox.getY() + 10 ,
+            duration: 1,
+            easing: 'strong-ease-out'
+        });
     }
 
     CanvasRenderer.prototype.drawLeftOutbox = function (cards) {
-        this.ctx.clearRect(game.lob.rect.x, game.lob.rect.y, game.lob.rect.w, game.lob.rect.h);
+        var cardsNum = cards.length;
+        var seatBox = game.lb.group;
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
 
-        var x = game.lob.rect.x;
-        var y = game.lob.rect.y;
+        putCardBox.removeChildren();
+        putCardBox.setX(210);
+        putCardBox.setY(160);
+        if ( cardsNum == 0 ) {
+            // hold
+            message = getPutMessage(0, 20, 'Hold');
+            putCardBox.add( message );
+        } else {
+            var sX = 0;
 
-        if (cards.length == 0) {
-            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
-            return;
+            for (i = 0; i < cards.length; i++) {
+              var card = new Kinetic.Image({
+                  image: Source.imgMap[cards[i].src],
+                  x: sX,
+                  y: 0,
+                  width:Game.CARD_WIDTH,
+                  height:Game.CARD_HEIGHT
+              });
+              sX += Game.CARD_SPACE;
+              putCardBox.add( card );
+            }
         }
-
-        for (i = 0; i < cards.length; i++) {
-            this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
-            x += Game.CARD_SPACE;
-        }
+        
+        game.layer.draw();
+        putCardBox.transitionTo({
+            x: putCardBox.getX() + 30 ,
+            duration: 1,
+            easing: 'strong-ease-out'
+        });
     }
 
     CanvasRenderer.prototype.drawRightOutbox = function (cards) {
-        this.ctx.clearRect(game.rob.rect.x, game.rob.rect.y, game.rob.rect.w, game.rob.rect.h);
+        var cardsNum = cards.length;
+        var seatBox = game.rb.group;
+        var putCardBox = seatBox.get('.putCardBox')[0];
+        var handCardBox = seatBox.get('.handCardBox')[0];
 
-        var w = Game.CARD_WIDTH + (cards.length - 1) * Game.CARD_SPACE;
-        if (cards.length == 0) {
-            w += Game.CARD_SPACE;
-        }
-        var x = game.rob.rect.w - w + game.rob.rect.x;
-        var y = game.rob.rect.y;
+        putCardBox.removeChildren();
+        putCardBox.setX(240 - (cardsNum -1)*Game.CARD_SPACE - Game.CARD_WIDTH );
+        putCardBox.setY(160);
+        if ( cardsNum == 0 ) {
+            // hold
+            message = getPutMessage(60, 20, 'Hold');
+            putCardBox.add( message );
+        } else {
+            var sX = 0;
 
-        if (cards.length == 0) {
-            this.ctx.fillText('Hold', x, y + Game.CARD_HEIGHT / 2);
-            return;
+            for (i = 0; i < cards.length; i++) {
+              var card = new Kinetic.Image({
+                  image: Source.imgMap[cards[i].src],
+                  x: sX,
+                  y: 0,
+                  width:Game.CARD_WIDTH,
+                  height:Game.CARD_HEIGHT
+              });
+              sX += Game.CARD_SPACE;
+              putCardBox.add( card );
+            }
         }
-
-        for (i = 0; i < cards.length; i++) {
-            this.ctx.drawImage(Source.imgMap[cards[i].src], x, y, Game.CARD_WIDTH, Game.CARD_HEIGHT);
-            x += Game.CARD_SPACE;
-        }
+        
+        game.layer.draw();
+        putCardBox.transitionTo({
+            x: putCardBox.getX() - 30 ,
+            duration: 1,
+            easing: 'strong-ease-out'
+        });
     }
 
 
@@ -205,28 +286,6 @@
         if ((game.mySeat + 3) % 4 == putterSeat) {
             renderer.drawLeftBox();
             renderer.drawLeftOutbox(putCards);
-        }
-    }
-
-    CanvasRenderer.prototype.drawPlayersInfo = function () {
-        this.ctx.font = '20pt Calibri';
-        this.ctx.fillStyle = 'black';
-
-        for (var i = 0; i < 4; i++) {
-            switch ((i - game.mySeat + 4) % 4) {
-                case 0: // bottom
-                    this.ctx.fillText(game.players[i].name, game.bn.x, game.bn.y, game.bn.w);
-                    break;
-                case 1: // right
-                    this.ctx.fillText(game.players[i].name, game.rn.x, game.rn.y, game.rn.w);
-                    break;
-                case 2: // top
-                    this.ctx.fillText(game.players[i].name, game.tn.x, game.tn.y, game.tn.w);
-                    break;
-                case 3: // left
-                    this.ctx.fillText(game.players[i].name, game.ln.x, game.ln.y, game.ln.w);
-                    break;
-            }
         }
     }
 
@@ -309,7 +368,7 @@
     }
 
     CanvasRenderer.prototype.clear = function () {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        game.initCanvas();
     }
 
     CanvasRenderer.prototype.drawRank = function (seat, rank) {
@@ -373,6 +432,85 @@
             return ;
         } 
         $('#count_down #count_down_num').html( parseInt(num) - 1 );
+    }
+
+    // put cards animation
+    CanvasRenderer.prototype.putAnim = function() {
+        var seatBox = game.bb.group;
+        var cardBox = seatBox.get('.cardBox')[0];
+          var cards = cardBox.getChildren();
+          var selectCards = [];
+          var handCards = [];
+
+          for( var i in cards ) {
+            if ( cards[i].isPut === true ) {
+              cards[i].hide();
+              cardBox.remove(cards[i]); // remove putted cards
+            }
+          }
+          for( var i in cards ) {
+            if ( cards[i].isPut === true ) {
+              continue;
+            } else {
+              if ( cards[i].selected === true  ) {
+                selectCards.push( cards[i] );
+              } else {
+                handCards.push( cards[i] );
+              }
+            }
+            
+          }
+
+          // put animation
+          if ( selectCards.length > 0 ) {
+            var putW = ( selectCards.length - 1 ) * Game.CARD_SPACE + Game.CARD_WIDTH;
+            var sX = ( 300 - putW )/2;
+            for( var i in selectCards ) {
+              var card = selectCards[i];
+              card.off('click');
+              card.transitionTo({
+                x: sX,
+                y:  160 - Game.CARD_EXTEND - 10 - Game.CARD_HEIGHT,
+                duration: 0.5,
+                easing: 'strong-ease-out'
+              });
+              card.isPut = true;
+              sX += Game.CARD_SPACE;
+            }
+          }
+          
+          // fold animation
+          if ( handCards.length > 0 ) {
+            var putW = ( handCards.length - 1 ) * Game.CARD_SPACE + Game.CARD_WIDTH;
+            var sX = ( 300 - putW )/2;
+            for( var i in handCards ) {
+              var card = handCards[i];
+              card.transitionTo({
+                x: sX,
+                y: card.getY(),
+                duration: 0.5,
+                easing: 'strong-ease-out'
+              });
+              sX += Game.CARD_SPACE;
+            }
+          }
+    }
+
+    function getPutMessage(x, y, msg) {
+        return message = new Kinetic.Text({
+          x: x,
+          y: y,
+          width: 100,
+          height:50,
+          text: msg,
+          fontSize: 30,
+          fontFamily: 'Calibri',
+          textFill: 'red',
+          padding: 0,
+          align: 'center',
+          id: 'message',
+          name: 'message'
+        });
     }
 
     // TODO

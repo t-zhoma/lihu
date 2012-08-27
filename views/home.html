@@ -11,7 +11,7 @@
 	<body>
 		<div class="" style='padding:0px; margin:0;border:0px;'>	
 			<div id='home'>
-				<div id = 'game_block' class="row-fluid" style='width:1600px;'>
+				<div id = 'game_block' class="row-fluid">
 					<div id = 'waiting' style='display:none' class="span8 well" >
 						
 						<table class='waiting-table'>
@@ -34,7 +34,7 @@
                     </div><!-- End waiting-->
 
 					<div id = 'game' style='display:none;' class="well" >
-						<canvas width="1200" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+						<div id="canvas"></div>
 			        	<div style='width:100%; margin:auto; padding:auto;'>
 			        		<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
 								<button id="btnHold" class="btn btn-primary">Hold</button>
@@ -112,7 +112,7 @@
 
 
 	</body>
-	
+	<script src="lib/kinetic-v4.0.0.js"></script>
 	<script type="text/javascript" src="lib/jquery.js"></script>
 	<script src="lib/socket.io.js"></script>
 	<script src="lib/smoke.min.js"></script>

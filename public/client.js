@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update game list
     socket.on('GameList', function (data) {
         game.gameList = data;
-        renderer.clear();
+        //renderer.clear();
         renderer.drawGameList();
         game.stage = game.StageType.CHOOSE_GAME;
 
@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // start game, get cards from server
     socket.on('RoundStart', function (data) {
         showGameStart();
+        renderer.clear();
 
         game.stage = game.StageType.PLAYING;
         game.players = data.players;
@@ -98,9 +99,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var yourLevel = data.isLevel_0_2 ? (game.mySeat % 2 == 0) : (game.mySeat % 2 == 1);
         $('#your_level').html(yourLevel ? 'yes' : 'no');
 
+        
         game.buildCardOrder();
         game.sort(game.bb.cards);
-        renderer.clear();
         renderer.drawBox();
 
         allowPut(false);

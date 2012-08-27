@@ -1,22 +1,266 @@
 ﻿(function (exports) {
-    var Box = function (cardsNum, rect) {
-        this.cardsNum = cardsNum;
-        this.rect = rect;
+    var Box = function (group) {
+        this.cardsNum = 0;
+        this.group = group;
     }
 
-    var BottomBox = function (rect) {
+    var BottomBox = function (group) {
         this.cards = [];
-        this.rect = rect;
-    }
-
-    var OutBox = function (rect) {
-        this.rect = rect;
+        this.group = group;
     }
 
     Game.CARD_WIDTH = 75;
     Game.CARD_HEIGHT = 107;
     Game.CARD_SPACE = 18;     // space btw cards
     Game.CARD_EXTEND = 25;    // extend space when card is selected
+
+
+    // init canvas
+    Game.prototype.initCanvas = function() {
+
+        this.canvasStage = new Kinetic.Stage({
+          container: 'canvas',
+          width: 980,
+          height: 780
+        });
+
+        this.layer = new Kinetic.Layer();
+
+        // left box
+        var groupBox = new Kinetic.Group({
+          x: 0,
+          y: 150,
+          id: 'leftBox'
+        });
+        var groupHandCardBox = new Kinetic.Group({
+          x: 100,
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 150,
+          id: 'avatarBox',
+          name: 'avatarBox'
+        });
+        var groupPutCardBox = new Kinetic.Group({
+          x: 280,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+
+        groupBox.add(groupHandCardBox);
+        groupBox.add(groupPutCardBox);
+
+        // init avatar box
+        var avatar = new Kinetic.Image({
+          image: Source.imgMap["img/gravatar-user.png"],
+          x: 40,
+          y: 0,
+          width: 50,
+          height:50,
+          id: 'avatar',
+          name: 'avatar'
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 60,
+          width: 130,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center',
+          id: 'name',
+          name: 'name'
+        });
+        groupAvatarBox.add(avatar);
+        groupAvatarBox.add(name);
+
+        groupBox.add(groupAvatarBox);
+        groupBox.add(groupPutCardBox);
+
+        this.lb = new Box(groupBox);
+        this.lob = groupPutCardBox;
+        this.layer.add(groupBox);
+
+        // right box
+        var groupBox = new Kinetic.Group({
+          x: 520,
+          y: 150,
+          id: 'rightBox'
+        });
+        var groupHandCardBox = new Kinetic.Group({
+          x: 200,
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 310,
+          y: 150,
+          id: 'avatarBox',
+          name: 'avatarBox'
+        });
+        var groupPutCardBox = new Kinetic.Group({
+          x: 100,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+
+        groupBox.add(groupHandCardBox);
+        groupBox.add(groupPutCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: Source.imgMap["img/gravatar-user.png"],
+          x: 50,
+          y: 0,
+          width: 50,
+          height:50,
+          id: 'avatar',
+          name: 'avatar'
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 60,
+          width: 150,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center',
+          id: 'name',
+          name: 'name'
+        });
+        groupAvatarBox.add(avatar);
+        groupAvatarBox.add(name);
+        groupBox.add(groupAvatarBox);
+
+        this.rb = new Box(groupBox);
+        this.rob = groupPutCardBox;
+        this.layer.add(groupBox);
+
+        // top box
+        var groupBox = new Kinetic.Group({
+          x: 260,
+          y: 0,
+          id: 'topBox'
+        });
+        var groupHandCardBox = new Kinetic.Group({
+          x: 100,
+          y: 10,
+          id: 'handCardBox',
+          name: 'handCardBox'
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 0,
+          id: 'avatarBox',
+          name: 'avatarBox'
+        });
+        var groupPutCardBox = new Kinetic.Group({
+          x: 150,
+          y: 160,
+          id: 'putCardBox',
+          name: 'putCardBox'
+        });
+        groupBox.add(groupHandCardBox);
+        groupBox.add(groupPutCardBox);
+
+
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: Source.imgMap["img/gravatar-user.png"],
+          x: 30,
+          y: 60,
+          width: 50,
+          height:50,
+          id: 'avatar',
+          name: 'avatar'
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 120,
+          width: 110,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center',
+          id: 'name',
+          name: 'name'
+        });
+        groupAvatarBox.add(name);
+        groupAvatarBox.add(avatar);
+        groupBox.add(groupAvatarBox);
+
+        this.tb = new Box(groupBox);
+        this.tob = groupPutCardBox;
+        this.layer.add(groupBox);
+
+        // buttom box
+        var groupBox = new Kinetic.Group({
+          x: 260,
+          y: 450,
+          id: 'bottomBox'
+        });
+        var groupCardBox = new Kinetic.Group({
+          x: 100,
+          y: 10,
+          id: 'cardBox',
+          name: 'cardBox'
+        });
+        var groupAvatarBox = new Kinetic.Group({
+          x: 0,
+          y: 130,
+          id: 'avatarBox',
+          name: 'avatarBox'
+        });
+
+        groupBox.add(groupCardBox);
+        // avatar
+        var avatar = new Kinetic.Image({
+          image: Source.imgMap["img/gravatar-user.png"],
+          x: 30,
+          y: 60,
+          width: 50,
+          height:50,
+          id: 'avatar',
+          name: 'avartar'
+        });
+        var name = new Kinetic.Text({
+          x: 0,
+          y: 120,
+          width: 110,
+          height:50,
+          text: 'mcfnmcmc',
+          fontSize: 12,
+          fontFamily: 'Calibri',
+          textFill: '#555',
+          padding: 0,
+          align: 'center',
+          id: 'name',
+          name: 'name'
+        });
+
+        groupAvatarBox.add(name);
+        groupAvatarBox.add(avatar);
+        groupBox.add(groupAvatarBox);
+
+        this.bb = new BottomBox(groupBox);
+        this.layer.add(groupBox);
+
+        this.canvasStage.add(this.layer);
+    }
 
     game = new Game();
     game.gameList = [];
@@ -38,6 +282,26 @@
 
     game.curPutterSeat = -1;
 
+    ////////
+    /// init game canvas
+    ////////
+
+    /// init left box
+    game.canvasStage = false;
+    game.layer = false;
+
+
+    game.tb = false;
+    game.lb = false;
+    game.rb = false;
+    game.bb = false;
+
+    game.tob = false;
+    game.lob = false;
+    game.rob = false;
+    game.bob = false;
+
+    /*
     game.tn = new Rect(560, 30, 100, 20);
     game.ln = new Rect(40, 415, 100, 20);
     game.rn = new Rect(1080, 415, 100, 20);
@@ -52,6 +316,7 @@
     game.lob = new OutBox(new Rect(267, 396, 326, Game.CARD_HEIGHT));
     game.rob = new OutBox(new Rect(594, 396, 326, Game.CARD_HEIGHT));
     game.bob = new OutBox(new Rect(300, 583, 600, Game.CARD_HEIGHT));
+    */
 
     game.imgSrcs = new Array;
 
@@ -73,6 +338,7 @@
         this.imgSrcs.push("img/joker-r-75.png");
         this.imgSrcs.push("img/back-blue-75-1.png");
         this.imgSrcs.push("img/back-blue-h-75-1.png");
+        this.imgSrcs.push("img/gravatar-user.png");
     }
 
     game.hold = function () {
@@ -94,6 +360,22 @@
         renderer.drawBottomBox();
     };
 
+    game.getSelectedCards = function() {
+        var cardBox = this.bb.group.get('.cardBox')[0];
+        var cards = cardBox.getChildren();
+        var selectCards = [];
+        var cardIdx = 0;
+        for( var i in cards ) {
+            if ( cards[i].selected == true && cards[i].isPut == false ) {
+              this.bb.cards[cardIdx].selected = true;
+              selectCards.push( this.bb.cards[cardIdx] );
+              cardIdx++;
+            }
+        }
+
+        return selectCards;
+    };
+
     game.put = function ( isTimeOut ) {
         var selectedCards = this.getSelectedCards(this.bb.cards);
 
@@ -107,14 +389,14 @@
 
         this.removeSelectedCards(this.bb.cards);
 
+        renderer.putAnim();
+
         // send to server
         socket.emit('Put', { room: this.myRoom, seat: this.mySeat,
             putCards: selectedCards,
             remainCards: this.bb.cards,
         });
 
-        renderer.drawBottomBox();
-        renderer.drawBottomOutbox(selectedCards);
     }
 
     game.fillbox = function (players, isFillBottom) {
@@ -140,6 +422,9 @@
         // verify whether can put
         return (game.compareCards(selectedCards, this.lastPutCards));
     }
+
+
+
     
     exports.game = game;
 })(window);
