@@ -1,0 +1,262 @@
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clr {
+    clear: both;
+}
+
+.ctr {
+    text-align: center;
+}
+
+body {
+    /*background:#000 url(/img/Floor.jpg);*/
+    margin:0 auto;
+}
+
+body.game {
+	/* background-image: url(/img/Floor.jpg);*/
+}
+
+#loading {
+    width:100%;
+    text-align:center;
+    margin: 100px 0px;
+}
+
+.container {
+    width: 100%;
+    /*width:1400px;*/
+    min-height: 500px;
+}
+
+.room-block {
+    padding:10px;
+    width: 900px;
+    min-height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#select_room {
+    background-color: white;
+    margin:0 auto;
+    width:95%;
+}
+#room_list {
+    padding:5px;
+}
+#room_list .room-item {
+    width: 220px;
+    padding: 10px;
+    background-color: whiteSmoke;
+    margin: 10px;
+    text-align: center;
+}
+#room_list .room-item td {
+    width:30%;
+    height:60px;
+    vertical-align: middle;
+
+    white-space: normal;
+    word-break: break-all;
+}
+#room_list .room-item .seat {
+    width:40px;
+    height: 40px;
+    line-height: 20px;
+
+}
+
+#room_list .room-item .game-status {
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    padding: 5px;
+    font-weight: bold;
+}
+#room_list .room-item .room-name {
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+#home {
+    min-height: 700px;
+}
+
+#waiting {
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 800px;
+}
+
+.waiting-table {
+    width:60%;
+    margin:0 auto;
+}
+
+.waiting-table  td {
+    width: 30%;
+    height: 100px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 3em;
+    color: white;
+    padding:10px;
+
+    white-space: normal;
+    word-break: break-all;
+}
+.waiting-table .seat {
+    width: 180px;
+    height: 100px;
+    padding: 10px;
+    line-height: 50px;
+    vertical-align: middle;
+    background-color: #0074CC;
+    margin:0 auto;
+
+    background-color: #0074cc;
+    *background-color: #0055cc;
+    background-image: -ms-linear-gradient(top, #0088cc, #0055cc);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0055cc));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0055cc);
+    background-image: -o-linear-gradient(top, #0088cc, #0055cc);
+    background-image: -moz-linear-gradient(top, #0088cc, #0055cc);
+    background-image: linear-gradient(top, #0088cc, #0055cc);
+    background-repeat: repeat-x;
+    border-color: #0055cc #0055cc #003580;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#0088cc', endColorstr='#0055cc', GradientType=0);
+    filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.nav-bar {
+    padding: 20px;
+    min-height: 800px;
+    margin-left: 20px;
+}
+
+.nav-bar .chat-msg-list {
+    text-align: left;
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #EEE; 
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    height: 580px;
+    overflow-y: scroll;
+}
+
+.nav-bar .chat-msg-item {
+    margin:5px;
+}
+.nav-bar .chat-msg-item .username {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.nav-bar .chat-input-box {
+}
+
+.nav-bar #chat_text {
+    width: 60%;
+}
+
+.nav-bar #btn_chat_text {
+    width: 30%;
+}
+
+.nav-bar #opt_playing span {
+    font-weight:bold;
+    margin-left: 5px;
+}
+.nav-bar #opt_playing #putter_name {
+
+}
+.nav-bar #opt_playing #cur_level {
+    text-transform:uppercase;
+}
+.nav-bar #opt_playing #your_level {
+    text-transform:uppercase;'
+}
+.nav-bar #opt_playing #lihu_player {
+    
+}
+
+
+#game {
+    width:1200px;
+    float: left;
+    padding:0px;
+}
+#game #count_down {
+    position: absolute;
+    top: 400px;
+    left: 545px;
+    font-weight: bold;
+    text-align: center;
+    width: 100px;
+}
+#game #count_down #putter_name {
+    font-size: 30px;
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+#game #count_down #count_down_num {
+    font-size: 90px;
+    line-height: 90px;
+}
+
+#footer {
+    text-align: center;
+    margin: 20px 0px;
+    border-top: 1px solid #CCC;
+    padding: 20px 0px;
+}
+#footer p a {
+    margin-right: 20px;
+}
+
+
+/* help */
+.help {
+
+}
+.help .help-block {
+    margin: 5px 0px 10px 0px;
+}
+.help .help-block-header {
+    padding: 5px 0px; 
+}
+.help .help-block-header h2 {
+    padding: 0px;
+    margin: 0px;
+    font-size:14px;
+    line-height: 20px;
+}
+.help .help-block-content h3 {
+    padding: 0px;
+    font-size:14px;
+    line-height: 20px;
+    margin: 0px;
+}

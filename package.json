@@ -1,0 +1,15 @@
+{
+	"name": "Lihu",
+	"version": "0.0.1",
+	"author": "J.M.S.Z",
+	"description": "poke game",
+	"dependencies": {
+		"socket.io": "*",
+		"ejs": "*",
+		"express": "*"
+	},
+	"engines": {
+	    "node": "0.8.x",
+	    "npm":  "1.1.x"
+	}
+}

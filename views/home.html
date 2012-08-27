@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Lihu</title>
+		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/css/app.css">
+		<link rel="stylesheet" type="text/css" href="/lib/smoke.css">
+	</head>
+	<body>
+		<div class="" style='padding:0px; margin:0;border:0px;'>	
+			<div id='home'>
+				<div id = 'game_block' class="row-fluid" style='width:1600px;'>
+					<div id = 'waiting' style='display:none' class="span8 well" >
+						
+						<table class='waiting-table'>
+				            <tr>
+				            	<td></td>
+				                <td><div class='seat tb' id = 'tb'></div></td>
+				                <td></td>
+				            </tr>
+				            <tr>
+				                <td><div class='seat lb' id = 'lb'></div></td>
+				                <td></td>
+				                <td><div class='seat rb' id = 'rb'></div></td>
+				            </tr>
+				            <tr>
+				                <td></td>
+				                <td><div class='seat bb' id = 'bb'></div></td>
+				                <td></td>
+				            </tr>
+				        </table>
+                    </div><!-- End waiting-->
+
+					<div id = 'game' style='display:none;' class="well" >
+						<canvas width="1200" height="880" id="canvas">Your browser doesn't support the HTML5 element canvas.</canvas>
+			        	<div style='width:100%; margin:auto; padding:auto;'>
+			        		<div style='width:400px; padding:20px;margin-left: auto;margin-right: auto;text-align:center;'>
+								<button id="btnHold" class="btn btn-primary">Hold</button>
+								<button id="btnPrompt" class='btn btn-primary'>Prompt</button>
+								<button id="btnPut" class='btn btn-primary'>Put</button>
+			        		</div>
+			        		<div id="count_down" style='display:none;'>
+			        			<div id="putter_name"></div>
+			        			<div id="count_down_num"></div>
+			        		</div>
+			        	</div>
+			       	</div><!-- End game -->
+			       	<div id="nav_bar" class="nav-bar span3 well" style='display:none;margin-left:20px;'>
+			       		<div id="options" style="text-align:center">
+			       			<h1 style='text-align:center;'>Room <span id = 'room_id'></h1>
+			       			<div id="opt_playing">
+						    	<div>
+						    		<p>Current Putter:<span id='putter_name' ></span></p>
+						    		<p>Current Level:<span id='cur_level'></span></p>
+			                        <p>Your Level:<span id='your_level'></span></p>
+	                            	<p>Lihu player:<span id='lihu_player'></span></p>
+						    	</div>
+						    	<p>
+						    		<a href="help" class="btn btn-success" target="_blank">Help</a>
+			                        <button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+			                    </p>
+				        	</div>
+
+				        	<div id="opt_waiting">
+					        	<p>waiting people to join the room.</p>
+	                        	<p>
+	                        	<button id="btnStart" class='btn btn-primary'>Start</button>
+	                        	<a href="help" class="btn btn-success" target="_blank">Help</a>
+	                        	<button id="quit_btn" class='quit-btn btn btn-warning'>Quit</button>
+	                        </p>
+				        	</div>
+			       		</div>
+			       		<div id="chat_msg_list" class="chat-msg-list">
+			       			
+			       		</div>
+			       		<div class="chat-input-box form-inline">
+			       			<input type="text" id="chat_text" name="chat_text" placeholder = "let's talk~	"/>
+			       			<input type="button" id="btn_chat_text" value="Submit" class="btn-chat-text btn"/>
+			       		</div>
+			       	</div><!-- End nav bar -->
+
+				<div class='clr'></div>
+			</div>
+			<!-- select room -->
+			<div id = 'select_room' style='display:none'>
+				<h1 style='padding:20px;text-align:center;'>Select Room</h1>
+
+				<div id = 'room_list'>
+
+				</div>
+				<div class="clr"></div>
+				<p style='text-align:center;'>
+					Lihu is a online multiplayer poke game. Detail rules you could read <a href="help" target="_blank">lihu - help</a> please.
+				</p>
+			</div><!-- End select room -->
+			<!-- loading animation -->
+			<div id = 'loading' >
+				<img src="img/loading.gif"/>
+			</div> <!-- End loading animation -->
+		</div>
+
+		<div id="footer">
+			<p>
+				<a href="help" target="_blank">Help</a>
+				Lihu @github: <a href="https://github.com/t-zhoma/lihu" target="_blank">https://github.com/t-zhoma/lihu</a>
+			</p>
+			<p>&copy; 2012 <span>J.M.S.Z</span></p>
+		</div>
+		
+
+
+	</body>
+	
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script src="lib/socket.io.js"></script>
+	<script src="lib/smoke.min.js"></script>
+	<script src="game.js"></script>
+	<script src="lib/imgpreloader.js"></script>
+	<script src="utility.js"></script>
+	<script src="render.js"></script>
+	<script src="controller.js"></script>
+    <script src="clientGame.js"></script>
+	<script src="client.js"></script>
+
+	<script type="text/javascript">
+	// IE version check
+	if ( $.browser.msie&&($.browser.version == "6.0" || $.browser.version == "5.0" || $.browser.version == "7.0" ||
+			$.browser.version == "8.0") ) {
+		smoke.alert('Please use IE9+,Chrome,Firefox,Safari for better HTML5 support');
+	} 
+	</script>
+
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-34306422-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+
+
+
+	
+</html>
