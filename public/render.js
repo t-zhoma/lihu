@@ -294,14 +294,14 @@
             }
             else {
                 smoke.prompt("what is your name", function (name) {
-                    
-                    if ( !name || $.trim(name) == '') { 
+
+                    if (!name || $.trim(name) == '') {
                         smoke.signal('sorry, name required');
-                    } else if ( $.trim(name).length > 8) {
+                    } else if ($.trim(name).length > 8) {
                         smoke.signal('name length must less than 10');
                     } else {
                         game.enterRoom(parseInt(room), parseInt(seat), $.trim(name));
-                    } 
+                    }
                 });
             }
         });
@@ -318,22 +318,22 @@
 
         // bb
         if (seat == game.mySeat) {
-            this.fillTextCenter('第' + rank + '名', game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h, font, fillStyle);
+            this.fillTextCenter('Rank ' + rank, game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h, font, fillStyle);
         }
 
         // rb
         if ((game.mySeat + 1) % 4 == seat) {
-            this.fillTextCenter('第' + rank + '名', game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h, font, fillStyle);
+            this.fillTextCenter('Rank ' + rank, game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h, font, fillStyle);
         }
 
         // tb
         if ((game.mySeat + 2) % 4 == seat) {
-            this.fillTextCenter('第' + rank + '名', game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h, font, fillStyle);
+            this.fillTextCenter('Rank ' + rank, game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h, font, fillStyle);
         }
 
         // lb
         if ((game.mySeat + 3) % 4 == seat) {
-            this.fillTextCenter('第' + rank + '名', game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h, font, fillStyle);
+            this.fillTextCenter('Rank ' + rank, game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h, font, fillStyle);
         }
     }
 
@@ -350,7 +350,7 @@
 
     CanvasRenderer.prototype.drawCountDown = function (num) {
         var num = $('#count_down #count_down_num').html();
-        if ( isNaN(num)  || ( parseInt(num) - 1 <= 0) ) {
+        if (isNaN(num) || (parseInt(num) - 1 <= 0)) {
             // disable button
             $('#btnHold').attr('disabled', true);
             $('#btnPrompt').attr('disabled', true);
@@ -359,20 +359,45 @@
             clearInterval(putInt);
             $('#count_down').fadeOut('slow');
 
-            if ( game.curPutterSeat != game.mySeat ) {
+            if (game.curPutterSeat != game.mySeat) {
                 return;
             }
 
             // promote
             game.prompt();
-            if ( game.isValidPut() == false) {
+            if (game.isValidPut() == false) {
                 game.hold();
             } else {
                 game.put();
             }
-            return ;
-        } 
-        $('#count_down #count_down_num').html( parseInt(num) - 1 );
+            return;
+        }
+        $('#count_down #count_down_num').html(parseInt(num) - 1);
+    }
+
+    CanvasRenderer.prototype.drawWatchMark = function (needPut) {
+        var font = '30px Arial';
+        var fillStyle = 'red';
+
+        // bb
+        if (!needPut[0]) {
+            this.fillTextCenter('Watch', game.bb.rect.x, game.bb.rect.y, game.bb.rect.w, game.bb.rect.h, font, fillStyle);
+        }
+
+        // rb
+        if (!needPut[1]) {
+            this.fillTextCenter('Watch', game.rb.rect.x, game.rb.rect.y, game.rb.rect.w, game.rb.rect.h, font, fillStyle);
+        }
+
+        // tb
+        if (!needPut[2]) {
+            this.fillTextCenter('Watch', game.tb.rect.x, game.tb.rect.y, game.tb.rect.w, game.tb.rect.h, font, fillStyle);
+        }
+
+        // lb
+        if (!needPut[3]) {
+            this.fillTextCenter('Watch', game.lb.rect.x, game.lb.rect.y, game.lb.rect.w, game.lb.rect.h, font, fillStyle);
+        }
     }
 
     // TODO

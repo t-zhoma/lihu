@@ -107,12 +107,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // li hu ?
         if (game.getCurrentLevel() != 11) { // 'a'
-            smoke.confirm('Do you want to li hu?', function (e) { 
-                socket.emit('lihu', { 
-                    room: game.myRoom, 
-                    seat: game.mySeat, 
-                    isLihu: e 
-                }); 
+            smoke.confirm('Do you want to li hu?', function (e) {
+                socket.emit('lihu', {
+                    room: game.myRoom,
+                    seat: game.mySeat,
+                    isLihu: e
+                });
             });
         }
     });
@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tmp == '') { tmp = 'No one ' }
         $('#home #nav_bar #lihu_player').html(tmp);
 
+        renderer.drawWatchMark(data.needPut);
         // show count down
         createCountDown();
     });
@@ -144,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
         game.lastPutCards = data.lastPutCards;
 
         if (data.curPutterSeat == data.lastPutterSeat) {
-            socket.emit('NewPutRound', {room: game.myRoom});
-            game.lastPutCards = []; 
+            socket.emit('NewPutRound', { room: game.myRoom });
+            game.lastPutCards = [];
         }
 
         $('#opt_playing #putter_name').html(game.players[data.curPutterSeat].name);
@@ -202,23 +203,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     data {
-        name: 
-        room:
-        msg:
+    name: 
+    room:
+    msg:
     }
     */
-    socket.on('RoomChat', function(data) {
-        if ( isNaN(data.room) ||  data.msg == '' ||
+    socket.on('RoomChat', function (data) {
+        if (isNaN(data.room) || data.msg == '' ||
         data.name == '' || data.room != game.myRoom) {
             // invalid data
             return;
         }
-        var chatItem = '<div class="chat-msg-item">' + 
-                            '<span class="username">[' + data.name +']</span>' + data.msg
-                        '</div>';
+        var chatItem = '<div class="chat-msg-item">' +
+                            '<span class="username">[' + data.name + ']</span>' + data.msg
+        '</div>';
         $("#chat_msg_list").append(chatItem);
         $("#chat_msg_list").scrollTop($("#chat_msg_list")[0].scrollHeight);
-        
+
     });
 });
 

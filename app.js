@@ -261,7 +261,7 @@ io.sockets.on('connection', function (socket) {
 
         if (game.lihuResponsNum == 4) {
             game.calcLihuType();
-            roomBroadCast(data.room, 'lihu', { lihuPlayersName: game.getLihuPlayersName() }, false);
+            roomBroadCast(data.room, 'lihu', { lihuPlayersName: game.getLihuPlayersName(), needPut: game.needPut }, false);
             putCards(data.room);
         }
     });
@@ -303,7 +303,7 @@ io.sockets.on('connection', function (socket) {
             games[room].needPutCount = 4;
             games[room].curPutterSeat = games[room].firstPutterSeat;
             for (var i = 0; i < 4; i++) { games[room].players[i].isLihu = false; }
-            roomBroadCast(room, 'lihu', { lihuPlayersName: games[room].getLihuPlayersName() }, false);
+            roomBroadCast(room, 'lihu', { lihuPlayersName: games[room].getLihuPlayersName(), needPut: games[room].needPut }, false);
 
             putCards(room);
         }
