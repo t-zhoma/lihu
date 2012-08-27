@@ -138,7 +138,10 @@ showGameStart();
         game.lastPutterSeat = data.lastPutterSeat;
         game.lastPutCards = data.lastPutCards;
 
-        if (data.curPutterSeat == data.lastPutterSeat) { game.lastPutCards = []; }
+        if (data.curPutterSeat == data.lastPutterSeat) {
+            socket.emit('NewPutRound', {room, data.room});
+            game.lastPutCards = []; 
+        }
 
         $('#putter_name').html(game.players[data.curPutterSeat].name);
     });
@@ -146,6 +149,8 @@ showGameStart();
     socket.on('PlayerFinish', function (data) {
         renderer.drawRank(data.seat, data.rank);
     });
+
+    socket.on('NewPutRound', {}, false);
 
     // leave room
     /*

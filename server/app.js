@@ -207,24 +207,24 @@ io.sockets.on('connection', function (socket) {
 
     /*
     data {
-        name: 
-        room:
-        msg:
+    name: 
+    room:
+    msg:
     }
     */
-    socket.on('RoomChat', function(data) {
-        if ( isNaN(data.room) || data.room >= GAME_COUNT || data.msg == '' ||
-        data.name == '' ) {
+    socket.on('RoomChat', function (data) {
+        if (isNaN(data.room) || data.room >= GAME_COUNT || data.msg == '' ||
+        data.name == '') {
             // invalid data
             return;
         }
 
-        roomBroadCast(data.room, 'RoomChat', { 
+        roomBroadCast(data.room, 'RoomChat', {
             name: data.name,
             room: data.room,
-            msg: data.msg 
-            }, false);
-            
+            msg: data.msg
+        }, false);
+
 
     });
 
@@ -238,6 +238,10 @@ io.sockets.on('connection', function (socket) {
             roomBroadCast(data.room, 'lihu', { lihuPlayersName: game.getLihuPlayersName() }, false);
             putCards(data.room);
         }
+    });
+
+    socket.on('NewPutRound', function (data) {
+        roomBroadCast(data.room, 'NewPutRound', {}, false);
     });
 
     function roundStart(room) {
@@ -311,7 +315,10 @@ io.sockets.on('connection', function (socket) {
                 continue;
             }
             Util.pause(500); // Robot thinking !
-            if (game.lastPutterSeat == game.curPutterSeat) { game.lastPutCards = []; }
+            if (game.lastPutterSeat == game.curPutterSeat) {
+                roomBroadCast(room, 'NewPutRound', {}, false);
+                game.lastPutCards = [];
+            }
 
             var cards = game.players[game.curPutterSeat].cards;
 
